@@ -6,12 +6,15 @@ import 'core/firebase_options/firebase_options_dev.dart' as dev_firebase_option;
 import 'core/firebase_options/firebase_options_prod.dart'
     as prod_firebase_option;
 import 'core/firebase_options/firebase_options_stg.dart' as stg_firebase_option;
+
 import 'feature/app.dart';
+
 
 const flavor = String.fromEnvironment('FLAVOR');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
 
   // Flavorに応じたOptionsを準備する
   final firebaseOptions = flavor == 'prod'
@@ -24,4 +27,5 @@ Future<void> main() async {
   await Firebase.initializeApp(options: firebaseOptions);
 
   runApp(ProviderScope(child: App()));
+
 }
