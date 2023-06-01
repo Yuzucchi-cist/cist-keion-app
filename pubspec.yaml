@@ -39,6 +39,7 @@ dependencies:
   hooks_riverpod: ^2.3.6
   auto_route: ^7.3.2
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
