@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../widgets/input_user_imformation.dart';
 
 @RoutePage()
-class RegisterPage extends HookConsumerWidget {
-  const RegisterPage({super.key});
+class LoginPage extends HookConsumerWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,10 +14,10 @@ class RegisterPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('登録'),
+        title: const Text('ログイン'),
         centerTitle: true,
       ),
-      body: const InputUserInformation(isLoginForm: false),
+      body: const InputUserInformation(isLoginForm: true),
     );
   }
 }
