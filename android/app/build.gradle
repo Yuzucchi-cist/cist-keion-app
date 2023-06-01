@@ -53,6 +53,24 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions 'flavor'
+    productFlavors {
+        dev {
+            dimension 'flavor'
+            applicationIdSuffix '.dev'
+            manifestPlaceholders = [appName: '(d)CistKeion']
+        }dev {
+            dimension 'flavor'
+            applicationIdSuffix '.stg'
+            manifestPlaceholders = [appName: '(s)CistKeion']
+        }
+        prod {
+            dimension 'flavor'
+            applicationIdSuffix ''
+            manifestPlaceholders = [appName: 'CistKeion']
+        }
+    }
 }
 
 flutter {
