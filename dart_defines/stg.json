@@ -1,0 +1,5 @@
+{
+  "flavor": "stg",
+  "appName": "CKA stg",
+  "appIdSuffix": ".stg"
+}
