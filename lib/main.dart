@@ -23,5 +23,5 @@ Future<void> main() async {
   // Firebaseの初期化
   await Firebase.initializeApp(options: firebaseOptions);
 
-  runApp(const ProviderScope(child: App()));
+  runApp(ProviderScope(child: App()));
 }
