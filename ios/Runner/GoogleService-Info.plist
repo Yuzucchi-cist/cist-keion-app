@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>524233733371-pt6kfi6lnpssp1kt64cr5e2phnicprma.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.524233733371-pt6kfi6lnpssp1kt64cr5e2phnicprma</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDs1wBqHJiLSIxOIWtvcehT2mMmPUC8BTU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>524233733371</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>jp.ac.cist.keion.cistKeionApp</string>
+	<key>PROJECT_ID</key>
+	<string>cist-keion-app-prod-35baa</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cist-keion-app-prod-35baa.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:524233733371:ios:335f562b1d3d0a8fd1ec5e</string>
+</dict>
+</plist>
