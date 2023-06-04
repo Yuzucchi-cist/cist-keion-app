@@ -18,6 +18,7 @@ class ChooseReserveTablePage extends HookConsumerWidget {
         appBar: AppBar(
           title: const Text('予約'),
           centerTitle: true,
+          automaticallyImplyLeading: false,
           bottom: const TabBar(
             indicatorSize: TabBarIndicatorSize.label,
             tabs: [

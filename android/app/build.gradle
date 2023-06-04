@@ -60,7 +60,8 @@ android {
             dimension 'flavor'
             applicationIdSuffix '.dev'
             manifestPlaceholders = [appName: '(d)CistKeion']
-        }dev {
+        }
+        stg {
             dimension 'flavor'
             applicationIdSuffix '.stg'
             manifestPlaceholders = [appName: '(s)CistKeion']
