@@ -45,7 +45,8 @@ class InputUserInformation extends HookConsumerWidget {
               children: [
                 TextButton(
                   child: const Text('ログイン'),
-                  onPressed: () => context.router.push(const HomeRoute()),
+                  onPressed: () => context
+                      .navigateTo(const RootRoute(children: [HomeRoute()])),
                 ),
                 TextButton(
                   child: const Text('登録'),

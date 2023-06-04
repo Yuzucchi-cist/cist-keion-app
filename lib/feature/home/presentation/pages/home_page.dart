@@ -20,7 +20,7 @@ class HomePage extends HookConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => context.router.push(const LoginRoute()),
+            onPressed: () => context.router.push(const AuthRouterRoute()),
             icon: const Icon(Icons.login),
           ),
         ],

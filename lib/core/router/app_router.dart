@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 
+import '../../feature/auth/presentation/pages/auth_router_page.dart';
 import '../../feature/auth/presentation/pages/confirm_email_verify_page.dart';
 import '../../feature/auth/presentation/pages/login_page.dart';
 import '../../feature/auth/presentation/pages/profile_page.dart';
@@ -25,24 +26,33 @@ class AppRouter extends _$AppRouter {
           children: [
             AutoRoute(initial: true, page: HomeRoute.page),
             AutoRoute(
-                path: 'reserve',
-                page: ReservationRouterRoute.page,
-                children: [
-                  AutoRoute(initial: true, page: ChooseReserveTableRoute.page),
-                  AutoRoute(
-                      path: 'reserveDetail',
-                      page: MakeReservationDetailRoute.page),
-                  AutoRoute(
-                      path: 'confirm_reservation',
-                      page: ConfirmReservationRoute.page),
-                ]),
+              path: 'reserve',
+              page: ReservationRouterRoute.page,
+              children: [
+                AutoRoute(initial: true, page: ChooseReserveTableRoute.page),
+                AutoRoute(
+                    path: 'reserveDetail',
+                    page: MakeReservationDetailRoute.page),
+                AutoRoute(
+                    path: 'confirm_reservation',
+                    page: ConfirmReservationRoute.page),
+              ],
+            ),
             AutoRoute(path: 'suggest', page: CreateSuggestionRoute.page),
             AutoRoute(path: 'profile', page: ProfileRoute.page),
           ],
         ),
-        AutoRoute(path: '/login', page: LoginRoute.page),
-        AutoRoute(path: '/register', page: RegisterRoute.page),
-        AutoRoute(path: '/confirm_email', page: ConfirmEmailVerifyRoute.page),
+        CustomRoute(
+          path: '/auth',
+          page: AuthRouterRoute.page,
+          fullscreenDialog: true,
+          children: [
+            AutoRoute(initial: true, path: 'login', page: LoginRoute.page),
+            AutoRoute(path: 'register', page: RegisterRoute.page),
+            AutoRoute(
+                path: 'confirm_email', page: ConfirmEmailVerifyRoute.page),
+          ],
+        ),
         AutoRoute(
             path: '/confirm_suggestion', page: ConfirmSuggestionRoute.page),
         AutoRoute(
