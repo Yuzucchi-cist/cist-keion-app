@@ -1,6 +1,8 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../../core/router/app_router.dart';
 
 @RoutePage()
 class ConfirmSuggestionPage extends HookConsumerWidget {
@@ -18,11 +20,27 @@ class ConfirmSuggestionPage extends HookConsumerWidget {
           children: [
             const Text('〇〇を改善してほしい。'),
             TextButton(
-              onPressed: () {},
               child: Text(
                 '確認',
                 style: const TextTheme().bodyLarge,
               ),
+              onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('送信完了'),
+                      content: const Text('メッセージの送信が完了しました。'),
+                      actions: [
+                        ElevatedButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context.router.push(const CreateSuggestionRoute());
+                          },
+                        )
+                      ],
+                    );
+                  }),
             ),
           ],
         ),
