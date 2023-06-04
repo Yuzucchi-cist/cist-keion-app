@@ -35,12 +35,28 @@ class ConfirmReservationPage extends HookConsumerWidget {
               ),
             ),
             TextButton(
-              onPressed: () =>
-                  context.router.push(const ReservationCompleteRoute()),
               child: Text(
                 '予約確定',
                 style: const TextTheme().bodyLarge,
               ),
+              onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('予約完了'),
+                      content: const Text('予約が完了しました。'),
+                      actions: [
+                        ElevatedButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context.router
+                                .push(const ChooseReserveTableRoute());
+                          },
+                        )
+                      ],
+                    );
+                  }),
             ),
           ],
         ),
