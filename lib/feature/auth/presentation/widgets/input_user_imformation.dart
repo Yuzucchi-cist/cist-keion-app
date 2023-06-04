@@ -1,6 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../../core/router/app_router.dart';
 
 class InputUserInformation extends HookConsumerWidget {
   const InputUserInformation({super.key, required this.isLoginForm});
@@ -42,18 +45,19 @@ class InputUserInformation extends HookConsumerWidget {
               children: [
                 TextButton(
                   child: const Text('ログイン'),
-                  onPressed: () {},
+                  onPressed: () => context.router.push(const HomeRoute()),
                 ),
                 TextButton(
                   child: const Text('登録'),
-                  onPressed: () {},
+                  onPressed: () => context.router.push(const RegisterRoute()),
                 ),
               ],
             )
           else
             TextButton(
               child: const Text('登録'),
-              onPressed: () {},
+              onPressed: () =>
+                  context.router.push(const ConfirmEmailVerifyRoute()),
             ),
         ],
       ),
