@@ -1,6 +1,8 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../../core/router/app_router.dart';
 
 @RoutePage()
 class HomePage extends HookConsumerWidget {
@@ -15,10 +17,11 @@ class HomePage extends HookConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.router.push(const LoginRoute()),
             icon: const Icon(Icons.login),
           ),
         ],
+        automaticallyImplyLeading: false,
       ),
       body: const Center(
         child: Column(
