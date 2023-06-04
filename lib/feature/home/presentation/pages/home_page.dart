@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../../../reservation/presentation/widgets/reserve_table_widget.dart';
 
 @RoutePage()
 class HomePage extends HookConsumerWidget {
@@ -11,6 +12,9 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO(yuzucchi): implement auth
+    final today = DateTime.now();
+    final startDateOfWeek = today
+        .subtract(Duration(days: (today.weekday % 7) - DateTime.daysPerWeek));
     return Scaffold(
       appBar: AppBar(
         title: const Text('ホーム'),
@@ -23,11 +27,13 @@ class HomePage extends HookConsumerWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           children: [
-            Text('5月7日~5月13日の予約'),
-            Placeholder(),
+            Expanded(
+                child: FittedBox(
+                    child:
+                        ReserveTableWidget(startDateOfWeek: startDateOfWeek))),
           ],
         ),
       ),
