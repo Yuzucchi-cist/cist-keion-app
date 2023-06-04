@@ -12,7 +12,6 @@ import '../../feature/reservation/presentation/pages/reservetion_router_page.dar
 import '../../feature/root_page.dart';
 import '../../feature/suggestion/presentation/pages/confirm_suggestion_page.dart';
 import '../../feature/suggestion/presentation/pages/create_suggestion_page.dart';
-import '../../feature/suggestion/presentation/pages/sending_message_complete_pate.dart';
 
 part 'app_router.gr.dart';
 
