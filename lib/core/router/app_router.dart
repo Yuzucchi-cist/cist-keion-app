@@ -8,7 +8,6 @@ import '../../feature/home/presentation/pages/home_page.dart';
 import '../../feature/reservation/presentation/pages/choose_reserve_table_page.dart';
 import '../../feature/reservation/presentation/pages/confirm_reservation_page.dart';
 import '../../feature/reservation/presentation/pages/make_reservation_detail_page.dart';
-import '../../feature/reservation/presentation/pages/reservation_complete_page.dart';
 import '../../feature/reservation/presentation/pages/reservetion_router_page.dart';
 import '../../feature/root_page.dart';
 import '../../feature/suggestion/presentation/pages/confirm_suggestion_page.dart';
@@ -37,9 +36,6 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                       path: 'confirm_reservation',
                       page: ConfirmReservationRoute.page),
-                  AutoRoute(
-                      path: 'reservation_complete',
-                      page: ReservationCompleteRoute.page),
                 ]),
             AutoRoute(path: 'suggest', page: CreateSuggestionRoute.page),
             AutoRoute(path: 'profile', page: ProfileRoute.page),
