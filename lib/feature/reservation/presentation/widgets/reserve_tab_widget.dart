@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../../../../core/utils/date_time_utils.dart';
 import 'reserve_table_widget.dart';
 
 class ReserveTabWidget extends HookConsumerWidget {
@@ -12,11 +13,9 @@ class ReserveTabWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final today = DateTime.now();
     final startDateOfWeek = isAdditionalReservation
-        ? today.subtract(Duration(days: today.weekday % DateTime.daysPerWeek))
-        : today
-            .subtract(Duration(days: today.weekday % DateTime.daysPerWeek))
+        ? getStartDateOfThisWeek()
+        : getStartDateOfThisWeek()
             .add(const Duration(days: DateTime.daysPerWeek));
 
     return Center(

@@ -7,8 +7,9 @@ class ReserveTableWidget extends HookConsumerWidget {
   final DateTime startDateOfWeek;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final endDateOfWeek =
-        startDateOfWeek.add(const Duration(days: DateTime.daysPerWeek));
+    final endDateOfWeek = startDateOfWeek
+        .add(const Duration(days: DateTime.daysPerWeek))
+        .subtract(const Duration(milliseconds: 1));
 
     final datesOfWeek = List<DateTime>.generate(DateTime.daysPerWeek,
         (diffDays) => startDateOfWeek.add(Duration(days: diffDays)));
