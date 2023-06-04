@@ -17,6 +17,11 @@ class ConfirmEmailVerifyPage extends ConsumerWidget {
         title: const Text('メール認証確認'),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () =>
+              context.navigateTo(const RootRoute(children: [HomeRoute()])),
+        ),
       ),
       body: Column(
         children: [
@@ -28,10 +33,6 @@ class ConfirmEmailVerifyPage extends ConsumerWidget {
               TextButton(
                 child: const Text('ログイン'),
                 onPressed: () => context.router.push(const LoginRoute()),
-              ),
-              TextButton(
-                child: const Text('ホームへ'),
-                onPressed: () => context.router.push(const HomeRoute()),
               ),
             ],
           )
