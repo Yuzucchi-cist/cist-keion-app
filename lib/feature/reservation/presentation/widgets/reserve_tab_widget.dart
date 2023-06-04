@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/router/app_router.dart';
 import 'reserve_table_widget.dart';
 
 class ReserveTabWidget extends HookConsumerWidget {
@@ -25,7 +27,8 @@ class ReserveTabWidget extends HookConsumerWidget {
                 child: ReserveTableWidget(startDateOfWeek: startDateOfWeek)),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () =>
+                context.router.push(const MakeReservationDetailRoute()),
             child: Text(
               '予約',
               style: const TextTheme().bodyLarge,
