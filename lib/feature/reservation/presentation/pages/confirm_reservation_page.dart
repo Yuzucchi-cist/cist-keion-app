@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
-import '../widgets/reserve_table_widget.dart';
+import '../widgets/reservation_table.dart';
 import '../widgets/show_confirm_dialog.dart';
 
 @RoutePage()
@@ -31,7 +31,7 @@ class ConfirmReservationPage extends HookConsumerWidget {
           children: [
             Expanded(
               child: FittedBox(
-                child: ReserveTableWidget(
+                child: reservationTable(
                     startDateOfWeek: reservation.startDateOfWeek),
               ),
             ),
