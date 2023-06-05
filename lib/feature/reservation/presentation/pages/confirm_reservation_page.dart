@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../widgets/reserve_table_widget.dart';
+import '../widgets/show_confirm_dialog.dart';
 
 @RoutePage()
 class ConfirmReservationPage extends HookConsumerWidget {
@@ -39,24 +40,20 @@ class ConfirmReservationPage extends HookConsumerWidget {
                 '予約確定',
                 style: const TextTheme().bodyLarge,
               ),
-              onPressed: () => showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('予約完了'),
-                      content: const Text('予約が完了しました。'),
-                      actions: [
-                        ElevatedButton(
-                          child: const Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            context.router
-                                .push(const ChooseReserveTableRoute());
-                          },
-                        )
-                      ],
-                    );
-                  }),
+              onPressed: () => showConfirmDialog(
+                context: context,
+                titleText: '予約完了',
+                contentText: '予約が完了しました。',
+                actions: [
+                  (context) => ElevatedButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          context.router.push(const ChooseReserveTableRoute());
+                        },
+                      )
+                ],
+              ),
             ),
           ],
         ),
