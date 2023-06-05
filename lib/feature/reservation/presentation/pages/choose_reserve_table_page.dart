@@ -1,8 +1,8 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/router/app_router.dart';
 import '../widgets/reserve_tab_widget.dart';
 
 @RoutePage()
@@ -19,6 +19,13 @@ class ChooseReserveTablePage extends HookConsumerWidget {
           title: const Text('予約'),
           centerTitle: true,
           automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.cancel),
+              onPressed: () =>
+                  context.router.push(const CancelReservationRoute()),
+            )
+          ],
           bottom: const TabBar(
             indicatorSize: TabBarIndicatorSize.label,
             tabs: [

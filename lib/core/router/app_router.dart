@@ -6,6 +6,7 @@ import '../../feature/auth/presentation/pages/login_page.dart';
 import '../../feature/auth/presentation/pages/profile_page.dart';
 import '../../feature/auth/presentation/pages/register_page.dart';
 import '../../feature/home/presentation/pages/home_page.dart';
+import '../../feature/reservation/presentation/pages/cancel_reservation_page.dart';
 import '../../feature/reservation/presentation/pages/choose_reserve_table_page.dart';
 import '../../feature/reservation/presentation/pages/confirm_reservation_page.dart';
 import '../../feature/reservation/presentation/pages/make_reservation_detail_page.dart';
@@ -36,6 +37,10 @@ class AppRouter extends _$AppRouter {
                 AutoRoute(
                     path: 'confirm_reservation',
                     page: ConfirmReservationRoute.page),
+                AutoRoute(
+                  path: 'cancel_reservation',
+                  page: CancelReservationRoute.page,
+                ),
               ],
             ),
             AutoRoute(path: 'suggest', page: CreateSuggestionRoute.page),
@@ -53,9 +58,5 @@ class AppRouter extends _$AppRouter {
                 path: 'confirm_email', page: ConfirmEmailVerifyRoute.page),
           ],
         ),
-        AutoRoute(
-            path: '/confirm_suggestion', page: ConfirmSuggestionRoute.page),
-        AutoRoute(
-            path: '/suggestion_complete', page: ConfirmSuggestionRoute.page),
       ];
 }
