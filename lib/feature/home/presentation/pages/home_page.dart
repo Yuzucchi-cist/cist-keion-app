@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/date_time_utils.dart';
-import '../../../reservation/presentation/widgets/reserve_table_widget.dart';
+import '../../../reservation/presentation/widgets/reservation_table.dart';
 
 @RoutePage()
 class HomePage extends HookConsumerWidget {
@@ -31,8 +31,7 @@ class HomePage extends HookConsumerWidget {
           children: [
             Expanded(
                 child: FittedBox(
-                    child:
-                        ReserveTableWidget(startDateOfWeek: startDateOfWeek))),
+                    child: reservationTable(startDateOfWeek: startDateOfWeek))),
           ],
         ),
       ),

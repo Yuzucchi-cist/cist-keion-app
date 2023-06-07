@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
-import '../widgets/reserve_tab_widget.dart';
+import '../widgets/reserve_tab_bar_view.dart';
 
 @RoutePage()
 class ChooseReserveTablePage extends HookConsumerWidget {
@@ -34,10 +34,11 @@ class ChooseReserveTablePage extends HookConsumerWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            ReserveTabWidget(),
-            ReserveTabWidget(
+            reserveTabBarView(context),
+            reserveTabBarView(
+              context,
               isAdditionalReservation: true,
             ),
           ],
