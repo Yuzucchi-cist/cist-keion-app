@@ -11,13 +11,13 @@ class RegisterPage extends HookConsumerWidget {
   RegisterPage({super.key});
 
   final _formKey = GlobalKey<FormState>();
+
   final _studentNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO(yuzucchi): 画面の詳細設計
     final isPasswordObscure = useState(true);
     final isConfirmPasswordObscure = useState(true);
 

@@ -12,11 +12,11 @@ class LoginPage extends HookConsumerWidget {
 
   final _formKey = GlobalKey<FormState>();
 
+  final studentNumberController = TextEditingController();
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO(yuzucchi): 画面の詳細設計
-    final studentNumberController = useState(TextEditingController());
-    final passwordController = useState(TextEditingController());
     final isPassObscure = useState(true);
 
     return Scaffold(
@@ -33,8 +33,8 @@ class LoginPage extends HookConsumerWidget {
         key: _formKey,
         child: Column(
           children: [
-            studentNumberFormField(studentNumberController.value),
-            passwordFormField(passwordController.value, isPassObscure),
+            studentNumberFormField(studentNumberController),
+            passwordFormField(passwordController, isPassObscure),
             Row(
               children: [
                 ElevatedButton(
