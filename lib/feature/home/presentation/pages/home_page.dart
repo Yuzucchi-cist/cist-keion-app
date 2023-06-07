@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/date_time_utils.dart';
+import '../../../reservation/presentation/notifier/reserve_table_notifier.dart';
 import '../../../reservation/presentation/widgets/reservation_table.dart';
 
 @RoutePage()
@@ -27,13 +28,8 @@ class HomePage extends HookConsumerWidget {
         automaticallyImplyLeading: false,
       ),
       body: Center(
-        child: Column(
-          children: [
-            Expanded(
-                child: FittedBox(
-                    child: reservationTable(startDateOfWeek: startDateOfWeek))),
-          ],
-        ),
+        child: reservationTable(context,
+            reserveTable: ref.watch(reserveTableProvider)),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../notifier/reserve_table_notifier.dart';
 import '../widgets/reserve_tab_bar_view.dart';
 
 @RoutePage()
@@ -26,19 +27,23 @@ class ChooseReserveTablePage extends HookConsumerWidget {
                   context.router.push(const CancelReservationRoute()),
             )
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             indicatorSize: TabBarIndicatorSize.label,
-            tabs: [
+            tabs: const [
               Tab(text: '予約'),
               Tab(text: '追加予約'),
             ],
+            onTap: (_) {
+              ref.read(reserveTableForReserveProvider.notifier).resetIsTapped();
+            },
           ),
         ),
         body: TabBarView(
           children: [
-            reserveTabBarView(context),
+            reserveTabBarView(context, ref),
             reserveTabBarView(
               context,
+              ref,
               isAdditionalReservation: true,
             ),
           ],

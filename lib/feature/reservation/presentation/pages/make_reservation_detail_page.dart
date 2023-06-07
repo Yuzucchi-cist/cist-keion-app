@@ -4,10 +4,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../notifier/reserve_table_notifier.dart';
 
 @RoutePage()
 class MakeReservationDetailPage extends HookConsumerWidget {
-  const MakeReservationDetailPage({super.key});
+  const MakeReservationDetailPage(
+      {super.key, required this.isAdditionalReservation});
+
+  final bool isAdditionalReservation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,6 +19,8 @@ class MakeReservationDetailPage extends HookConsumerWidget {
     final dateAndTimes = [Params(DateTime.now(), '1講')];
 
     final reserveTitleController = useState(TextEditingController());
+
+    final reserveTable = ref.watch(reserveTableForReserveProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,10 +31,13 @@ class MakeReservationDetailPage extends HookConsumerWidget {
         child: Column(
           children: [
             Row(
-              children: [const Text('予約時間: ')]
-                  .followedBy(dateAndTimes
-                      .map((param) => Text('${param.date} ${param.time}')))
-                  .toList(),
+              children: [
+                const Text('予約時間: '),
+                ...reserveTable.table.entries
+                    .where((table) => table.value.isTapped)
+                    .map((table) => Text(
+                        '${table.key.weekDay.value} ${table.key.time.value}  '))
+              ],
             ),
             TextFormField(
               controller: reserveTitleController.value,
