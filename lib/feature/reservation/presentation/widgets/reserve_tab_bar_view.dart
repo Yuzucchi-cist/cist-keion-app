@@ -1,31 +1,37 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
-import '../../../../core/utils/date_time_utils.dart';
+import '../notifier/reserve_table_notifier.dart';
 import 'reservation_table.dart';
 
-Widget reserveTabBarView(BuildContext context,
+Widget reserveTabBarView(BuildContext context, WidgetRef ref,
     {bool isAdditionalReservation = false}) {
-  final startDateOfWeek = isAdditionalReservation
-      ? getStartDateOfThisWeek()
-      : getStartDateOfThisWeek()
-          .add(const Duration(days: DateTime.daysPerWeek));
-
+  final reserveTable = ref.watch(reserveTableForReserveProvider);
+  final reserveTableNotifier =
+      ref.read(reserveTableForReserveProvider.notifier);
   return Center(
     child: Column(
       children: [
         Expanded(
-          child: FittedBox(
-              child: reservationTable(startDateOfWeek: startDateOfWeek)),
+          child: reservationTable(
+            context,
+            reserveTable: reserveTable,
+            onTap: reserveTableNotifier.onTapped,
+          ),
         ),
         ElevatedButton(
           child: Text(
             '予約',
             style: const TextTheme().bodyLarge,
           ),
-          onPressed: () =>
-              context.router.push(const MakeReservationDetailRoute()),
+          onPressed: () {
+            if (reserveTableNotifier.isChosen()) {
+              context.router.push(MakeReservationDetailRoute(
+                  isAdditionalReservation: isAdditionalReservation));
+            }
+          },
         ),
       ],
     ),
