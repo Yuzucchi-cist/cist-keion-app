@@ -32,7 +32,7 @@ class ConfirmEmailVerifyPage extends ConsumerWidget {
             children: [
               TextButton(
                 child: const Text('ログイン'),
-                onPressed: () => context.router.push(const LoginRoute()),
+                onPressed: () => context.router.push(LoginRoute()),
               ),
             ],
           )
