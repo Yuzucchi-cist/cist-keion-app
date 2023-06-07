@@ -19,13 +19,13 @@ Widget reserveTabBarView(BuildContext context,
           child: FittedBox(
               child: reservationTable(startDateOfWeek: startDateOfWeek)),
         ),
-        TextButton(
-          onPressed: () =>
-              context.router.push(const MakeReservationDetailRoute()),
+        ElevatedButton(
           child: Text(
             '予約',
             style: const TextTheme().bodyLarge,
           ),
+          onPressed: () =>
+              context.router.push(const MakeReservationDetailRoute()),
         ),
       ],
     ),
