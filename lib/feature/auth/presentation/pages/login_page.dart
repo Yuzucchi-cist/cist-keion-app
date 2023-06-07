@@ -8,13 +8,15 @@ import '../widgets/user_data_form_field.dart';
 
 @RoutePage()
 class LoginPage extends HookConsumerWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  final _formKey = GlobalKey<FormState>();
+
+  final studentNumberController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO(yuzucchi): 画面の詳細設計
-    final stNumController = useState(TextEditingController());
-    final passController = useState(TextEditingController());
     final isPassObscure = useState(true);
 
     return Scaffold(
@@ -28,20 +30,27 @@ class LoginPage extends HookConsumerWidget {
         ),
       ),
       body: Form(
+        key: _formKey,
         child: Column(
           children: [
-            studentNumberFormField(stNumController.value),
-            passwordFormField(passController.value, isPassObscure),
+            studentNumberFormField(studentNumberController),
+            passwordFormField(passwordController, isPassObscure),
             Row(
               children: [
-                TextButton(
+                ElevatedButton(
                   child: const Text('ログイン'),
-                  onPressed: () => context
-                      .navigateTo(const RootRoute(children: [HomeRoute()])),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      context.router
+                          .push(const RootRoute(children: [HomeRoute()]));
+                    }
+                  },
                 ),
-                TextButton(
+                ElevatedButton(
                   child: const Text('登録'),
-                  onPressed: () => context.router.push(const RegisterRoute()),
+                  onPressed: () {
+                    context.router.push(RegisterRoute());
+                  },
                 ),
               ],
             ),

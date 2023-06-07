@@ -8,16 +8,18 @@ import '../widgets/user_data_form_field.dart';
 
 @RoutePage()
 class RegisterPage extends HookConsumerWidget {
-  const RegisterPage({super.key});
+  RegisterPage({super.key});
+
+  final _formKey = GlobalKey<FormState>();
+
+  final _studentNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO(yuzucchi): 画面の詳細設計
-    final stNumController = useState(TextEditingController());
-    final passController = useState(TextEditingController());
-    final isPassObscure = useState(true);
-    final confirmPassController = useState(TextEditingController());
-    final isConfirmPassObscure = useState(true);
+    final isPasswordObscure = useState(true);
+    final isConfirmPasswordObscure = useState(true);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,16 +32,20 @@ class RegisterPage extends HookConsumerWidget {
         ),
       ),
       body: Form(
+        key: _formKey,
         child: Column(
           children: [
-            studentNumberFormField(stNumController.value),
-            passwordFormField(passController.value, isPassObscure),
-            confirmPasswordFormField(
-                confirmPassController.value, isConfirmPassObscure),
-            TextButton(
+            studentNumberFormField(_studentNumberController),
+            passwordFormField(_passwordController, isPasswordObscure),
+            confirmPasswordFormField(_passwordController,
+                _confirmPasswordController, isConfirmPasswordObscure),
+            ElevatedButton(
               child: const Text('登録'),
-              onPressed: () =>
-                  context.router.push(const ConfirmEmailVerifyRoute()),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  context.router.push(const ConfirmEmailVerifyRoute());
+                }
+              },
             ),
           ],
         ),
