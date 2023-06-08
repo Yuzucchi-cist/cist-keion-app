@@ -1,3 +1,5 @@
+// ignore_for_file: sort_constructors_first
+
 enum InstituteGrade {
   first('1年生'),
   second('2年生'),

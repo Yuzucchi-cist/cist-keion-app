@@ -5,3 +5,8 @@ abstract class Belonging {
   final String name;
   final List<String> memberIds;
 }
+
+class UnexpectedBelonging extends Belonging {
+  UnexpectedBelonging(
+      {required super.id, required super.name, required super.memberIds});
+}
