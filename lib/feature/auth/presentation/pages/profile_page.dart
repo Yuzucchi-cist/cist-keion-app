@@ -12,6 +12,8 @@ class ProfilePage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('プロフィール'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: const Column(
         children: [
