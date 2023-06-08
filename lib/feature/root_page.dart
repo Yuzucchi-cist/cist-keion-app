@@ -31,7 +31,19 @@ class RootPage extends HookConsumerWidget {
                   label: '意見箱', icon: Icon(Icons.settings_suggest)),
               NavigationDestination(label: 'プロフィール', icon: Icon(Icons.person)),
             ],
-            onDestinationSelected: tabsRouter.setActiveIndex,
+            onDestinationSelected: (index) {
+              // 選択中じゃないタブをTapした場合
+              if (tabsRouter.activeIndex != index) {
+                tabsRouter.setActiveIndex(index);
+              }
+              // 選択中のタブをTapした場合
+              else {
+                // ネストされたルーターのスタック情報を破棄
+                tabsRouter
+                    .innerRouterOf<StackRouter>(tabsRouter.current.name)
+                    ?.popUntilRoot();
+              }
+            },
             indicatorColor: ThemeData().primaryColor,
           ),
         );
