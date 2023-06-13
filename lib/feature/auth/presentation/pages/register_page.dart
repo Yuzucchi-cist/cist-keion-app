@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../notifier/auth_notifier.dart';
 import '../widgets/user_data_form_field.dart';
 
 @RoutePage()
@@ -43,7 +44,13 @@ class RegisterPage extends HookConsumerWidget {
               child: const Text('登録'),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  context.router.push(const ConfirmEmailVerifyRoute());
+                  final studentNumber = _studentNumberController.text;
+                  final password = _passwordController.text;
+                  ref
+                      .read(authProvider.notifier)
+                      .register(studentNumber, password)
+                      .then((value) =>
+                          context.router.push(const ConfirmEmailVerifyRoute()));
                 }
               },
             ),
