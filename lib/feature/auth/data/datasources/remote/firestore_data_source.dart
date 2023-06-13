@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../../core/error/exception/firestore_exception.dart';
 import '../../models/firestore/firestore_user_model.dart';
 
-const authCollectionName = 'auth';
+const authCollectionName = 'users';
 
 abstract class FirestoreDataSource {
   Future<FirestoreUserModel> getMemberByStudentNumber(String studentNumber);
