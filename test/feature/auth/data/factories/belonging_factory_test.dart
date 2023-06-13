@@ -10,24 +10,18 @@ void main() {
   const tId = 'testId';
   const tType = BelongingType.band;
   const tName = 'testName';
-  final tMemberIds = ['testMemberId'];
-  final tAdditionalParam = NoAdditionalParam();
 
-  final tParams = BelongingParams<NoAdditionalParam>(
+  const tParams = BelongingParams(
     id: tId,
     type: tType,
     name: tName,
-    memberIds: tMemberIds,
-    additionalParams: tAdditionalParam,
   );
 
-  final tValue = Band(id: tId, name: tName, memberIds: tMemberIds);
-  final tModel = BelongingModel<NoAdditionalParam>(
+  final tValue = Band(id: tId, name: tName);
+  const tModel = BelongingModel(
     id: tId,
     type: tType,
     name: tName,
-    memberIds: tMemberIds,
-    additionalParams: tAdditionalParam,
   );
 
   group('create', () {
@@ -36,13 +30,10 @@ void main() {
       final result = factory.create(tParams);
       // assert
       expect(
-        result,
-        isA<Belonging>()
-            .having((result) => result.id, 'id', tValue.id)
-            .having((result) => result.name, 'id', tValue.name)
-            .having((result) => result.memberIds, 'id',
-                unorderedEquals(tValue.memberIds)),
-      );
+          result,
+          isA<Band>()
+              .having((result) => result.id, 'id', tValue.id)
+              .having((result) => result.name, 'id', tValue.name));
     });
   });
 
@@ -55,9 +46,7 @@ void main() {
         result,
         isA<Belonging>()
             .having((result) => result.id, 'id', tValue.id)
-            .having((result) => result.name, 'id', tValue.name)
-            .having((result) => result.memberIds, 'id',
-                unorderedEquals(tValue.memberIds)),
+            .having((result) => result.name, 'name', tValue.name),
       );
     });
   });
@@ -69,11 +58,10 @@ void main() {
       // assert
       expect(
         result,
-        isA<BelongingModel<NoAdditionalParam>>()
+        isA<BelongingModel>()
             .having((result) => result.id, 'id', tModel.id)
             .having((result) => result.name, 'name', tModel.name)
-            .having((result) => result.memberIds, 'memberIds',
-                unorderedEquals(tModel.memberIds)),
+            .having((result) => result.type, 'type', tModel.type),
       );
     });
   });

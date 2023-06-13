@@ -21,7 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
       storeDataSource.getMemberByStudentNumber(studentNumber);
       authDataSource.createUser(studentNumber, password);
       return const Right(unit);
-    } on FirebaseAuthException catch (e) {
+    } on FireAuthException catch (e) {
       return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
     } on FirestoreException catch (e) {
       return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));

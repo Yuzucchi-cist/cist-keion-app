@@ -4,66 +4,54 @@ import '../../domain/values/belongings/belonging.dart';
 import '../models/firestore/belonging_model.dart';
 
 abstract class BelongingFactory
-    implements
-        DataFactory<Belonging, BelongingModel<dynamic>,
-            BelongingParams<dynamic>> {}
+    implements DataFactory<Belonging, BelongingModel, BelongingParams> {}
 
 class BelongingFactoryImpl implements BelongingFactory {
   @override
-  BelongingModel<dynamic> convertToModel(Belonging entity) {
+  BelongingModel convertToModel(Belonging entity) {
     if (entity is Band) {
-      return BelongingModel<NoAdditionalParam>(
+      return BelongingModel(
         id: entity.id,
         type: BelongingType.band,
         name: entity.name,
-        memberIds: entity.memberIds,
-        additionalParams: NoAdditionalParam(),
       );
     }
-    return BelongingModel<NoAdditionalParam>(
+    return BelongingModel(
       id: entity.id,
       type: BelongingType.unexpected,
       name: entity.name,
-      memberIds: entity.memberIds,
-      additionalParams: NoAdditionalParam(),
     );
   }
 
   @override
-  Belonging create(BelongingParams<dynamic> value) {
+  Belonging create(BelongingParams value) {
     switch (value.type) {
       case BelongingType.band:
-        return Band(id: value.id, name: value.name, memberIds: value.memberIds);
+        return Band(id: value.id, name: value.name);
       case BelongingType.unexpected:
-        return UnexpectedBelonging(
-            id: value.id, name: value.name, memberIds: value.memberIds);
+        return UnexpectedBelonging(id: value.id, name: value.name);
     }
   }
 
   @override
-  Belonging createFromModel(BelongingModel<dynamic> model) {
+  Belonging createFromModel(BelongingModel model) {
     switch (model.type) {
       case BelongingType.band:
-        return Band(id: model.id, name: model.name, memberIds: model.memberIds);
+        return Band(id: model.id, name: model.name);
       case BelongingType.unexpected:
-        return UnexpectedBelonging(
-            id: model.id, name: model.name, memberIds: model.memberIds);
+        return UnexpectedBelonging(id: model.id, name: model.name);
     }
   }
 }
 
-class BelongingParams<AdditionalParams> {
+class BelongingParams {
   const BelongingParams({
     required this.id,
     required this.type,
     required this.name,
-    required this.memberIds,
-    required this.additionalParams,
   });
 
   final String id;
   final BelongingType type;
   final String name;
-  final List<String> memberIds;
-  final AdditionalParams additionalParams;
 }

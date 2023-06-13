@@ -45,24 +45,22 @@ void main() {
   final tUserState = UserState.values.byName(tUserStateString);
   final tUserStateModel = UserStateModel.values.byName(tUserStateString);
   const tIsVerified = false;
-  final tBelongingParams = BelongingParams<NoAdditionalParam>(
-      id: 'testId',
-      type: BelongingType.band,
-      name: 'testBelongingName',
-      memberIds: ['testMemberIds'],
-      additionalParams: NoAdditionalParam());
+  const tBelongingParams = BelongingParams(
+    id: 'testId',
+    type: BelongingType.band,
+    name: 'testBelongingName',
+  );
   final tBelongingsParams = [tBelongingParams];
   final tBelonging = Band(
-      id: tBelongingParams.id,
-      name: tBelongingParams.name,
-      memberIds: tBelongingParams.memberIds);
+    id: tBelongingParams.id,
+    name: tBelongingParams.name,
+  );
   final tBelongings = [tBelonging];
   final tBelongingModel = BelongingModel(
-      id: tBelongingParams.id,
-      type: tBelongingParams.type,
-      name: tBelongingParams.name,
-      memberIds: tBelongingParams.memberIds,
-      additionalParams: tBelongingParams.additionalParams);
+    id: tBelongingParams.id,
+    type: tBelongingParams.type,
+    name: tBelongingParams.name,
+  );
   final tBelongingModels = [tBelongingModel];
   final tParams = Params(
     memberId: tMemberId,

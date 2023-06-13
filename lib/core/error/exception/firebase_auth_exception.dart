@@ -1,5 +1,5 @@
-class FirebaseAuthException implements Exception {
-  FirebaseAuthException(this.code);
+class FireAuthException implements Exception {
+  FireAuthException(this.code);
 
   final String code;
 

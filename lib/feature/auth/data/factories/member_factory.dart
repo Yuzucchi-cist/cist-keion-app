@@ -93,7 +93,7 @@ class Params {
   final String instituteGrade;
   final String userState;
   final bool isVerified;
-  final List<BelongingParams<dynamic>> belongingParams;
+  final List<BelongingParams> belongingParams;
 }
 
 class Models {

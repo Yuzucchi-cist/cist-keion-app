@@ -58,7 +58,7 @@ void main() {
         () async {
       // arrange
       when(mockAuthDataSource.createUser(any, any))
-          .thenThrow(FirebaseAuthException('invalid-email'));
+          .thenThrow(FireAuthException('invalid-email'));
       when(mockStoreDataSource.getMemberByStudentNumber(any))
           .thenThrow(FirestoreException('no-member'));
       // act
