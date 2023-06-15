@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../notifier/auth_notifier.dart';
+import '../widgets/showErrorDialog.dart';
 import '../widgets/user_data_form_field.dart';
 
 @RoutePage()
@@ -49,8 +50,11 @@ class RegisterPage extends HookConsumerWidget {
                   ref
                       .read(authProvider.notifier)
                       .register(studentNumber, password)
-                      .then((value) =>
-                          context.router.push(const ConfirmEmailVerifyRoute()));
+                      .onError((error, _) => showErrorDialog(
+                            context: context,
+                            titleText: 'ERROR',
+                            contentText: error.toString(),
+                          ));
                 }
               },
             ),

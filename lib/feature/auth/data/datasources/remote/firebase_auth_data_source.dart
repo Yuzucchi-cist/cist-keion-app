@@ -18,7 +18,7 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   @override
   Future<void> createUser(String studentNumber, String password) async {
     try {
-      auth.createUserWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
           email: studentNumber + emailDomainOfInstitute, password: password);
     } on FirebaseAuthException catch (e) {
       throw FireAuthException(e.code);

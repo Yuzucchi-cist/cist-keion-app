@@ -25,8 +25,8 @@ class AuthRepositoryImpl implements AuthRepository {
       String studentNumber, String password) async {
     if (await networkInfo.isConnected) {
       try {
-        storeDataSource.getMemberByStudentNumber(studentNumber);
-        authDataSource.createUser(studentNumber, password);
+        await storeDataSource.getMemberByStudentNumber(studentNumber);
+        await authDataSource.createUser(studentNumber, password);
         return const Right(unit);
       } on FireAuthException catch (e) {
         return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
@@ -42,7 +42,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, Unit>> sendEmailVerify(String studentNumber) async {
     if (await networkInfo.isConnected) {
       try {
-        authDataSource.sendEmailVerify(studentNumber);
+        await authDataSource.sendEmailVerify(studentNumber);
         return const Right(unit);
       } on FireAuthException catch (e) {
         return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
