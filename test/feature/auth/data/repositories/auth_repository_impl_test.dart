@@ -121,4 +121,56 @@ void main() {
       });
     });
   });
+
+  group('sendEmailVerify', () {
+    test('should check online', () async {
+      // arrange
+      when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => true);
+      when(mockAuthDataSource.sendEmailVerify(any))
+          .thenAnswer((realInvocation) async => {});
+      // act
+      await repository.sendEmailVerify(tStudentNumber);
+      // assert
+      verify(mockNetworkInfo.isConnected);
+    });
+
+    group('device is online', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => true));
+      test('should call data source to send email verify', () async {
+        // arrange
+        when(mockAuthDataSource.sendEmailVerify(any))
+            .thenAnswer((realInvocation) async => {});
+        // act
+        final result = await repository.sendEmailVerify(tStudentNumber);
+        // assert
+        verify(mockAuthDataSource.sendEmailVerify(tStudentNumber));
+        expect(result, const Right(unit));
+      });
+
+      test('should return auth failure when sending email failed', () async {
+        // arrange
+        when(mockAuthDataSource.sendEmailVerify(tStudentNumber))
+            .thenThrow(FireAuthException('invalid-email'));
+        // act
+        final result = await repository.sendEmailVerify(tStudentNumber);
+        // assert
+        expect(result, Left(AuthFailure(AuthFailureState.invalidEmail)));
+      });
+    });
+
+    group('device is offline', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => false));
+
+      test('should return server failure', () async {
+        // act
+        final result = await repository.sendEmailVerify(tStudentNumber);
+        // assert
+        verifyNever(mockAuthDataSource.sendEmailVerify(tStudentNumber));
+        expect(result, Left(ServerFailure()));
+      });
+    });
+  });
 }

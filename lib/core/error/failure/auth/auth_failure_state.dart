@@ -4,5 +4,6 @@ enum AuthFailureState {
   invalidEmail,
   noMemberExists,
   userNotFound,
+  userNotLogin,
   wrongPassword,
 }

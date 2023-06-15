@@ -37,4 +37,18 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> sendEmailVerify(String studentNumber) async {
+    if (await networkInfo.isConnected) {
+      try {
+        authDataSource.sendEmailVerify(studentNumber);
+        return const Right(unit);
+      } on FireAuthException catch (e) {
+        return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
+      }
+    } else {
+      return Left(ServerFailure());
+    }
+  }
 }

@@ -25,10 +25,24 @@ void main() {
     // arrange
     when(mockAuthRepository.registerMember(any, any))
         .thenAnswer((_) async => const Right(unit));
+    when(mockAuthRepository.sendEmailVerify(any))
+        .thenAnswer((realInvocation) async => const Right(unit));
     // act
     final result = await usecase(tParams);
     // assert
     verify(mockAuthRepository.registerMember(tStudentNumber, tPassword));
     expect(result, const Right(unit));
+  });
+
+  test('should call the sending email verify', () async {
+    // arrange
+    when(mockAuthRepository.sendEmailVerify(any))
+        .thenAnswer((realInvocation) async => const Right(unit));
+    when(mockAuthRepository.registerMember(any, any))
+        .thenAnswer((_) async => const Right(unit));
+    // act
+    await usecase(tParams);
+    // assert
+    verify(mockAuthRepository.sendEmailVerify(tStudentNumber));
   });
 }
