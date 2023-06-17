@@ -10,6 +10,7 @@ import '../feature/auth/data/factories/institute_grade_factory.dart';
 import '../feature/auth/data/factories/member_factory.dart';
 import '../feature/auth/data/factories/user_state_factory.dart';
 import '../feature/auth/data/repositories/auth_repository_impl.dart';
+import '../feature/auth/domain/usecases/login.dart';
 import '../feature/auth/domain/usecases/register_member.dart';
 import 'network/network_info.dart';
 
@@ -46,3 +47,5 @@ final authRepositoryProvider = Provider(
 
 final registerMemberProvider = Provider(
     (ref) => RegisterMember(authRepository: ref.watch(authRepositoryProvider)));
+final loginProvider =
+    Provider((ref) => Login(authRepository: ref.watch(authRepositoryProvider)));

@@ -19,7 +19,8 @@ void main() {
 
   const tStudentNumber = 'b2202260';
   const tPassword = 'Cist1234';
-  final tParams = Params(studentNumber: tStudentNumber, password: tPassword);
+  final tParams =
+      RegisterParams(studentNumber: tStudentNumber, password: tPassword);
 
   test('should return unit(void) from repository', () async {
     // arrange

@@ -22,7 +22,8 @@ void main() {
 
   const tStudentNumber = 'b2202260';
   const tPassword = 'Cist1234';
-  final tParams = Params(studentNumber: tStudentNumber, password: tPassword);
+  final tParams =
+      LoginParams(studentNumber: tStudentNumber, password: tPassword);
 
   const tMember = Member(
     memberId: 'tId',

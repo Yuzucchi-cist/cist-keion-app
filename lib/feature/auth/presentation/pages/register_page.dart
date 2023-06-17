@@ -50,6 +50,7 @@ class RegisterPage extends HookConsumerWidget {
                   ref
                       .read(authProvider.notifier)
                       .register(studentNumber, password)
+                      .then((_) => context.router.push(LoginRoute()))
                       .onError((error, _) => showErrorDialog(
                             context: context,
                             titleText: 'ERROR',
