@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../../core/factories/data_factory.dart';
 import '../../domain/entities/member.dart';
 import '../models/firebase_auth/firebase_auth_user_model.dart';
@@ -96,9 +98,12 @@ class Params {
   final List<BelongingParams> belongingParams;
 }
 
-class Models {
-  Models({required this.authUserModel, required this.storeUserModel});
+class Models extends Equatable {
+  const Models({required this.authUserModel, required this.storeUserModel});
 
   final FirebaseAuthUserModel authUserModel;
   final FirestoreUserModel storeUserModel;
+
+  @override
+  List<Object?> get props => [authUserModel, storeUserModel];
 }

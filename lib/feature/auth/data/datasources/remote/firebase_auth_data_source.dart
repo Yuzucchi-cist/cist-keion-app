@@ -7,6 +7,7 @@ const String errorCodeUserNotLoggedIn = 'user-not-logged-in';
 
 abstract class FirebaseAuthDataSource {
   Future<void> createUser(String studentNumber, String password);
+  Future<FirebaseAuthUserModel> login(String studentNumber, String password);
   Future<void> sendEmailVerify(String studentNumber);
 }
 
@@ -23,6 +24,12 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
     } on FirebaseAuthException catch (e) {
       throw FireAuthException(e.code);
     }
+  }
+
+  @override
+  Future<FirebaseAuthUserModel> login(String studentNumber, String password) {
+    // TODO(yuzucchi): implement login
+    throw UnimplementedError();
   }
 
   @override

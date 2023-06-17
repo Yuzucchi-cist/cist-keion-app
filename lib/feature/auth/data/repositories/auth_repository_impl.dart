@@ -10,16 +10,20 @@ import '../../domain/entities/member.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/remote/firebase_auth_data_source.dart';
 import '../datasources/remote/firestore_data_source.dart';
+import '../factories/member_factory.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  AuthRepositoryImpl(
-      {required this.networkInfo,
-      required this.authDataSource,
-      required this.storeDataSource});
+  AuthRepositoryImpl({
+    required this.networkInfo,
+    required this.authDataSource,
+    required this.storeDataSource,
+    required this.memberFactory,
+  });
 
   final NetworkInfo networkInfo;
   final FirebaseAuthDataSource authDataSource;
   final FirestoreDataSource storeDataSource;
+  final MemberFactory memberFactory;
 
   @override
   Future<Either<Failure, Unit>> registerMember(
@@ -54,8 +58,24 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, Member>> login(String studentNumber, String password) {
-    // TODO(yuzucchi): implement login
-    throw UnimplementedError();
+  Future<Either<Failure, Member>> login(
+      String studentNumber, String password) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final authUserModel =
+            await authDataSource.login(studentNumber, password);
+        final storeUserModel =
+            await storeDataSource.getMemberByStudentNumber(studentNumber);
+        final member = memberFactory.createFromModel(Models(
+            authUserModel: authUserModel, storeUserModel: storeUserModel));
+        return Right(member);
+      } on FireAuthException catch (e) {
+        return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
+      } on FirestoreException catch (e) {
+        return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
+      }
+    } else {
+      return Left(ServerFailure());
+    }
   }
 }
