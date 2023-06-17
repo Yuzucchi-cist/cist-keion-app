@@ -6,6 +6,7 @@ import '../../../../core/error/failure/auth/auth_failure.dart';
 import '../../../../core/error/failure/failure.dart';
 import '../../../../core/error/failure/server/server_failure.dart';
 import '../../../../core/network/network_info.dart';
+import '../../domain/entities/member.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/remote/firebase_auth_data_source.dart';
 import '../datasources/remote/firestore_data_source.dart';
@@ -50,5 +51,11 @@ class AuthRepositoryImpl implements AuthRepository {
     } else {
       return Left(ServerFailure());
     }
+  }
+
+  @override
+  Future<Either<Failure, Member>> login(String studentNumber, String password) {
+    // TODO(yuzucchi): implement login
+    throw UnimplementedError();
   }
 }
