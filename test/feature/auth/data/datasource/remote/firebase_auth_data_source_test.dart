@@ -20,15 +20,19 @@ void main() {
     dataSource = FirebaseAuthDataSourceImpl(auth: mockFirebaseAuth);
   });
 
-  when(mockUserCredential.user).thenAnswer((_) => mockUser);
-  when(mockUser.emailVerified).thenAnswer((_) => false);
-
   const tStudentNumber = 'b2202260';
   const tEmail = tStudentNumber + emailDomainOfInstitute;
   const tPassword = 'Cist1234';
+  const tUserModel = FirebaseAuthUserModel(
+      email: tEmail, studentNumber: tStudentNumber, isEmailVerify: false);
+
   const testErrorCode = 'testErrorCode';
 
-  group('signUp', () {
+  when(mockUserCredential.user).thenAnswer((_) => mockUser);
+  when(mockUser.email).thenAnswer((realInvocation) => tEmail);
+  when(mockUser.emailVerified).thenAnswer((_) => false);
+
+  group('createUser', () {
     test('should call createUserWithEmailAndPassword to create user', () async {
       // arrange
       when(mockFirebaseAuth.createUserWithEmailAndPassword(
@@ -50,6 +54,36 @@ void main() {
         // act
         await dataSource.createUser(tStudentNumber, tPassword);
         // assert
+      } on FireAuthException catch (e) {
+        expect(e.code, testErrorCode);
+      } catch (e) {
+        fail('Not-expect object was thrown');
+      }
+    });
+  });
+
+  group('login', () {
+    test('should call signInWithEmailAndPassword to login', () async {
+      // arrange
+      when(mockFirebaseAuth.signInWithEmailAndPassword(
+              email: anyNamed('email'), password: anyNamed('password')))
+          .thenAnswer((realInvocation) async => mockUserCredential);
+      // act
+      final result = await dataSource.login(tStudentNumber, tPassword);
+      // assert
+      verify(mockFirebaseAuth.signInWithEmailAndPassword(
+          email: tEmail, password: tPassword));
+      expect(result, tUserModel);
+    });
+
+    test('should throw AuthException when login is failed', () async {
+      // arrange
+      when(mockFirebaseAuth.signInWithEmailAndPassword(
+              email: anyNamed('email'), password: anyNamed('password')))
+          .thenThrow(FirebaseAuthException(code: testErrorCode));
+      try {
+        // act
+        await dataSource.login(tStudentNumber, tPassword);
       } on FireAuthException catch (e) {
         expect(e.code, testErrorCode);
       } catch (e) {

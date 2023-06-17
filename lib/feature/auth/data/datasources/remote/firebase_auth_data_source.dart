@@ -27,9 +27,17 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   }
 
   @override
-  Future<FirebaseAuthUserModel> login(String studentNumber, String password) {
-    // TODO(yuzucchi): implement login
-    throw UnimplementedError();
+  Future<FirebaseAuthUserModel> login(
+      String studentNumber, String password) async {
+    try {
+      final userCredential = await auth.signInWithEmailAndPassword(
+          email: studentNumber + emailDomainOfInstitute, password: password);
+      final user = userCredential.user!;
+      return FirebaseAuthUserModel.fromEmail(
+          email: user.email!, isEmailVerify: user.emailVerified);
+    } on FirebaseAuthException catch (e) {
+      throw FireAuthException(e.code);
+    }
   }
 
   @override
