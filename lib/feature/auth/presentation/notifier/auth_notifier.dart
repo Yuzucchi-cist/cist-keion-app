@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../core/error/failure/auth/auth_failure.dart';
 import '../../../../core/error/failure/server/server_failure.dart';
 import '../../../../core/provider_di.dart';
+import '../../domain/entities/member.dart';
 import '../../domain/usecases/login.dart';
 import '../../domain/usecases/register_member.dart';
 import '../states/auth_state.dart';
@@ -35,16 +36,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
   }
 
-  Future<void> login(String studentNumber, String password) async {
+  Future<Member> login(String studentNumber, String password) async {
     final params =
         LoginParams(studentNumber: studentNumber, password: password);
     final result = await loginUsecase(params);
-    result.fold(
+    return result.fold(
       (failure) {
         if (failure is AuthFailure) {
           throw Exception(failure.state.toString());
         } else if (failure is ServerFailure) {
           throw Exception('ネットワークに接続してください。');
+        } else {
+          throw Exception('unknown error occurred');
         }
       },
       (member) {
@@ -53,6 +56,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         } else {
           state = AuthState.unVerified(member);
         }
+        return member;
       },
     );
   }

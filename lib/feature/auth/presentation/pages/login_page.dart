@@ -48,13 +48,20 @@ class LoginPage extends HookConsumerWidget {
                       ref
                           .read(authProvider.notifier)
                           .login(studentNumber, password)
-                          .then((_) => context.router
-                              .push(const RootRoute(children: [HomeRoute()])))
-                          .onError((error, _) => showErrorDialog(
-                                context: context,
-                                titleText: 'ERROR',
-                                contentText: error.toString(),
-                              ));
+                          .then((member) {
+                        if (member.isVerified) {
+                          context.router
+                              .push(const RootRoute(children: [HomeRoute()]));
+                        } else {
+                          context.router.push(const ConfirmEmailVerifyRoute());
+                        }
+                      }).onError((error, _) {
+                        showErrorDialog(
+                          context: context,
+                          titleText: 'ERROR',
+                          contentText: error.toString(),
+                        );
+                      });
                     }
                   },
                 ),
