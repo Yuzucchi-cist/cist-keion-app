@@ -29,8 +29,7 @@ class RegisterPage extends HookConsumerWidget {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.clear),
-          onPressed: () =>
-              context.navigateTo(const RootRoute(children: [HomeRoute()])),
+          onPressed: () => context.navigateTo(const HomeRoute()),
         ),
       ),
       body: Form(
@@ -50,7 +49,8 @@ class RegisterPage extends HookConsumerWidget {
                   ref
                       .read(authProvider.notifier)
                       .register(studentNumber, password)
-                      .then((_) => context.router.push(LoginRoute()))
+                      .then((_) =>
+                          context.router.push(const ConfirmEmailVerifyRoute()))
                       .onError((error, _) => showErrorDialog(
                             context: context,
                             titleText: 'ERROR',

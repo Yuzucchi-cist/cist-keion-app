@@ -70,7 +70,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
   }
 
-  Future<Member> initialize() async {
+  Future<void> initialize() async {
     final result = await initializeAuthUsecase(NoParams());
     return result.fold(
       (failure) {
@@ -88,7 +88,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
         } else {
           state = AuthState.unVerified(member);
         }
-        return member;
       },
     );
   }

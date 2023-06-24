@@ -27,8 +27,7 @@ class LoginPage extends HookConsumerWidget {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.clear),
-          onPressed: () =>
-              context.navigateTo(const RootRoute(children: [HomeRoute()])),
+          onPressed: () => context.navigateTo(const HomeRoute()),
         ),
       ),
       body: Form(
@@ -50,8 +49,8 @@ class LoginPage extends HookConsumerWidget {
                           .login(studentNumber, password)
                           .then((member) {
                         if (member.isVerified) {
-                          context.router
-                              .push(const RootRoute(children: [HomeRoute()]));
+                          context.router.push(
+                              const RootRoute(children: [AuthedHomeRoute()]));
                         } else {
                           context.router.push(const ConfirmEmailVerifyRoute());
                         }
