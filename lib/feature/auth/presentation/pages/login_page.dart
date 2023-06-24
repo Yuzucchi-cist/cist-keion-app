@@ -4,6 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../notifier/auth_notifier.dart';
+import '../widgets/showErrorDialog.dart';
 import '../widgets/user_data_form_field.dart';
 
 @RoutePage()
@@ -25,8 +27,7 @@ class LoginPage extends HookConsumerWidget {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.clear),
-          onPressed: () =>
-              context.navigateTo(const RootRoute(children: [HomeRoute()])),
+          onPressed: () => context.navigateTo(const HomeRoute()),
         ),
       ),
       body: Form(
@@ -41,8 +42,25 @@ class LoginPage extends HookConsumerWidget {
                   child: const Text('ログイン'),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      context.router
-                          .push(const RootRoute(children: [HomeRoute()]));
+                      final studentNumber = studentNumberController.text;
+                      final password = passwordController.text;
+                      ref
+                          .read(authProvider.notifier)
+                          .login(studentNumber, password)
+                          .then((member) {
+                        if (member.isVerified) {
+                          context.router.push(
+                              const RootRoute(children: [AuthedHomeRoute()]));
+                        } else {
+                          context.router.push(const ConfirmEmailVerifyRoute());
+                        }
+                      }).onError((error, _) {
+                        showErrorDialog(
+                          context: context,
+                          titleText: 'ERROR',
+                          contentText: error.toString(),
+                        );
+                      });
                     }
                   },
                 ),

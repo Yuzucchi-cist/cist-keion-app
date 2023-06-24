@@ -19,8 +19,7 @@ class ConfirmEmailVerifyPage extends ConsumerWidget {
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.clear),
-          onPressed: () =>
-              context.navigateTo(const RootRoute(children: [HomeRoute()])),
+          onPressed: () => context.navigateTo(const HomeRoute()),
         ),
       ),
       body: Column(
