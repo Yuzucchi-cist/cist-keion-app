@@ -1,3 +1,5 @@
+const String errorCodeUserNotLoggedIn = 'user-not-logged-in';
+
 class FireAuthException implements Exception {
   FireAuthException(this.code);
 

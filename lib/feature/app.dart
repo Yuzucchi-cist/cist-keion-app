@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../core/router/app_router.dart';
+import 'auth/presentation/notifier/auth_notifier.dart';
 
 class App extends HookConsumerWidget {
   App({super.key});
@@ -10,6 +11,8 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(authProvider.notifier).initialize();
+
     return MaterialApp.router(
       routerConfig: _appRouter.config(),
       theme: ThemeData(

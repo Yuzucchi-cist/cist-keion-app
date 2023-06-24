@@ -95,8 +95,7 @@ void main() {
   group('sendEmailVerify', () {
     test('should call sendEmailVerify to send email verify', () {
       // arrange
-      when(mockFirebaseAuth.currentUser)
-          .thenAnswer((realInvocation) => mockUser);
+      when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
       // act
       dataSource.sendEmailVerify(tStudentNumber);
       // assert
@@ -105,7 +104,7 @@ void main() {
 
     test('should throw Auth Exception when user has not login', () async {
       // arrange
-      when(mockFirebaseAuth.currentUser).thenAnswer((realInvocation) => null);
+      when(mockFirebaseAuth.currentUser).thenReturn(null);
       try {
         // act
         await dataSource.sendEmailVerify(tStudentNumber);
@@ -122,8 +121,7 @@ void main() {
     test('should throw AuthException when sending email verify failed',
         () async {
       // arrange
-      when(mockFirebaseAuth.currentUser)
-          .thenAnswer((realInvocation) => mockUser);
+      when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
       when(mockUser.sendEmailVerification())
           .thenThrow(FirebaseAuthException(code: testErrorCode));
       try {
@@ -132,6 +130,33 @@ void main() {
         fail('');
       } on FireAuthException catch (e) {
         expect(e.code, testErrorCode);
+      } catch (e) {
+        fail('Not-expect object was thrown');
+      }
+    });
+  });
+
+  group('getCurrentUser', () {
+    test('should return member when firebase auth is successful', () async {
+      // arrange
+      when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+      // act
+      final result = await dataSource.getCurrentUser();
+      // assert
+      verify(mockFirebaseAuth.currentUser);
+      expect(result, tUserModel);
+    });
+
+    test('should throw Auth Exception when user has not login', () async {
+      // arrange
+      when(mockFirebaseAuth.currentUser).thenReturn(null);
+      try {
+        // act
+        await dataSource.getCurrentUser();
+        fail('');
+      } on FireAuthException catch (e) {
+        // assert
+        expect(e.code, errorCodeUserNotLoggedIn);
       } catch (e) {
         fail('Not-expect object was thrown');
       }

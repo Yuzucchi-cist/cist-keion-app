@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
-import '../../../../core/utils/date_time_utils.dart';
+import '../../../auth/presentation/notifier/auth_notifier.dart';
 import '../../../reservation/presentation/notifier/reserve_table_notifier.dart';
 import '../../../reservation/presentation/widgets/reservation_table.dart';
 
@@ -13,18 +13,20 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO(yuzucchi): implement auth
-    final startDateOfWeek = getStartDateOfThisWeek();
+    final isAuthenticated = ref.watch(authProvider).isAuthenticated;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('ホーム'),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => context.router.push(const AuthRouterRoute()),
-            icon: const Icon(Icons.login),
-          ),
-        ],
+        actions: isAuthenticated
+            ? []
+            : [
+                IconButton(
+                  onPressed: () => context.router.push(const AuthRouterRoute()),
+                  icon: const Icon(Icons.login),
+                ),
+              ],
         automaticallyImplyLeading: false,
       ),
       body: Center(

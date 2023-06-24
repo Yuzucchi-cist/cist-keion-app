@@ -3,12 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../../core/error/exception/firebase_auth_exception.dart';
 import '../../models/firebase_auth/firebase_auth_user_model.dart';
 
-const String errorCodeUserNotLoggedIn = 'user-not-logged-in';
-
 abstract class FirebaseAuthDataSource {
   Future<void> createUser(String studentNumber, String password);
   Future<FirebaseAuthUserModel> login(String studentNumber, String password);
   Future<void> sendEmailVerify(String studentNumber);
+  Future<FirebaseAuthUserModel> getCurrentUser();
 }
 
 class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
@@ -46,6 +45,22 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
       final currentUser = auth.currentUser;
       if (currentUser != null) {
         currentUser.sendEmailVerification();
+      } else {
+        throw FireAuthException(errorCodeUserNotLoggedIn);
+      }
+    } on FirebaseAuthException catch (e) {
+      throw FireAuthException(e.code);
+    }
+  }
+
+  @override
+  Future<FirebaseAuthUserModel> getCurrentUser() async {
+    try {
+      final currentUser = auth.currentUser;
+      if (currentUser != null) {
+        return FirebaseAuthUserModel.fromEmail(
+            email: currentUser.email!,
+            isEmailVerify: currentUser.emailVerified);
       } else {
         throw FireAuthException(errorCodeUserNotLoggedIn);
       }

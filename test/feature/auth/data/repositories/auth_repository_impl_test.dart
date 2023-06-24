@@ -44,6 +44,20 @@ void main() {
     );
   });
 
+  void checkOnline(
+      {required void Function() arrange, required void Function() act}) {
+    test('should check online', () async {
+      // arrange
+      when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => true);
+      arrange();
+      // act
+      act();
+      // assert
+      verify(mockNetworkInfo.isConnected);
+    });
+  }
+
   const tStudentNumber = 'b2202260';
   const tPassword = 'Cist1234';
 
@@ -60,7 +74,7 @@ void main() {
       userState: UserStateModel.active,
       belongings: []);
 
-  final tModels = const Models(
+  const tModels = Models(
       authUserModel: tAuthUserModel, storeUserModel: tFirestoreUserModel);
 
   const tMember = Member(
@@ -72,19 +86,17 @@ void main() {
       isVerified: false);
 
   group('registerMember', () {
-    test('should check online', () async {
-      // arrange
-      when(mockNetworkInfo.isConnected)
-          .thenAnswer((realInvocation) async => true);
-      when(mockAuthDataSource.createUser(any, any))
-          .thenAnswer((realInvocation) async {});
-      when(mockStoreDataSource.getMemberByStudentNumber(any))
-          .thenAnswer((realInvocation) async => tFirestoreUserModel);
-      // act
-      await repository.registerMember(tStudentNumber, tPassword);
-      // assert
-      verify(mockNetworkInfo.isConnected);
-    });
+    checkOnline(
+      arrange: () {
+        when(mockAuthDataSource.createUser(any, any))
+            .thenAnswer((realInvocation) async {});
+        when(mockStoreDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+      },
+      act: () async {
+        await repository.registerMember(tStudentNumber, tPassword);
+      },
+    );
 
     group('when device is online', () {
       setUp(() => when(mockNetworkInfo.isConnected)
@@ -149,17 +161,15 @@ void main() {
   });
 
   group('sendEmailVerify', () {
-    test('should check online', () async {
-      // arrange
-      when(mockNetworkInfo.isConnected)
-          .thenAnswer((realInvocation) async => true);
-      when(mockAuthDataSource.sendEmailVerify(any))
-          .thenAnswer((realInvocation) async => {});
-      // act
-      await repository.sendEmailVerify(tStudentNumber);
-      // assert
-      verify(mockNetworkInfo.isConnected);
-    });
+    checkOnline(
+      arrange: () {
+        when(mockAuthDataSource.sendEmailVerify(any))
+            .thenAnswer((realInvocation) async => {});
+      },
+      act: () async {
+        await repository.sendEmailVerify(tStudentNumber);
+      },
+    );
 
     group('device is online', () {
       setUp(() => when(mockNetworkInfo.isConnected)
@@ -201,20 +211,18 @@ void main() {
   });
 
   group('login', () {
-    test('should check online', () async {
-      // arrange
-      when(mockNetworkInfo.isConnected)
-          .thenAnswer((realInvocation) async => true);
-      when(mockAuthDataSource.login(any, any))
-          .thenAnswer((realInvocation) async => tAuthUserModel);
-      when(mockStoreDataSource.getMemberByStudentNumber(any))
-          .thenAnswer((realInvocation) async => tFirestoreUserModel);
-      when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
-      // act
-      await repository.login(tStudentNumber, tPassword);
-      // assert
-      verify(mockNetworkInfo.isConnected);
-    });
+    checkOnline(
+      arrange: () {
+        when(mockAuthDataSource.login(any, any))
+            .thenAnswer((realInvocation) async => tAuthUserModel);
+        when(mockStoreDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
+      },
+      act: () async {
+        await repository.login(tStudentNumber, tPassword);
+      },
+    );
 
     group('device is online', () {
       setUp(() => when(mockNetworkInfo.isConnected)
@@ -282,6 +290,79 @@ void main() {
       test('should return the server failure', () async {
         // act
         final result = await repository.login(tStudentNumber, tPassword);
+        // assert
+        expect(result, Left(ServerFailure()));
+      });
+    });
+  });
+
+  group('getCurrentMember', () {
+    checkOnline(
+      arrange: () {
+        when(mockAuthDataSource.getCurrentUser())
+            .thenAnswer((realInvocation) async => tAuthUserModel);
+        when(mockStoreDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
+      },
+      act: () async {
+        await repository.getCurrentMember();
+      },
+    );
+
+    group('device is online', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => true));
+
+      test('should return member when data sources are successful', () async {
+        // arrange
+        when(mockAuthDataSource.getCurrentUser())
+            .thenAnswer((realInvocation) async => tAuthUserModel);
+        when(mockStoreDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
+        // act
+        final result = await repository.getCurrentMember();
+        // assert
+        verify(mockAuthDataSource.getCurrentUser());
+        verify(mockStoreDataSource.getMemberByStudentNumber(tStudentNumber));
+        verify(mockMemberFactory.createFromModel(tModels));
+        expect(result, const Right(tMember));
+      });
+
+      test('should return auth failure when auth data source failed', () async {
+        // arrange
+        when(mockAuthDataSource.getCurrentUser())
+            .thenThrow(FireAuthException('invalid-email'));
+        // act
+        final result = await repository.getCurrentMember();
+        // assert
+        verifyNever(mockStoreDataSource.getMemberByStudentNumber(any));
+        verifyNever(mockMemberFactory.createFromModel(any));
+        expect(result, Left(AuthFailure(AuthFailureState.invalidEmail)));
+      });
+
+      test(
+          'should return the auth failure when member does not exist in data base',
+          () async {
+        // arrange
+        when(mockAuthDataSource.getCurrentUser())
+            .thenAnswer((realInvocation) async => tAuthUserModel);
+        when(mockStoreDataSource.getMemberByStudentNumber(any))
+            .thenThrow(FirestoreException('no-member'));
+        // act
+        final result = await repository.getCurrentMember();
+        // assert
+        expect(result, Left(AuthFailure(AuthFailureState.noMemberExists)));
+      });
+    });
+
+    group('when device is offline', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => false));
+      test('should return the server failure', () async {
+        // act
+        final result = await repository.getCurrentMember();
         // assert
         expect(result, Left(ServerFailure()));
       });

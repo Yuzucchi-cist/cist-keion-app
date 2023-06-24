@@ -11,6 +11,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../datasources/remote/firebase_auth_data_source.dart';
 import '../datasources/remote/firestore_data_source.dart';
 import '../factories/member_factory.dart';
+import '../models/firebase_auth/firebase_auth_user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
@@ -60,12 +61,25 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, Member>> login(
       String studentNumber, String password) async {
+    return getMember(
+        getAuthUserModel: () async =>
+            authDataSource.login(studentNumber, password));
+  }
+
+  @override
+  Future<Either<Failure, Member>> getCurrentMember() async {
+    return getMember(
+        getAuthUserModel: () async => authDataSource.getCurrentUser());
+  }
+
+  Future<Either<Failure, Member>> getMember(
+      {required Future<FirebaseAuthUserModel> Function()
+          getAuthUserModel}) async {
     if (await networkInfo.isConnected) {
       try {
-        final authUserModel =
-            await authDataSource.login(studentNumber, password);
-        final storeUserModel =
-            await storeDataSource.getMemberByStudentNumber(studentNumber);
+        final authUserModel = await getAuthUserModel();
+        final storeUserModel = await storeDataSource
+            .getMemberByStudentNumber(authUserModel.studentNumber);
         final member = memberFactory.createFromModel(Models(
             authUserModel: authUserModel, storeUserModel: storeUserModel));
         return Right(member);
