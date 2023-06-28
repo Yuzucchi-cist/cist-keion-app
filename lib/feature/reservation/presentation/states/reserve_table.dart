@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'institute_time.dart';
+import '../../domain/values/institute_time.dart';
 import 'reserve_table_cell.dart';
 import 'week_day.dart';
 

@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/utils/date_time_utils.dart';
-import '../states/institute_time.dart';
+import '../../domain/values/institute_time.dart';
 import '../states/reserve_table.dart';
 import '../states/reserve_table_cell.dart';
 import '../states/week_day.dart';
