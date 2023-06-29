@@ -2,6 +2,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../core/utils/date_time_utils.dart';
+import '../../domain/entities/reservation.dart';
 import '../../domain/values/institute_time.dart';
 import 'reserve_table_cell.dart';
 import 'week_day.dart';
@@ -18,6 +20,24 @@ class ReserveTable with _$ReserveTable {
     required DateTime startDateOfWeek,
   }) = _ReserveTable;
 
+  factory ReserveTable.init() => ReserveTable(
+      table: _initialMap, startDateOfWeek: getStartDateOfThisWeek());
+
+  factory ReserveTable.fromReservationList(
+      List<Reservation> reservationList, DateTime startDateOfWeek,
+      {ReserveTable? oldTable}) {
+    final newTable = {...oldTable?.table ?? _initialMap};
+
+    for (final reservation in reservationList) {
+      newTable.update(
+          (weekDay: WeekDay.fromDate(reservation.date), time: reservation.time),
+          (value) =>
+              value.copyWith(title: reservation.title, id: reservation.id));
+    }
+    return oldTable?.copyWith(table: newTable) ??
+        ReserveTable(table: newTable, startDateOfWeek: startDateOfWeek);
+  }
+
   Map<InstituteTime, Map<WeekDay, ReserveTableCell>> get tableMap {
     final returnValue = <InstituteTime, Map<WeekDay, ReserveTableCell>>{};
     for (final e in table.entries) {
@@ -33,5 +53,14 @@ class ReserveTable with _$ReserveTable {
   }
 
   DateTime get endDateOfWeek =>
-      startDateOfWeek.add(const Duration(days: DateTime.daysPerWeek));
+      startDateOfWeek.add(const Duration(days: DateTime.daysPerWeek - 1));
 }
+
+final _initialMap = Map.fromIterables(
+    WeekDay.values
+        .map((day) =>
+            InstituteTime.values.map((time) => (weekDay: day, time: time)))
+        .expand((values) => values)
+        .toList(),
+    List.filled(WeekDay.values.length * InstituteTime.values.length,
+        const ReserveTableCell(title: '')));

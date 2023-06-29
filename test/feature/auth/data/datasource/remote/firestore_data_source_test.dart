@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:cist_keion_app/core/error/exception/firestore_exception.dart';
 import 'package:cist_keion_app/feature/auth/data/datasources/remote/firestore_data_source.dart';
 import 'package:cist_keion_app/feature/auth/data/models/firestore/belonging_model.dart';
 import 'package:cist_keion_app/feature/auth/data/models/firestore/firestore_user_model.dart';
 import 'package:cist_keion_app/feature/auth/data/models/firestore/institute_grade_model.dart';
 import 'package:cist_keion_app/feature/auth/data/models/firestore/user_state_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -21,20 +18,7 @@ void main() {
     dataSource = FirestoreDataSourceImpl(firestore: mockFirestore);
   });
 
-  final tFirestoreJsonData =
-      (json.decode(fixtureReader(firestoreUserDataPath)) as List<dynamic>)
-          .map((data) {
-    final id = (data as Map<String, dynamic>)['id'];
-    final value = (data['value'] as Map<String, dynamic>).map<String, dynamic>(
-      (key, value) => MapEntry(
-        key,
-        (key == 'date' || key == 'created_at' || key == 'updated_at')
-            ? Timestamp.fromDate(DateTime.parse(value as String))
-            : value,
-      ),
-    );
-    return {'id': id, 'value': value};
-  }).toList();
+  final tFirestoreJsonData = firestoreDataReader(firestoreUserDataPath, []);
 
   void setFirestoreToData() {
     for (final data in tFirestoreJsonData) {

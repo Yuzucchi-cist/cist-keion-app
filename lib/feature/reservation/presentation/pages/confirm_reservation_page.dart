@@ -14,14 +14,6 @@ class ConfirmReservationPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO(yuzucchi): 認証を追加
-    final reservation = InputtedReservation(
-      startDateOfWeek: DateTime(2023, 06, 04),
-      dateAndTime: [
-        ReservationDateAndTime(date: DateTime(2023, 06, 10), time: '1講')
-      ],
-      title: 'タイトル',
-      reserveMemberName: 'ゆず',
-    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('確認'),
@@ -31,8 +23,8 @@ class ConfirmReservationPage extends HookConsumerWidget {
         child: Column(
           children: [
             Expanded(
-              child: reservationTable(context,
-                  reserveTable: ref.watch(reserveTableForReserveProvider)),
+              child: reservationTable(context, ref,
+                  reserveTableProvider: reserveTableForReserveProvider),
             ),
             TextButton(
               child: Text(

@@ -16,7 +16,6 @@ class MakeReservationDetailPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO(yuzucchi): 認証を追加
-    final dateAndTimes = [Params(DateTime.now(), '1講')];
 
     final reserveTitleController = useState(TextEditingController());
 

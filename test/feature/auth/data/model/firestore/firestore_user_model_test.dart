@@ -1,29 +1,13 @@
-import 'dart:convert';
-
 import 'package:cist_keion_app/feature/auth/data/models/firestore/belonging_model.dart';
 import 'package:cist_keion_app/feature/auth/data/models/firestore/firestore_user_model.dart';
 import 'package:cist_keion_app/feature/auth/data/models/firestore/institute_grade_model.dart';
 import 'package:cist_keion_app/feature/auth/data/models/firestore/user_state_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../../fixtures/fixture_reader.dart';
 
 void main() {
-  final tFirestoreJsonData =
-      (json.decode(fixtureReader(firestoreUserDataPath)) as List<dynamic>)
-          .map((data) {
-    final id = (data as Map<String, dynamic>)['id'];
-    final value = (data['value'] as Map<String, dynamic>).map<String, dynamic>(
-      (key, value) => MapEntry(
-        key,
-        (key == 'date' || key == 'created_at' || key == 'updated_at')
-            ? Timestamp.fromDate(DateTime.parse(value as String))
-            : value,
-      ),
-    );
-    return {'id': id, 'value': value};
-  }).toList();
+  final tFirestoreJsonData = firestoreDataReader(firestoreUserDataPath, []);
 
   final tId = tFirestoreJsonData.first['id'] as String;
   final tFirestoreDatum = (tFirestoreJsonData.first['value']

@@ -6,5 +6,6 @@ part 'generated/reserve_table_cell.freezed.dart';
 class ReserveTableCell with _$ReserveTableCell {
   const factory ReserveTableCell(
       {required String title,
+      String? id,
       @Default(false) bool isTapped}) = _ReserveTableCell;
 }
