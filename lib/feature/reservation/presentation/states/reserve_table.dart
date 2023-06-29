@@ -20,8 +20,9 @@ class ReserveTable with _$ReserveTable {
     required DateTime startDateOfWeek,
   }) = _ReserveTable;
 
-  factory ReserveTable.init() => ReserveTable(
-      table: _initialMap, startDateOfWeek: getStartDateOfThisWeek());
+  factory ReserveTable.init([DateTime? startDateOfWeek]) => ReserveTable(
+      table: _initialMap,
+      startDateOfWeek: startDateOfWeek ?? getStartDateOfThisWeek());
 
   factory ReserveTable.fromReservationList(
       List<Reservation> reservationList, DateTime startDateOfWeek,

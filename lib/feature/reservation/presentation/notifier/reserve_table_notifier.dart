@@ -6,34 +6,39 @@ import '../../../../core/error/failure/server/server_failure.dart';
 import '../../../../core/provider_di.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../../../core/utils/date_time_utils.dart';
-import '../../domain/usecases/get_reservations_this_week.dart';
+import '../../domain/entities/reservation.dart';
 import '../../domain/values/institute_time.dart';
 import '../states/reserve_table.dart';
 import '../states/week_day.dart';
 
-final reserveTableForDisplayProvider =
+final reserveTableInThisWeekProvider =
     StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
   final notifier = ReserveTableNotifier(
-      getReservationsThisWeek: ref.watch(getReservationsThisWeekProvider));
+      getReservations: ref.watch(getReservationsThisWeekProvider),
+      startDateOfWeek: getStartDateOfThisWeek());
   return notifier;
 });
 
-final reserveTableForReserveProvider =
+final reserveTableInNextWeekProvider =
     StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
   final notifier = ReserveTableNotifier(
-      getReservationsThisWeek: ref.watch(getReservationsThisWeekProvider));
+      getReservations: ref.watch(getReservationsNextWeekProvider),
+      startDateOfWeek: getStartDateOfThisWeek()
+          .add(const Duration(days: DateTime.daysPerWeek)));
   return notifier;
 });
 
 class ReserveTableNotifier extends StateNotifier<ReserveTable> {
   ReserveTableNotifier({
-    required this.getReservationsThisWeek,
-  }) : super(ReserveTable.init());
+    required this.getReservations,
+    required this.startDateOfWeek,
+  }) : super(ReserveTable.init(startDateOfWeek));
 
-  final GetReservationsThisWeek getReservationsThisWeek;
+  final UseCase<List<Reservation>, NoParams> getReservations;
+  final DateTime startDateOfWeek;
 
   Future<void> update() async {
-    final result = await getReservationsThisWeek(NoParams());
+    final result = await getReservations(NoParams());
     result.fold((l) {
       if (l is ServerFailure) {
         throw Exception(l);
@@ -47,8 +52,7 @@ class ReserveTableNotifier extends StateNotifier<ReserveTable> {
         }
       }
     }, (reservations) {
-      state = ReserveTable.fromReservationList(
-          reservations, getStartDateOfThisWeek(),
+      state = ReserveTable.fromReservationList(reservations, startDateOfWeek,
           oldTable: state);
     });
   }

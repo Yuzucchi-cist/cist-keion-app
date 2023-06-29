@@ -19,7 +19,9 @@ class MakeReservationDetailPage extends HookConsumerWidget {
 
     final reserveTitleController = useState(TextEditingController());
 
-    final reserveTable = ref.watch(reserveTableForReserveProvider);
+    final reserveTable = ref.watch(isAdditionalReservation
+        ? reserveTableInThisWeekProvider
+        : reserveTableInNextWeekProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,8 +53,8 @@ class MakeReservationDetailPage extends HookConsumerWidget {
             ),
             ElevatedButton(
               child: const Text('予約確認'),
-              onPressed: () =>
-                  context.router.push(const ConfirmReservationRoute()),
+              onPressed: () => context.router.push(ConfirmReservationRoute(
+                  isAdditionalReservation: isAdditionalReservation)),
             ),
           ],
         ),

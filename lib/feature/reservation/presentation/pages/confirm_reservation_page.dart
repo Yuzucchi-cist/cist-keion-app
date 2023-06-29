@@ -9,8 +9,10 @@ import '../widgets/show_confirm_dialog.dart';
 
 @RoutePage()
 class ConfirmReservationPage extends HookConsumerWidget {
-  const ConfirmReservationPage({super.key});
+  const ConfirmReservationPage(
+      {super.key, required this.isAdditionalReservation});
 
+  final bool isAdditionalReservation;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO(yuzucchi): 認証を追加
@@ -24,7 +26,9 @@ class ConfirmReservationPage extends HookConsumerWidget {
           children: [
             Expanded(
               child: reservationTable(context, ref,
-                  reserveTableProvider: reserveTableForReserveProvider),
+                  reserveTableProvider: isAdditionalReservation
+                      ? reserveTableInThisWeekProvider
+                      : reserveTableInNextWeekProvider),
             ),
             TextButton(
               child: Text(

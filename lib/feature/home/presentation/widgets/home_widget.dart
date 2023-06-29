@@ -26,7 +26,7 @@ Widget homeWidget(
     ),
     body: Center(
       child: reservationTable(context, ref,
-          reserveTableProvider: reserveTableForDisplayProvider),
+          reserveTableProvider: reserveTableInThisWeekProvider),
     ),
   );
 }

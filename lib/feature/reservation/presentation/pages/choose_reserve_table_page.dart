@@ -34,7 +34,8 @@ class ChooseReserveTablePage extends HookConsumerWidget {
               Tab(text: '追加予約'),
             ],
             onTap: (_) {
-              ref.read(reserveTableForReserveProvider.notifier).resetIsTapped();
+              ref.read(reserveTableInThisWeekProvider.notifier).resetIsTapped();
+              ref.read(reserveTableInNextWeekProvider.notifier).resetIsTapped();
             },
           ),
         ),
