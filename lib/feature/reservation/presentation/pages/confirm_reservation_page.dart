@@ -16,6 +16,11 @@ class ConfirmReservationPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO(yuzucchi): 認証を追加
+
+    final reserveTableProvider = isAdditionalReservation
+        ? reserveTableInThisWeekProvider
+        : reserveTableInNextWeekProvider;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('確認'),
@@ -26,29 +31,35 @@ class ConfirmReservationPage extends HookConsumerWidget {
           children: [
             Expanded(
               child: reservationTable(context, ref,
-                  reserveTableProvider: isAdditionalReservation
-                      ? reserveTableInThisWeekProvider
-                      : reserveTableInNextWeekProvider),
+                  reserveTableProvider: reserveTableProvider),
             ),
             TextButton(
               child: Text(
                 '予約確定',
                 style: const TextTheme().bodyLarge,
               ),
-              onPressed: () => showConfirmDialog(
-                context: context,
-                titleText: '予約完了',
-                contentText: '予約が完了しました。',
-                actions: [
-                  (context) => ElevatedButton(
-                        child: const Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          context.router.push(const ChooseReserveTableRoute());
-                        },
-                      )
-                ],
-              ),
+              onPressed: () {
+                ref.read(reserveTableProvider.notifier).add().then((value) {
+                  showConfirmDialog(
+                    context: context,
+                    titleText: '予約完了',
+                    contentText: '予約が完了しました。',
+                    actions: [
+                      (context) => ElevatedButton(
+                            child: const Text('OK'),
+                            onPressed: () {
+                              ref
+                                  .read(reserveTableProvider.notifier)
+                                  .resetIsTapped();
+                              Navigator.of(context).pop();
+                              context.router
+                                  .push(const ChooseReserveTableRoute());
+                            },
+                          )
+                    ],
+                  );
+                });
+              },
             ),
           ],
         ),

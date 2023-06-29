@@ -1,6 +1,8 @@
+import 'package:clock/clock.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../../core/error/exception/firestore_exception.dart';
+import '../../../auth/data/datasources/remote/firestore_data_source.dart';
 import '../models/reservation_model.dart';
 
 const reservationCollectionName = 'reservations';
@@ -8,6 +10,8 @@ const reservationCollectionName = 'reservations';
 abstract class ReservationRemoteDataSource {
   Future<List<ReservationModel>> getReservationsBetween(
       Timestamp startDate, Timestamp endDate);
+
+  Future<void> addReservations(List<ReservationModel> reservations);
 }
 
 class RemoteDataSourceImpl implements ReservationRemoteDataSource {
@@ -48,5 +52,39 @@ class RemoteDataSourceImpl implements ReservationRemoteDataSource {
       });
     }
     return MapEntry(key, value);
+  }
+
+  @override
+  Future<void> addReservations(List<ReservationModel> reservations) async {
+    try {
+      final batch = firestore.batch();
+
+      for (final reservation in reservations) {
+        final convertedReservationEntry = await Future.wait(
+            reservation.toFirestoreJson.entries.map((entry) async {
+          final key = entry.key;
+          final value = entry.value;
+          if (key == 'reserved_member') {
+            final documentReference = firestore
+                .collection(authCollectionName)
+                .doc((value as Map)['id'] as String);
+            return MapEntry(key,
+                {'id': documentReference, 'name': value['name'] as String});
+          } else {
+            return MapEntry(key, value);
+          }
+        }));
+        final convertedReservation = Map.fromEntries(convertedReservationEntry);
+        convertedReservation.addAll({
+          'created_at': Timestamp.fromDate(clock.now()),
+          'updated_at': Timestamp.fromDate(clock.now())
+        });
+        batch.set(firestore.collection(reservationCollectionName).doc(),
+            convertedReservation);
+      }
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw FirestoreException(e.code);
+    }
   }
 }

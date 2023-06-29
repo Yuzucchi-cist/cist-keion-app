@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/exception/firestore_exception.dart';
 import '../../../../core/error/failure/failure.dart';
 import '../../../../core/error/failure/reservation/reservation_failure.dart';
+import '../../../../core/error/failure/server/server_failure.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/reservation.dart';
 import '../../domain/repositories/reservation_repository.dart';
@@ -42,6 +43,24 @@ class ReservationRepositoryImpl implements ReservationRepository {
       return Right(reservations);
     } on FirestoreException catch (e) {
       return Left(ReservationFailure.fromCode(e.code));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> addReservations(
+      List<Reservation> reservations) async {
+    if (await networkInfo.isConnected) {
+      try {
+        remoteDataSource.addReservations(reservations
+            .map(
+                (reservation) => reservationFactory.convertToModel(reservation))
+            .toList());
+        return const Right(unit);
+      } on FirestoreException catch (e) {
+        return Left(ReservationFailure.fromCode(e.code));
+      }
+    } else {
+      return Left(ServerFailure());
     }
   }
 }

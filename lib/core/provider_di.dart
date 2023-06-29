@@ -20,6 +20,7 @@ import '../feature/reservation/data/factories/institute_time_factory.dart';
 import '../feature/reservation/data/factories/reservation_factory.dart';
 import '../feature/reservation/data/factories/reserved_member_factory.dart';
 import '../feature/reservation/data/repositories/reservation_repository_impl.dart';
+import '../feature/reservation/domain/usecases/add_reservations.dart';
 import '../feature/reservation/domain/usecases/get_reservations_next_week.dart';
 import '../feature/reservation/domain/usecases/get_reservations_this_week.dart';
 import 'network/network_info.dart';
@@ -92,3 +93,6 @@ final getReservationsThisWeekProvider = Provider((ref) =>
 final getReservationsNextWeekProvider = Provider((ref) =>
     GetReservationsNextWeek(
         reservationRepository: ref.watch(reservationRepositoryProvider)));
+
+final addReservationsProvider = Provider((ref) => AddReservations(
+    reservationRepository: ref.watch(reservationRepositoryProvider)));

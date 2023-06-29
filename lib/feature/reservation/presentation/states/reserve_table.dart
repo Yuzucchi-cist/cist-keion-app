@@ -32,8 +32,7 @@ class ReserveTable with _$ReserveTable {
     for (final reservation in reservationList) {
       newTable.update(
           (weekDay: WeekDay.fromDate(reservation.date), time: reservation.time),
-          (value) =>
-              value.copyWith(title: reservation.title, id: reservation.id));
+          (value) => ReserveTableCell.fromReservation(reservation));
     }
     return oldTable?.copyWith(table: newTable) ??
         ReserveTable(table: newTable, startDateOfWeek: startDateOfWeek);

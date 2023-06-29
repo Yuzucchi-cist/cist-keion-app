@@ -3,6 +3,7 @@
 import 'package:cist_keion_app/core/error/exception/firestore_exception.dart';
 import 'package:cist_keion_app/core/error/failure/reservation/reservation_failure.dart';
 import 'package:cist_keion_app/core/error/failure/reservation/reservation_failure_state.dart';
+import 'package:cist_keion_app/core/error/failure/server/server_failure.dart';
 import 'package:cist_keion_app/core/network/network_info.dart';
 import 'package:cist_keion_app/feature/reservation/data/datasources/reservation_local_data_source.dart';
 import 'package:cist_keion_app/feature/reservation/data/datasources/reservation_remote_data_source.dart';
@@ -71,15 +72,17 @@ void main() {
     tReservationModel,
     tReservationModel.copyWith(id: 'testId2')
   ];
-  final tReservationList = tReservationModelList.map((e) => Reservation(
-      id: e.id,
-      title: e.title,
-      date: e.date.toDate(),
-      reservedMember:
-          ReservedMember(id: e.reservedMember.id, name: e.reservedMember.name),
-      time: InstituteTime.values.byName(e.time),
-      createdAt: e.createdAt?.toDate(),
-      updatedAt: e.updatedAt?.toDate()));
+  final tReservationList = tReservationModelList
+      .map((e) => Reservation(
+          id: e.id,
+          title: e.title,
+          date: e.date.toDate(),
+          reservedMember: ReservedMember(
+              id: e.reservedMember.id, name: e.reservedMember.name),
+          time: InstituteTime.values.byName(e.time),
+          createdAt: e.createdAt?.toDate(),
+          updatedAt: e.updatedAt?.toDate()))
+      .toList();
 
   group('getReservationsBetween', () {
     final tStartDate = DateTime(2023, 06, 25);
@@ -171,6 +174,67 @@ void main() {
         // assert
         verify(mockReservationLocalDataSource.getReservations());
         expect(result, unorderedEquals(tReservationList));
+      });
+    });
+  });
+
+  group('addReservations', () {
+    checkOnline(arrange: () {
+      when(mockReservationRemoteDataSource.addReservations(any))
+          .thenAnswer((realInvocation) async {});
+      tReservationList.asMap().forEach((i, entity) =>
+          when(mockReservationFactory.convertToModel(entity))
+              .thenReturn(tReservationModelList.elementAt(i)));
+    }, act: () {
+      repository.addReservations(tReservationList);
+    });
+
+    group('device is online', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => true));
+
+      test('should call data source to add data', () async {
+        // arrange
+        when(mockReservationRemoteDataSource.addReservations(any))
+            .thenAnswer((realInvocation) async {});
+        tReservationList.asMap().forEach((i, entity) =>
+            when(mockReservationFactory.convertToModel(entity))
+                .thenReturn(tReservationModelList.elementAt(i)));
+        // act
+        final result = await repository.addReservations(tReservationList);
+        // assert
+        verify(mockReservationRemoteDataSource
+            .addReservations(tReservationModelList));
+        for (final entity in tReservationList) {
+          verify(mockReservationFactory.convertToModel(entity));
+        }
+        expect(result, const Right(unit));
+      });
+
+      test('should return firestore failure when datasource failed', () async {
+        // arrange
+        when(mockReservationRemoteDataSource.addReservations(any))
+            .thenThrow(FirestoreException('no-data'));
+        tReservationList.asMap().forEach((i, entity) =>
+            when(mockReservationFactory.convertToModel(entity))
+                .thenReturn(tReservationModelList.elementAt(i)));
+        // act
+        final result = await repository.addReservations(tReservationList);
+        // assert
+        expect(
+            result, Left(ReservationFailure(ReservationFailureState.noData)));
+      });
+    });
+
+    group('device is offline', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => false));
+
+      test('should return server failure', () async {
+        // act
+        final result = await repository.addReservations(tReservationList);
+        // assert
+        expect(result, Left(ServerFailure()));
       });
     });
   });

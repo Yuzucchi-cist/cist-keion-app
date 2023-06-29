@@ -20,7 +20,7 @@ class ReservationFactory
     return ReservationModel(
         id: entity.id,
         title: entity.title,
-        date: Timestamp.fromDate(entity.date),
+        date: Timestamp.fromDate(entity.date.copyWith(hour: 12)),
         time: instituteTimeFactory.convertToModel(entity.time),
         reservedMember:
             reservedMemberFactory.convertToModel(entity.reservedMember),
@@ -50,7 +50,7 @@ class ReservationFactory
     return Reservation(
         id: model.id,
         title: model.title,
-        date: model.date.toDate(),
+        date: model.date.toDate().copyWith(hour: 0),
         reservedMember:
             reservedMemberFactory.createFromModel(model.reservedMember),
         time: instituteTimeFactory.createFromModel(model.time),

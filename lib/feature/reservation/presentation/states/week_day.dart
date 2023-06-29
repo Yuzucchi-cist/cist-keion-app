@@ -17,8 +17,7 @@ enum WeekDay {
     return WeekDay.values[(date.weekday % DateTime.daysPerWeek)];
   }
 
-  DateTime get date {
-    final today = DateTime.now();
-    return today.subtract(Duration(days: (today.weekday % 7) - index));
+  DateTime date(DateTime startDateOfWeek) {
+    return startDateOfWeek.add(Duration(days: index));
   }
 }

@@ -50,7 +50,7 @@ void main() {
   final tModel = ReservationModel(
       id: tId,
       title: tTitle,
-      date: Timestamp.fromDate(tDate),
+      date: Timestamp.fromDate(tDate.copyWith(hour: 12)),
       time: tTime.name,
       reservedMember: tReservedMemberModel,
       createdAt: Timestamp.fromDate(tCreatedAt),
