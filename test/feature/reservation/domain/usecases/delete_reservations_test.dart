@@ -21,23 +21,21 @@ void main() {
   });
 
   const tMemberId = 'testMId1';
-  final tToday = DateTime(2023, 06, 26);
-  final tEndDateOfNextWeek = tToday
-      .subtract(Duration(days: tToday.weekday))
-      .add(const Duration(days: DateTime.daysPerWeek * 2));
+  final tToday = DateTime(2023, 06, 07);
+  final tEndDateOfNextWeek = DateTime(2023, 06, 17);
 
   final tReservationParams = [
     ReservationParams(
       reservationId: 'testRId1',
       title: 'testTitle',
-      date: DateTime(2023, 06, 26, 12),
+      date: DateTime(2023, 06, 07, 12),
       time: InstituteTime.first,
       reservedMemberId: 'testMId1',
     ),
     ReservationParams(
       reservationId: 'testRId2',
       title: 'testTitle',
-      date: DateTime(2023, 06, 27, 12),
+      date: DateTime(2023, 06, 06, 12),
       time: InstituteTime.first,
       reservedMemberId: 'testMId2',
     ),

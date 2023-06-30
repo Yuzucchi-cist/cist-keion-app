@@ -23,18 +23,15 @@ void main() {
         reservationRepository: mockReservationRepository);
   });
 
-  final tToday = DateTime(2023, 06, 26);
-  final tStartDateOfNextWeek = tToday
-      .subtract(Duration(days: tToday.weekday))
-      .add(const Duration(days: DateTime.daysPerWeek));
-  final tEndDateOfNextWeek =
-      tStartDateOfNextWeek.add(const Duration(days: DateTime.daysPerWeek));
+  final tToday = DateTime(2023, 06, 07);
+  final tStartDateOfNextWeek = DateTime(2023, 06, 11);
+  final tEndDateOfNextWeek = DateTime(2023, 06, 18);
 
   const tMember = ReservedMember(id: 'testId', name: 'testName');
   final tReservation = Reservation(
     id: 'testId',
     title: 'testTitle',
-    date: DateTime(2023, 06, 26),
+    date: DateTime(2023, 06, 16),
     reservedMember: tMember,
     time: InstituteTime.first,
   );
@@ -42,7 +39,7 @@ void main() {
   final tReservationList = [
     tReservation,
     tReservation.copyWith(
-        id: 'testId2', title: 'testTitle2', date: DateTime(2023, 07, 10)),
+        id: 'testId2', title: 'testTitle2', date: DateTime(2023, 06, 17)),
   ];
 
   final tSuitableReservationList = tReservationList
