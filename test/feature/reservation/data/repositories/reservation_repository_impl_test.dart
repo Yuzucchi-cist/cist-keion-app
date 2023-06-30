@@ -238,4 +238,54 @@ void main() {
       });
     });
   });
+
+  group('deleteReservations', () {
+    final tReservationIds = ['testId1', 'testId2'];
+    checkOnline(arrange: () {
+      when(mockReservationRemoteDataSource.deleteReservations(any))
+          .thenAnswer((realInvocation) async {});
+    }, act: () {
+      repository.deleteReservations(tReservationIds);
+    });
+
+    group('device is online', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => true));
+
+      test('should call data source to delete data', () async {
+        // arrange
+        when(mockReservationRemoteDataSource.deleteReservations(any))
+            .thenAnswer((realInvocation) async {});
+        // act
+        final result = await repository.deleteReservations(tReservationIds);
+        // assert
+        verify(mockReservationRemoteDataSource
+            .deleteReservations(tReservationIds));
+        expect(result, const Right(unit));
+      });
+
+      test('should return firestore failure when datasource failed', () async {
+        // arrange
+        when(mockReservationRemoteDataSource.deleteReservations(any))
+            .thenThrow(FirestoreException('no-data'));
+        // act
+        final result = await repository.deleteReservations(tReservationIds);
+        // assert
+        expect(
+            result, Left(ReservationFailure(ReservationFailureState.noData)));
+      });
+    });
+
+    group('device is offline', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => false));
+
+      test('should return server failure', () async {
+        // act
+        final result = await repository.deleteReservations(tReservationIds);
+        // assert
+        expect(result, Left(ServerFailure()));
+      });
+    });
+  });
 }

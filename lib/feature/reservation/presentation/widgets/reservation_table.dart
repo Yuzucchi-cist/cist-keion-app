@@ -14,7 +14,6 @@ Widget reservationTable(BuildContext context, WidgetRef ref,
   final reserveTable = ref.watch(reserveTableProvider);
   final startDateOfWeek = reserveTable.startDateOfWeek;
   final endDateOfWeek = reserveTable.endDateOfWeek;
-
   return Column(
     children: [
       Text('$startDateOfWeek~$endDateOfWeekの予約'),

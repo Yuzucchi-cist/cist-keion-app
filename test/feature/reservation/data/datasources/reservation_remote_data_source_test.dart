@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:cist_keion_app/feature/auth/data/datasources/remote/firestore_data_source.dart';
 import 'package:cist_keion_app/feature/reservation/data/datasources/reservation_remote_data_source.dart';
 import 'package:cist_keion_app/feature/reservation/data/models/reservation_model.dart';
@@ -135,6 +137,51 @@ void main() {
               updatedAt: Timestamp.fromDate(tNowTime)))));
     });
 
+    /*
+    test('should throw the FirestoreException when data does not exist',
+        () async {
+      // arrange
+      setDataToFirestore();
+      try {
+        // act
+        await dataSource.addReservations(tReservationModels);
+        fail('');
+      } on FirestoreException catch (e) {
+        expect(e.code, 'firestoreError');
+      } catch (e) {
+        fail('Not-expect object was thrown: $e');
+      }
+    });
+     */
+  });
+
+  group('deleteReservation', () {
+    final tId = tFirestoreData.first['id'] as String;
+    final deletedModels = [...tReservationModels];
+    deletedModels.removeWhere((model) => model.id == tId);
+    test('should call firestore to delete data', () async {
+      // arrange
+      setDataToFirestore();
+      // act
+      await dataSource.deleteReservations([tId]);
+      // assert
+      final snapshot =
+          await mockFirestore.collection(reservationCollectionName).get();
+      final result = snapshot.docs
+          .map<ReservationModel>((e) => ReservationModel.fromFirestoreJson(
+              e.id,
+              e.data().map((key, value) {
+                if (key == 'reserved_member') {
+                  return MapEntry(key, {
+                    'id': ((value as Map)['id'] as DocumentReference).id,
+                    'name': value['name'],
+                  });
+                }
+                return MapEntry(key, value);
+              })))
+          .toList();
+      expect(result, unorderedEquals(deletedModels));
+    });
     /*
     test('should throw the FirestoreException when data does not exist',
         () async {

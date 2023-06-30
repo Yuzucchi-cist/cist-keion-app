@@ -12,6 +12,8 @@ abstract class ReservationRemoteDataSource {
       Timestamp startDate, Timestamp endDate);
 
   Future<void> addReservations(List<ReservationModel> reservations);
+
+  Future<void> deleteReservations(List<String> reservationIds);
 }
 
 class RemoteDataSourceImpl implements ReservationRemoteDataSource {
@@ -81,6 +83,20 @@ class RemoteDataSourceImpl implements ReservationRemoteDataSource {
         });
         batch.set(firestore.collection(reservationCollectionName).doc(),
             convertedReservation);
+      }
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw FirestoreException(e.code);
+    }
+  }
+
+  @override
+  Future<void> deleteReservations(List<String> reservationIds) async {
+    try {
+      final batch = firestore.batch();
+      for (final id in reservationIds) {
+        final doc = firestore.collection(reservationCollectionName).doc(id);
+        batch.delete(doc);
       }
       await batch.commit();
     } on FirebaseException catch (e) {

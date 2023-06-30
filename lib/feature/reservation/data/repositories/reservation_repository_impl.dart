@@ -63,4 +63,19 @@ class ReservationRepositoryImpl implements ReservationRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> deleteReservations(
+      List<String> reservationIds) async {
+    if (await networkInfo.isConnected) {
+      try {
+        remoteDataSource.deleteReservations(reservationIds);
+        return const Right(unit);
+      } on FirestoreException catch (e) {
+        return Left(ReservationFailure.fromCode(e.code));
+      }
+    } else {
+      return Left(ServerFailure());
+    }
+  }
 }

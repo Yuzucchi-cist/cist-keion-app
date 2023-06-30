@@ -27,7 +27,11 @@ class ReserveTable with _$ReserveTable {
   factory ReserveTable.fromReservationList(
       List<Reservation> reservationList, DateTime startDateOfWeek,
       {ReserveTable? oldTable}) {
-    final newTable = {...oldTable?.table ?? _initialMap};
+    final newTable = {
+      ...oldTable?.table
+              .map((key, value) => MapEntry(key, value.resetReservation)) ??
+          _initialMap
+    };
 
     for (final reservation in reservationList) {
       newTable.update(

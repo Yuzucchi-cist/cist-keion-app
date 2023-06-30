@@ -8,4 +8,6 @@ abstract class ReservationRepository {
       DateTime startDate, DateTime endDate);
 
   Future<Either<Failure, Unit>> addReservations(List<Reservation> reservations);
+
+  Future<Either<Failure, Unit>> deleteReservations(List<String> reservationIds);
 }
