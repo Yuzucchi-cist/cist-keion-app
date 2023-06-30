@@ -5,7 +5,7 @@ import '../firebase_options/firebase_options_prod.dart'
     as firebase_options_prod;
 import '../firebase_options/firebase_options_stg.dart' as firebase_options_stg;
 
-const flavorString = String.fromEnvironment('FLAVOR');
+const flavorString = String.fromEnvironment('flavor');
 
 final flavor = Flavor.values.firstWhere(
   (flavor) => flavor.name == flavorString,
