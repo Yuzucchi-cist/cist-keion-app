@@ -162,4 +162,42 @@ void main() {
       }
     });
   });
+
+  group('getAuthStateChanges', () {
+    group('should return stream from firebase', () {
+      test('should return member when firebase auth is successful', () async {
+        // arrange
+        when(mockFirebaseAuth.authStateChanges())
+            .thenAnswer((realInvocation) async* {
+          yield mockUser;
+        });
+        // act
+        final result = dataSource.getAuthStateChanges();
+        // assert
+        result.forEach((element) {
+          expect(element, tUserModel);
+        });
+      });
+
+      test('should throw Auth Exception when user has not login', () async {
+        // arrange
+        when(mockFirebaseAuth.authStateChanges())
+            .thenAnswer((realInvocation) async* {
+          yield null;
+        });
+        // act
+        final result = dataSource.getAuthStateChanges();
+        // assert
+        result.forEach((element) {
+          expect(element, tUserModel);
+        }).onError((error, stackTrace) {
+          if (error is FireAuthException) {
+            expect(error.code, errorCodeUserNotLoggedIn);
+          } else {
+            fail('Not-expect object was thrown: $error');
+          }
+        });
+      });
+    });
+  });
 }

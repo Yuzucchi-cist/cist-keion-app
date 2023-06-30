@@ -12,4 +12,6 @@ abstract class AuthRepository {
   Future<Either<Failure, Unit>> sendEmailVerify(String studentNumber);
 
   Future<Either<Failure, Member>> getCurrentMember();
+
+  Stream<Either<Failure, Member>> getAuthChange();
 }

@@ -22,7 +22,7 @@ void main() {
   });
 
   final tToday = DateTime(2023, 06, 07);
-  final tEndDateOfNextWeek = DateTime(2023, 06, 17);
+  final tEndDateOfNextWeek = DateTime(2023, 06, 18);
 
   final params = [
     AddReservationsParam(
