@@ -25,8 +25,8 @@ Widget homeWidget(
       automaticallyImplyLeading: false,
     ),
     body: Center(
-      child: reservationTable(context,
-          reserveTable: ref.watch(reserveTableProvider)),
+      child: reservationTable(context, ref,
+          reserveTableProvider: reserveTableInThisWeekProvider),
     ),
   );
 }

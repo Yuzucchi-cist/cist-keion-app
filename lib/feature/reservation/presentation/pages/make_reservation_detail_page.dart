@@ -4,23 +4,28 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../../../auth/presentation/notifier/auth_notifier.dart';
 import '../notifier/reserve_table_notifier.dart';
 
 @RoutePage()
 class MakeReservationDetailPage extends HookConsumerWidget {
-  const MakeReservationDetailPage(
-      {super.key, required this.isAdditionalReservation});
+  MakeReservationDetailPage({super.key, required this.isAdditionalReservation});
 
+  final _formKey = GlobalKey<FormState>();
   final bool isAdditionalReservation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO(yuzucchi): 認証を追加
-    final dateAndTimes = [Params(DateTime.now(), '1講')];
-
     final reserveTitleController = useState(TextEditingController());
+    final reserveTableProvider = isAdditionalReservation
+        ? reserveTableInThisWeekProvider
+        : reserveTableInNextWeekProvider;
+    final reserveTable = ref.watch(reserveTableProvider);
 
-    final reserveTable = ref.watch(reserveTableForReserveProvider);
+    final member = ref.watch(authProvider).when(
+        unAuthenticated: () => null,
+        unVerified: (_) => null,
+        authenticated: (member) => member);
 
     return Scaffold(
       appBar: AppBar(
@@ -28,6 +33,7 @@ class MakeReservationDetailPage extends HookConsumerWidget {
         centerTitle: true,
       ),
       body: Form(
+        key: _formKey,
         child: Column(
           children: [
             Row(
@@ -45,15 +51,24 @@ class MakeReservationDetailPage extends HookConsumerWidget {
                 labelText: '予約名',
               ),
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: '予約者名',
-              ),
+            Row(
+              children: [
+                const Text('予約者名: '),
+                Text(member?.name ?? ''),
+              ],
             ),
             ElevatedButton(
               child: const Text('予約確認'),
-              onPressed: () =>
-                  context.router.push(const ConfirmReservationRoute()),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  final title = reserveTitleController.value.text;
+                  ref
+                      .read(reserveTableProvider.notifier)
+                      .setDetail(title, member!.memberId, member.name);
+                  context.router.push(ConfirmReservationRoute(
+                      isAdditionalReservation: isAdditionalReservation));
+                }
+              },
             ),
           ],
         ),

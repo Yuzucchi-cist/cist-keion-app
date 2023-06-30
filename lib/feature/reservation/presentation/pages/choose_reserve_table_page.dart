@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../notifier/delete_param_notifier.dart';
 import '../notifier/reserve_table_notifier.dart';
 import '../widgets/reserve_tab_bar_view.dart';
 
@@ -23,8 +24,10 @@ class ChooseReserveTablePage extends HookConsumerWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.cancel),
-              onPressed: () =>
-                  context.router.push(const CancelReservationRoute()),
+              onPressed: () {
+                ref.read(deleteParamProvider.notifier).update().then(
+                    (_) => context.router.push(const CancelReservationRoute()));
+              },
             )
           ],
           bottom: TabBar(
@@ -34,7 +37,8 @@ class ChooseReserveTablePage extends HookConsumerWidget {
               Tab(text: '追加予約'),
             ],
             onTap: (_) {
-              ref.read(reserveTableForReserveProvider.notifier).resetIsTapped();
+              ref.read(reserveTableInThisWeekProvider.notifier).resetIsTapped();
+              ref.read(reserveTableInNextWeekProvider.notifier).resetIsTapped();
             },
           ),
         ),

@@ -74,7 +74,6 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final routeName = resolver.route.name;
-    print(routeName);
 
     if ([
       HomeRoute.name,

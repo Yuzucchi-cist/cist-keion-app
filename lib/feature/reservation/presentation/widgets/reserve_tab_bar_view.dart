@@ -8,16 +8,18 @@ import 'reservation_table.dart';
 
 Widget reserveTabBarView(BuildContext context, WidgetRef ref,
     {bool isAdditionalReservation = false}) {
-  final reserveTable = ref.watch(reserveTableForReserveProvider);
-  final reserveTableNotifier =
-      ref.read(reserveTableForReserveProvider.notifier);
+  final reserveTableProvider = isAdditionalReservation
+      ? reserveTableInThisWeekProvider
+      : reserveTableInNextWeekProvider;
+  final reserveTableNotifier = ref.read(reserveTableProvider.notifier);
   return Center(
     child: Column(
       children: [
         Expanded(
           child: reservationTable(
             context,
-            reserveTable: reserveTable,
+            ref,
+            reserveTableProvider: reserveTableProvider,
             onTap: reserveTableNotifier.onTapped,
           ),
         ),
