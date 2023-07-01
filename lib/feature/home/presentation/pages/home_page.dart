@@ -10,6 +10,6 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return homeWidget(context: context, ref: ref);
+    return homeWidget(context: context, ref: ref, isAuthenticated: true);
   }
 }

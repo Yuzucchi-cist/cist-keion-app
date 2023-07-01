@@ -10,19 +10,23 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref
-        .read(authProvider.notifier)
-        .initialize()
-        .onError((error, stackTrace) {});
-    ref.read(reserveTableInThisWeekProvider.notifier).initialize();
-    ref.read(reserveTableInNextWeekProvider.notifier).initialize();
+    initialize(ref);
 
     return MaterialApp.router(
-      routerConfig: ref.watch(appRouterProvider).config(),
+      routerConfig: AppRouter().config(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
     );
+  }
+
+  Future<void> initialize(WidgetRef ref) async {
+    await ref
+        .read(authProvider.notifier)
+        .initialize()
+        .onError((error, stackTrace) => null);
+    await ref.read(reserveTableInThisWeekProvider.notifier).initialize();
+    await ref.read(reserveTableInNextWeekProvider.notifier).initialize();
   }
 }

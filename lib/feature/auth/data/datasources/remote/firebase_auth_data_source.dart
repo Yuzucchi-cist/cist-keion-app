@@ -8,6 +8,7 @@ abstract class FirebaseAuthDataSource {
   Future<FirebaseAuthUserModel> login(String studentNumber, String password);
   Future<void> sendEmailVerify(String studentNumber);
   Future<FirebaseAuthUserModel> getCurrentUser();
+  Stream<FirebaseAuthUserModel> getAuthStateChanges();
 }
 
 class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
@@ -64,6 +65,22 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
       } else {
         throw FireAuthException(errorCodeUserNotLoggedIn);
       }
+    } on FirebaseAuthException catch (e) {
+      throw FireAuthException(e.code);
+    }
+  }
+
+  @override
+  Stream<FirebaseAuthUserModel> getAuthStateChanges() {
+    try {
+      return auth.authStateChanges().map((user) {
+        if (user != null) {
+          return FirebaseAuthUserModel.fromEmail(
+              email: user.email!, isEmailVerify: user.emailVerified);
+        } else {
+          throw FireAuthException(errorCodeUserNotLoggedIn);
+        }
+      });
     } on FirebaseAuthException catch (e) {
       throw FireAuthException(e.code);
     }

@@ -368,4 +368,54 @@ void main() {
       });
     });
   });
+
+  group('getAuthState', () {
+    test('should return stream', () {
+      // arrange
+      when(mockAuthDataSource.getAuthStateChanges())
+          .thenAnswer((realInvocation) async* {
+        yield tAuthUserModel;
+      });
+      when(mockStoreDataSource.getMemberByStudentNumber(tStudentNumber))
+          .thenAnswer((realInvocation) async => tFirestoreUserModel);
+      when(mockMemberFactory.createFromModel(any))
+          .thenAnswer((realInvocation) => tMember);
+      // act
+      final result = repository.getAuthChange();
+      // assert
+      result.forEach((element) {
+        expect(element, const Right(tMember));
+      });
+    });
+
+    test('should return auth failure when auth data source failed', () async {
+      // arrange
+      when(mockAuthDataSource.getAuthStateChanges())
+          .thenThrow(FireAuthException('invalid-email'));
+      // act
+      final result = repository.getAuthChange();
+      // assert
+      result.forEach((element) {
+        expect(element, Left(AuthFailure(AuthFailureState.invalidEmail)));
+      });
+    });
+
+    test(
+        'should return the auth failure when member does not exist in data base',
+        () async {
+      // arrange
+      when(mockAuthDataSource.getAuthStateChanges())
+          .thenAnswer((realInvocation) async* {
+        yield tAuthUserModel;
+      });
+      when(mockStoreDataSource.getMemberByStudentNumber(any))
+          .thenThrow(FirestoreException('no-member'));
+      // act
+      final result = repository.getAuthChange();
+      // assert
+      result.forEach((element) {
+        expect(element, Left(AuthFailure(AuthFailureState.noMemberExists)));
+      });
+    });
+  });
 }

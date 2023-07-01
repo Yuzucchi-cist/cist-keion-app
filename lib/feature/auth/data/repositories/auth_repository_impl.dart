@@ -92,4 +92,22 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Stream<Either<Failure, Member>> getAuthChange() {
+    try {
+      return authDataSource.getAuthStateChanges().asyncMap((authModel) async {
+        final storeModel = await storeDataSource
+            .getMemberByStudentNumber(authModel.studentNumber);
+        return Right<Failure, Member>(memberFactory.createFromModel(
+            Models(authUserModel: authModel, storeUserModel: storeModel)));
+      });
+    } on FireAuthException catch (e) {
+      return Stream<Either<Failure, Member>>.value(
+          Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code)));
+    } on FirestoreException catch (e) {
+      return Stream<Either<Failure, Member>>.value(
+          Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code)));
+    }
+  }
 }
