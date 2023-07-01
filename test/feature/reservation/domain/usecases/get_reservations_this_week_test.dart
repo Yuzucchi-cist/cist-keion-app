@@ -23,10 +23,9 @@ void main() {
         reservationRepository: mockReservationRepository);
   });
 
-  final tToday = DateTime(2023, 06, 26);
-  final tStartDateOfWeek = tToday.subtract(Duration(days: tToday.weekday));
-  final tEndDateOfWeek =
-      tStartDateOfWeek.add(const Duration(days: DateTime.daysPerWeek));
+  final tToday = DateTime(2023, 06, 07);
+  final tStartDateOfWeek = DateTime(2023, 06, 04);
+  final tEndDateOfWeek = DateTime(2023, 06, 11);
 
   const tMember = ReservedMember(id: 'testId', name: 'testName');
   final tReservation = Reservation(

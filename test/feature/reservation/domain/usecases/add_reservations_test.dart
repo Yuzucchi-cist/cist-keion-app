@@ -21,22 +21,20 @@ void main() {
     usecase = AddReservations(reservationRepository: mockReservationRepository);
   });
 
-  final tToday = DateTime(2023, 06, 26);
-  final tEndDateOfNextWeek = tToday
-      .subtract(Duration(days: tToday.weekday))
-      .add(const Duration(days: DateTime.daysPerWeek * 2));
+  final tToday = DateTime(2023, 06, 07);
+  final tEndDateOfNextWeek = DateTime(2023, 06, 17);
 
   final params = [
     AddReservationsParam(
       title: 'testTitle',
-      date: DateTime(2023, 06, 26),
+      date: DateTime(2023, 06, 15),
       time: InstituteTime.first,
       reservedMemberId: 'testMemberId',
       reservedMemberName: 'testMemberName',
     ),
     AddReservationsParam(
       title: 'testTitle2',
-      date: DateTime(2023, 07, 10),
+      date: DateTime(2023, 06, 25),
       time: InstituteTime.first,
       reservedMemberId: 'testMemberId2',
       reservedMemberName: 'testMemberName2',
