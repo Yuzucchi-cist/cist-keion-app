@@ -18,47 +18,65 @@ Widget reservationTable(BuildContext context, WidgetRef ref,
     children: [
       Text('$startDateOfWeek~$endDateOfWeekの予約'),
       Expanded(
-        child: DataTable(
-          columnSpacing: 0,
-          horizontalMargin: 0,
-          columns: [
-            const DataColumn(label: Center(child: Text(''))),
-            ...reserveTable.tableMap.values.first.keys.map((weekDay) =>
-                DataColumn(label: Center(child: Text(weekDay.value))))
-          ],
-          rows: reserveTable.tableMap.entries.map<DataRow>((eRow) {
-            final rowLabel = DataCell(SizedBox(
-              child: Center(
-                child: Text(
-                  eRow.key.value,
-                  softWrap: false,
-                ),
-              ),
-            ));
-            final data = eRow.value.entries.map((eCell) {
-              final isTapped = eCell.value.isTapped;
-              return DataCell(
-                Container(
-                  width: MediaQuery.of(context).size.width / 8,
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  color: isTapped ? Colors.red : null,
-                  child: Align(
-                    child: AutoSizeText(
-                      eCell.value.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                      maxLines: 2,
-                      minFontSize: 8,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+        child: Center(
+          child: DataTable(
+            columnSpacing: 0,
+            horizontalMargin: 0,
+            decoration: BoxDecoration(border: Border.all()),
+            columns: [
+              DataColumn(
+                  label: Expanded(
+                child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(border: Border.all()),
+                    child: Text('')),
+              )),
+              ...reserveTable.tableMap.values.first.keys
+                  .map((weekDay) => DataColumn(
+                          label: Expanded(
+                        child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(border: Border.all()),
+                            child: Text(weekDay.value)),
+                      )))
+            ],
+            rows: reserveTable.tableMap.entries.map<DataRow>((eRow) {
+              final rowLabel = DataCell(SizedBox(
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(border: Border.all()),
+                  child: Text(
+                    eRow.key.value,
+                    softWrap: false,
                   ),
                 ),
-                onTap: eCell.value.id == null && onTap != null
-                    ? () => onTap(eCell.key, eRow.key)
-                    : null,
-              );
-            }).toList();
-            return DataRow(cells: [rowLabel, ...data]);
-          }).toList(),
+              ));
+              final data = eRow.value.entries.map((eCell) {
+                final isTapped = eCell.value.isTapped;
+                return DataCell(
+                  Container(
+                    width: MediaQuery.of(context).size.width / 8,
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    decoration: BoxDecoration(border: Border.all()),
+                    color: isTapped ? Colors.red : null,
+                    child: Align(
+                      child: AutoSizeText(
+                        eCell.value.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        maxLines: 2,
+                        minFontSize: 8,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  onTap: eCell.value.id == null && onTap != null
+                      ? () => onTap(eCell.key, eRow.key)
+                      : null,
+                );
+              }).toList();
+              return DataRow(cells: [rowLabel, ...data]);
+            }).toList(),
+          ),
         ),
       )
     ],
