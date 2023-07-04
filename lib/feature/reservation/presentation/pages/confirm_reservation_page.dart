@@ -18,8 +18,8 @@ class ConfirmReservationPage extends HookConsumerWidget {
     // TODO(yuzucchi): 認証を追加
 
     final reserveTableProvider = isAdditionalReservation
-        ? reserveTableInThisWeekProvider
-        : reserveTableInNextWeekProvider;
+        ? reserveTableForReserveInThisWeekProvider
+        : reserveTableForReserveInNextWeekProvider;
 
     return Scaffold(
       appBar: AppBar(

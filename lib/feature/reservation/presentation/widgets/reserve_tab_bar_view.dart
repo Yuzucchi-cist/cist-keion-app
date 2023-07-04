@@ -7,35 +7,48 @@ import '../notifier/reserve_table_notifier.dart';
 import 'reservation_table.dart';
 
 Widget reserveTabBarView(BuildContext context, WidgetRef ref,
-    {bool isAdditionalReservation = false}) {
-  final reserveTableProvider = isAdditionalReservation
-      ? reserveTableInThisWeekProvider
-      : reserveTableInNextWeekProvider;
+    {bool isThisWeek = false, bool isDisplay = false}) {
+  final reserveTableProvider = isThisWeek
+      ? reserveTableForReserveInThisWeekProvider
+      : reserveTableForReserveInNextWeekProvider;
   final reserveTableNotifier = ref.read(reserveTableProvider.notifier);
   return Center(
     child: Column(
-      children: [
-        Expanded(
-          child: reservationTable(
-            context,
-            ref,
-            reserveTableProvider: reserveTableProvider,
-            onTap: reserveTableNotifier.onTapped,
-          ),
-        ),
-        ElevatedButton(
-          child: Text(
-            '予約',
-            style: const TextTheme().bodyLarge,
-          ),
-          onPressed: () {
-            if (reserveTableNotifier.isChosen()) {
-              context.router.push(MakeReservationDetailRoute(
-                  isAdditionalReservation: isAdditionalReservation));
-            }
-          },
-        ),
-      ],
+      children: isDisplay
+          ? [
+              Expanded(
+                child: reservationTable(
+                  context,
+                  ref,
+                  reserveTableProvider: reserveTableProvider,
+                  onTap: isDisplay ? null : reserveTableNotifier.onTapped,
+                ),
+              ),
+            ]
+          : [
+              Expanded(
+                child: reservationTable(
+                  context,
+                  ref,
+                  reserveTableProvider: reserveTableProvider,
+                  onTap: isDisplay ? null : reserveTableNotifier.onTapped,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: isDisplay
+                    ? () {}
+                    : () {
+                        if (reserveTableNotifier.isChosen()) {
+                          context.router.push(MakeReservationDetailRoute(
+                              isAdditionalReservation: isThisWeek));
+                        }
+                      },
+                child: Text(
+                  '予約',
+                  style: const TextTheme().bodyLarge,
+                ),
+              ),
+            ],
     ),
   );
 }

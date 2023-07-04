@@ -12,7 +12,7 @@ import '../../domain/values/institute_time.dart';
 import '../states/reserve_table.dart';
 import '../states/week_day.dart';
 
-final reserveTableInThisWeekProvider =
+final reserveTableForDisplayInThisWeekProvider =
     StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
   final notifier = ReserveTableNotifier(
       getReservations: ref.watch(getReservationsThisWeekProvider),
@@ -21,7 +21,26 @@ final reserveTableInThisWeekProvider =
   return notifier;
 });
 
-final reserveTableInNextWeekProvider =
+final reserveTableForDisplayInNextWeekProvider =
+    StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
+  final notifier = ReserveTableNotifier(
+      getReservations: ref.watch(getReservationsNextWeekProvider),
+      addReservations: ref.watch(addReservationsProvider),
+      startDateOfWeek: getStartDateOfThisWeek()
+          .add(const Duration(days: DateTime.daysPerWeek)));
+  return notifier;
+});
+
+final reserveTableForReserveInThisWeekProvider =
+    StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
+  final notifier = ReserveTableNotifier(
+      getReservations: ref.watch(getReservationsThisWeekProvider),
+      addReservations: ref.watch(addReservationsProvider),
+      startDateOfWeek: getStartDateOfThisWeek());
+  return notifier;
+});
+
+final reserveTableForReserveInNextWeekProvider =
     StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
   final notifier = ReserveTableNotifier(
       getReservations: ref.watch(getReservationsNextWeekProvider),

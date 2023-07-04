@@ -18,8 +18,8 @@ class MakeReservationDetailPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final reserveTitleController = useState(TextEditingController());
     final reserveTableProvider = isAdditionalReservation
-        ? reserveTableInThisWeekProvider
-        : reserveTableInNextWeekProvider;
+        ? reserveTableForReserveInThisWeekProvider
+        : reserveTableForReserveInNextWeekProvider;
     final reserveTable = ref.watch(reserveTableProvider);
 
     final member = ref.watch(authProvider).when(

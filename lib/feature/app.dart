@@ -26,7 +26,17 @@ class App extends HookConsumerWidget {
         .read(authProvider.notifier)
         .initialize()
         .onError((error, stackTrace) => null);
-    await ref.read(reserveTableInThisWeekProvider.notifier).initialize();
-    await ref.read(reserveTableInNextWeekProvider.notifier).initialize();
+    await ref
+        .read(reserveTableForDisplayInThisWeekProvider.notifier)
+        .initialize();
+    await ref
+        .read(reserveTableForDisplayInNextWeekProvider.notifier)
+        .initialize();
+    await ref
+        .read(reserveTableForReserveInThisWeekProvider.notifier)
+        .initialize();
+    await ref
+        .read(reserveTableForReserveInNextWeekProvider.notifier)
+        .initialize();
   }
 }
