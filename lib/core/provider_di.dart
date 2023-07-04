@@ -14,6 +14,7 @@ import '../feature/auth/data/repositories/auth_repository_impl.dart';
 import '../feature/auth/domain/usecases/get_member_stream.dart';
 import '../feature/auth/domain/usecases/initialize_auth.dart';
 import '../feature/auth/domain/usecases/login.dart';
+import '../feature/auth/domain/usecases/logout.dart';
 import '../feature/auth/domain/usecases/register_member.dart';
 import '../feature/reservation/data/datasources/reservation_local_data_source.dart';
 import '../feature/reservation/data/datasources/reservation_remote_data_source.dart';
@@ -34,6 +35,7 @@ final networkInfoProvider =
 final firebaseAuthProvider = Provider((ref) => FirebaseAuth.instance);
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 
+// auth
 final firebaseAuthDataSourceProvider = Provider(
     (ref) => FirebaseAuthDataSourceImpl(auth: ref.watch(firebaseAuthProvider)));
 final firestoreDataSourceProvider = Provider(
@@ -62,6 +64,8 @@ final registerMemberProvider = Provider(
     (ref) => RegisterMember(authRepository: ref.watch(authRepositoryProvider)));
 final loginProvider =
     Provider((ref) => Login(authRepository: ref.watch(authRepositoryProvider)));
+final logoutProvider = Provider(
+    (ref) => Logout(authRepository: ref.watch(authRepositoryProvider)));
 final initializeProvider = Provider(
     (ref) => InitializeAuth(authRepository: ref.watch(authRepositoryProvider)));
 final getAuthStateProvider = Provider((ref) =>
