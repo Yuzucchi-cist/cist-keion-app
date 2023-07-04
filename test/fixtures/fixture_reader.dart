@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 const firestoreUserDataPath = 'auth/firestore_users_data.json';
 const firestoreReservationDataPath =
     'reservation/firestore_reservation_data.json';
+const firestoreSuggestionDataPath = 'suggestion/firestore_suggestion_data.json';
 
 String fixtureReader(String path) =>
     File('test/fixtures/$path').readAsStringSync();
