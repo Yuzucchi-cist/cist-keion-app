@@ -10,7 +10,6 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO(yuzucchi): 認証を追加
     return Scaffold(
         appBar: AppBar(
           title: const Text('プロフィール'),
@@ -23,10 +22,22 @@ class ProfilePage extends HookConsumerWidget {
               authenticated: (member) => Center(
                 child: Column(
                   children: [
-                    Text(member.name),
-                    Text(member.studentNumber),
-                    Text(member.instituteGrade.jpString),
-                    Text(member.userState.name),
+                    Column(
+                      children: [
+                        Text(member.name),
+                        Text(member.studentNumber),
+                        Text(member.instituteGrade.jpString),
+                        Text(member.userState.name),
+                      ],
+                    ),
+                    ElevatedButton(
+                      child: const Text('ログアウト'),
+                      onPressed: () {
+                        ref
+                            .read(authProvider.notifier)
+                            .logout(member.studentNumber);
+                      },
+                    )
                   ],
                 ),
               ),

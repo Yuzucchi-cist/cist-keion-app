@@ -6,6 +6,7 @@ import '../../models/firebase_auth/firebase_auth_user_model.dart';
 abstract class FirebaseAuthDataSource {
   Future<void> createUser(String studentNumber, String password);
   Future<FirebaseAuthUserModel> login(String studentNumber, String password);
+  Future<void> logout(String studentNumber);
   Future<void> sendEmailVerify(String studentNumber);
   Future<FirebaseAuthUserModel> getCurrentUser();
   Stream<FirebaseAuthUserModel> getAuthStateChanges();
@@ -83,6 +84,15 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
       });
     } on FirebaseAuthException catch (e) {
       throw FireAuthException(e.code);
+    }
+  }
+
+  @override
+  Future<void> logout(String studentNumber) async {
+    if (auth.currentUser != null) {
+      auth.signOut();
+    } else {
+      throw FireAuthException(errorCodeUserNotLoggedIn);
     }
   }
 }

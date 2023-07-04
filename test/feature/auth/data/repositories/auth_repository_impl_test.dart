@@ -2,6 +2,7 @@ import 'package:cist_keion_app/core/error/exception/firebase_auth_exception.dart
 import 'package:cist_keion_app/core/error/exception/firestore_exception.dart';
 import 'package:cist_keion_app/core/error/failure/auth/auth_failure.dart';
 import 'package:cist_keion_app/core/error/failure/auth/auth_failure_state.dart';
+import 'package:cist_keion_app/core/error/failure/failure.dart';
 import 'package:cist_keion_app/core/error/failure/server/server_failure.dart';
 import 'package:cist_keion_app/core/network/network_info.dart';
 import 'package:cist_keion_app/feature/auth/data/datasources/remote/firebase_auth_data_source.dart';
@@ -55,6 +56,20 @@ void main() {
       act();
       // assert
       verify(mockNetworkInfo.isConnected);
+    });
+  }
+
+  void returnServerFailureWhenDeviceIsOffline(
+      {required Future<Either<Failure, dynamic>> Function() act}) {
+    group('when device is offline', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => false));
+      test('should return the server failure', () async {
+        // act
+        final result = await act();
+        // assert
+        expect(result, Left(ServerFailure()));
+      });
     });
   }
 
@@ -147,17 +162,8 @@ void main() {
       });
     });
 
-    group('when device is offline', () {
-      setUp(() => when(mockNetworkInfo.isConnected)
-          .thenAnswer((realInvocation) async => false));
-      test('should return the server failure', () async {
-        // act
-        final result =
-            await repository.registerMember(tStudentNumber, tPassword);
-        // assert
-        expect(result, Left(ServerFailure()));
-      });
-    });
+    returnServerFailureWhenDeviceIsOffline(
+        act: () => repository.registerMember(tStudentNumber, tPassword));
   });
 
   group('sendEmailVerify', () {
@@ -196,18 +202,8 @@ void main() {
       });
     });
 
-    group('device is offline', () {
-      setUp(() => when(mockNetworkInfo.isConnected)
-          .thenAnswer((realInvocation) async => false));
-
-      test('should return server failure', () async {
-        // act
-        final result = await repository.sendEmailVerify(tStudentNumber);
-        // assert
-        verifyNever(mockAuthDataSource.sendEmailVerify(tStudentNumber));
-        expect(result, Left(ServerFailure()));
-      });
-    });
+    returnServerFailureWhenDeviceIsOffline(
+        act: () => repository.sendEmailVerify(tStudentNumber));
   });
 
   group('login', () {
@@ -284,16 +280,8 @@ void main() {
       });
     });
 
-    group('when device is offline', () {
-      setUp(() => when(mockNetworkInfo.isConnected)
-          .thenAnswer((realInvocation) async => false));
-      test('should return the server failure', () async {
-        // act
-        final result = await repository.login(tStudentNumber, tPassword);
-        // assert
-        expect(result, Left(ServerFailure()));
-      });
-    });
+    returnServerFailureWhenDeviceIsOffline(
+        act: () => repository.login(tStudentNumber, tPassword));
   });
 
   group('getCurrentMember', () {
@@ -357,16 +345,45 @@ void main() {
       });
     });
 
-    group('when device is offline', () {
+    returnServerFailureWhenDeviceIsOffline(
+        act: () => repository.getCurrentMember());
+  });
+
+  group('logout', () {
+    checkOnline(
+        arrange: () {},
+        act: () {
+          repository.logout(tStudentNumber);
+        });
+
+    group('device is online', () {
       setUp(() => when(mockNetworkInfo.isConnected)
-          .thenAnswer((realInvocation) async => false));
-      test('should return the server failure', () async {
+          .thenAnswer((realInvocation) async => true));
+
+      test('should call logout member to log out', () async {
+        // arrange
+        when(mockAuthDataSource.logout(any))
+            .thenAnswer((realInvocation) async {});
         // act
-        final result = await repository.getCurrentMember();
+        final result = await repository.logout(tStudentNumber);
         // assert
-        expect(result, Left(ServerFailure()));
+        verify(mockAuthDataSource.logout(tStudentNumber));
+        expect(result, const Right(unit));
+      });
+
+      test('should return auth failure when auth data source failed', () async {
+        // arrange
+        when(mockAuthDataSource.logout(tStudentNumber))
+            .thenThrow(FireAuthException('invalid-email'));
+        // act
+        final result = await repository.logout(tStudentNumber);
+        // assert
+        expect(result, Left(AuthFailure(AuthFailureState.invalidEmail)));
       });
     });
+
+    returnServerFailureWhenDeviceIsOffline(
+        act: () => repository.logout(tStudentNumber));
   });
 
   group('getAuthState', () {

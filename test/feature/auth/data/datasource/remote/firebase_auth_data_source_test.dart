@@ -163,6 +163,33 @@ void main() {
     });
   });
 
+  group('logout', () {
+    test('should call logout', () async {
+      // arrange
+      when(mockFirebaseAuth.signOut()).thenAnswer((realInvocation) async {});
+      // act
+      await dataSource.logout(tStudentNumber);
+      // assert
+      verify(mockFirebaseAuth.signOut());
+    });
+
+    test('should throw Auth Exception when user has not login', () async {
+      // arrange
+      when(mockFirebaseAuth.currentUser).thenReturn(null);
+      try {
+        // act
+        await dataSource.logout(tStudentNumber);
+        // assert
+        verify(mockFirebaseAuth.currentUser);
+        fail('');
+      } on FireAuthException catch (e) {
+        expect(e.code, errorCodeUserNotLoggedIn);
+      } catch (e) {
+        fail('Not-expect object was thrown');
+      }
+    });
+  });
+
   group('getAuthStateChanges', () {
     group('should return stream from firebase', () {
       test('should return member when firebase auth is successful', () async {

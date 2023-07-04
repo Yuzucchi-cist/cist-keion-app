@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../notifier/auth_notifier.dart';
-import '../widgets/showErrorDialog.dart';
+import '../widgets/show_error_dialog.dart';
 import '../widgets/user_data_form_field.dart';
 
 @RoutePage()

@@ -12,7 +12,7 @@ void showErrorDialog(
           content: Text(contentText),
           actions: [
             ElevatedButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

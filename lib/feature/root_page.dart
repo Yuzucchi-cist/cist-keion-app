@@ -12,7 +12,6 @@ class RootPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('A');
     return StreamBuilder(
       stream: ref.read(authProvider.notifier).authStateChanges(),
       builder: (context, snapshot) {
@@ -20,9 +19,7 @@ class RootPage extends HookConsumerWidget {
           return const Center(child: CircularProgressIndicator());
         }
         final data = snapshot.data;
-        print(data);
         if (data != null) {
-          print(data.isVerified);
           if (data.isVerified) {
             return rootWidget(context);
           }
