@@ -16,8 +16,8 @@ abstract class ReservationRemoteDataSource {
   Future<void> deleteReservations(List<String> reservationIds);
 }
 
-class RemoteDataSourceImpl implements ReservationRemoteDataSource {
-  RemoteDataSourceImpl({required this.firestore});
+class ReservationRemoteDataSourceImpl implements ReservationRemoteDataSource {
+  ReservationRemoteDataSourceImpl({required this.firestore});
 
   final FirebaseFirestore firestore;
 

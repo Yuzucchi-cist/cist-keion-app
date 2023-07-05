@@ -32,11 +32,11 @@ class RootPage extends HookConsumerWidget {
 
 Widget rootWidget(BuildContext context) {
   return AutoTabsRouter(
-    routes: const [
-      HomeRoute(),
-      ReservationRouterRoute(),
+    routes: [
+      const HomeRoute(),
+      const ReservationRouterRoute(),
       CreateSuggestionRoute(),
-      ProfileRoute(),
+      const ProfileRoute(),
     ],
     builder: (context, child) {
       final tabsRouter = context.tabsRouter;

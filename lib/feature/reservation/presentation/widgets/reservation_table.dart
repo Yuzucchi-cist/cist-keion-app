@@ -29,7 +29,7 @@ Widget reservationTable(BuildContext context, WidgetRef ref,
                 child: Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(border: Border.all()),
-                    child: Text('')),
+                    child: const Text('')),
               )),
               ...reserveTable.tableMap.values.first.keys
                   .map((weekDay) => DataColumn(

@@ -11,12 +11,12 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
-  late RemoteDataSourceImpl dataSource;
+  late ReservationRemoteDataSourceImpl dataSource;
   late FakeFirebaseFirestore mockFirestore;
 
   setUp(() {
     mockFirestore = FakeFirebaseFirestore();
-    dataSource = RemoteDataSourceImpl(firestore: mockFirestore);
+    dataSource = ReservationRemoteDataSourceImpl(firestore: mockFirestore);
   });
 
   final tFirestoreData = firestoreDataReader(
