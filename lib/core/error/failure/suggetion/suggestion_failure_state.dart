@@ -1,0 +1,4 @@
+enum SuggestionFailureState {
+  unexpected,
+  noData,
+}

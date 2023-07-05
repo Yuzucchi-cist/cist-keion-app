@@ -1,0 +1,18 @@
+[
+  {
+    "id": "testId",
+    "value": {
+      "category": "live",
+      "description": "テストです。",
+      "created_at": "20230704"
+    }
+  },
+  {
+    "id": "testId2",
+    "value": {
+      "category": "club_room",
+      "description": "テストです。",
+      "created_at": "20230621"
+    }
+  }
+]
