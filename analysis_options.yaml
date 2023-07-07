@@ -27,10 +27,10 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     # Ignore firebase setting files
-    - lib/utils/settings.dart
-    - lib/firebase_options_dev.dart
-    - lib/firebase_options_stg.dart
-    - lib/firebase_options_prod.dart
+    - lib/core/utils/firebase_settings.dart
+    - lib/firebase_options/firebase_options_dev.dart
+    - lib/firebase_options/firebase_options_stg.dart
+    - lib/firebase_options/firebase_options_prod.dart
   errors:
     # allow self-reference to deprecated members (we do this because otherwise we have
     # to annotate every member in every test, assert, etc, when we deprecate something)
