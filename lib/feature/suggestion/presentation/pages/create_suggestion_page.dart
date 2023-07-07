@@ -53,7 +53,7 @@ class CreateSuggestionPage extends HookConsumerWidget {
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
-                      if (value != null) {
+                      if (value == null) {
                         return 'メッセージを入力してください。';
                       }
                       return null;

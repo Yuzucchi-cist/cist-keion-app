@@ -9,6 +9,7 @@ import 'package:cist_keion_app/feature/suggestion/data/models/suggestion_model.d
 import 'package:cist_keion_app/feature/suggestion/data/repositories/suggestion_repository_impl.dart';
 import 'package:cist_keion_app/feature/suggestion/domain/entities/suggestion.dart';
 import 'package:cist_keion_app/feature/suggestion/domain/values/suggestion_category.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -51,8 +52,10 @@ void main() {
   const tSuggestion =
       Suggestion(description: 'テストです。', category: SuggestionCategory.club_room);
   final tSuggestionModel = SuggestionModel(
-      description: tSuggestion.description,
-      category: tSuggestion.category.name);
+    description: tSuggestion.description,
+    category: tSuggestion.category.name,
+    createdAt: Timestamp.fromDate(DateTime(2023, 07, 07)),
+  );
 
   group('add', () {
     checkOnline(

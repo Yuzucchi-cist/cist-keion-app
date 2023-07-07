@@ -62,12 +62,14 @@ void main() {
   }
 
   final tReservationModel = ReservationModel(
-      id: 'testId',
-      title: 'testTitle',
-      date: Timestamp.fromDate(DateTime(2023, 06, 25)),
-      time: 'first',
-      reservedMember:
-          const ReservedMemberModel(id: 'testId', name: 'testName'));
+    id: 'testId',
+    title: 'testTitle',
+    date: Timestamp.fromDate(DateTime(2023, 06, 25)),
+    time: 'first',
+    reservedMember: const ReservedMemberModel(id: 'testId', name: 'testName'),
+    createdAt: Timestamp.fromDate(DateTime(2023, 06, 23)),
+    updatedAt: Timestamp.fromDate(DateTime(2023, 06, 23)),
+  );
   final tReservationModelList = [
     tReservationModel,
     tReservationModel.copyWith(id: 'testId2')
@@ -80,8 +82,8 @@ void main() {
           reservedMember: ReservedMember(
               id: e.reservedMember.id, name: e.reservedMember.name),
           time: InstituteTime.values.byName(e.time),
-          createdAt: e.createdAt?.toDate(),
-          updatedAt: e.updatedAt?.toDate()))
+          createdAt: e.createdAt.toDate(),
+          updatedAt: e.updatedAt.toDate()))
       .toList();
 
   group('getReservationsBetween', () {

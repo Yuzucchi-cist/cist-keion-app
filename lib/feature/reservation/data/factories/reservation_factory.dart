@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../../core/factories/data_factory.dart';
@@ -26,10 +27,10 @@ class ReservationFactory
             reservedMemberFactory.convertToModel(entity.reservedMember),
         createdAt: entity.createdAt != null
             ? Timestamp.fromDate(entity.createdAt!)
-            : null,
+            : Timestamp.fromDate(clock.now()),
         updatedAt: entity.updatedAt != null
             ? Timestamp.fromDate(entity.updatedAt!)
-            : null);
+            : Timestamp.fromDate(clock.now()));
   }
 
   @override
@@ -54,8 +55,8 @@ class ReservationFactory
         reservedMember:
             reservedMemberFactory.createFromModel(model.reservedMember),
         time: instituteTimeFactory.createFromModel(model.time),
-        createdAt: model.createdAt?.toDate(),
-        updatedAt: model.updatedAt?.toDate());
+        createdAt: model.createdAt.toDate(),
+        updatedAt: model.updatedAt.toDate());
   }
 }
 

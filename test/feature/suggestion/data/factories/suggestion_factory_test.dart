@@ -3,6 +3,7 @@ import 'package:cist_keion_app/feature/suggestion/data/factories/suggestion_fact
 import 'package:cist_keion_app/feature/suggestion/data/models/suggestion_model.dart';
 import 'package:cist_keion_app/feature/suggestion/domain/entities/suggestion.dart';
 import 'package:cist_keion_app/feature/suggestion/domain/values/suggestion_category.dart';
+import 'package:clock/clock.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -29,9 +30,7 @@ void main() {
   final tModel = SuggestionModel(
       description: tValue.description,
       category: tValue.category.name,
-      createdAt: tValue.createdAt != null
-          ? Timestamp.fromDate(tValue.createdAt!)
-          : null);
+      createdAt: Timestamp.fromDate(tValue.createdAt!));
 
   final params = Params(
       description: 'テストです。',
@@ -74,6 +73,24 @@ void main() {
       // assert
       verify(mockSuggestionCategoryFactory.convertToModel(tValue.category));
       expect(result, tModel);
+    });
+
+    test(
+        'should return model with time stamp when createdAt or updatedAt is null',
+        () {
+      final tNow = DateTime(2023, 07, 07, 18, 30);
+      withClock(Clock.fixed(tNow), () {
+        // arrange
+        final tValueWithNull = tValue.copyWith(createdAt: null);
+        final tModelWithTimestamp =
+            tModel.copyWith(createdAt: Timestamp.fromDate(clock.now()));
+        when(mockSuggestionCategoryFactory.convertToModel(any))
+            .thenAnswer((realInvocation) => tModel.category);
+        // act
+        final result = factory.convertToModel(tValueWithNull);
+        // assert
+        expect(result, tModelWithTimestamp);
+      });
     });
   });
 }

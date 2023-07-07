@@ -57,8 +57,10 @@ Widget reservationTable(BuildContext context, WidgetRef ref,
                   Container(
                     width: MediaQuery.of(context).size.width / 8,
                     padding: const EdgeInsets.symmetric(horizontal: 3),
-                    decoration: BoxDecoration(border: Border.all()),
-                    color: isTapped ? Colors.red : null,
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      color: isTapped ? Colors.red : null,
+                    ),
                     child: Align(
                       child: AutoSizeText(
                         eCell.value.title,

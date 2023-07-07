@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../../core/factories/data_factory.dart';
@@ -18,7 +19,7 @@ class SuggestionFactory
         category: suggestionCategoryFactory.convertToModel(entity.category),
         createdAt: entity.createdAt != null
             ? Timestamp.fromDate(entity.createdAt!)
-            : null);
+            : Timestamp.fromDate(clock.now()));
   }
 
   @override
@@ -34,7 +35,7 @@ class SuggestionFactory
     return Suggestion(
         description: model.description,
         category: suggestionCategoryFactory.createFromModel(model.category),
-        createdAt: model.createdAt?.toDate());
+        createdAt: model.createdAt.toDate());
   }
 }
 
