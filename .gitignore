@@ -37,7 +37,6 @@ migrate_working_dir/
 lib/core/firebase_options/
 /android/app/google-services.json
 /ios/firebase_app_id_file.json
-*.gr.dart
 
 # Symbolication related
 app.*.symbols
