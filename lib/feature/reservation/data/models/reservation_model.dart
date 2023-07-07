@@ -20,8 +20,8 @@ class ReservationModel with _$ReservationModel {
     @TimestampConverter() required Timestamp date,
     required String time,
     @ReservedMemberConverter() required ReservedMemberModel reservedMember,
-    @TimestampConverter() Timestamp? createdAt,
-    @TimestampConverter() Timestamp? updatedAt,
+    @TimestampConverter() required Timestamp createdAt,
+    @TimestampConverter() required Timestamp updatedAt,
   }) = _ReservationModel;
 
   factory ReservationModel.fromJson(Map<String, dynamic> json) =>

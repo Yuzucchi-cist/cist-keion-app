@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'firebase_auth_data_source_test.mocks.dart';
+import 'auth_firebase_auth_data_source_test.mocks.dart';
 
 @GenerateMocks([FirebaseAuth, UserCredential, User])
 void main() {
@@ -167,6 +167,7 @@ void main() {
     test('should call logout', () async {
       // arrange
       when(mockFirebaseAuth.signOut()).thenAnswer((realInvocation) async {});
+      when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
       // act
       await dataSource.logout(tStudentNumber);
       // assert

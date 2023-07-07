@@ -3,7 +3,6 @@
 import 'package:cist_keion_app/feature/auth/data/datasources/remote/firestore_data_source.dart';
 import 'package:cist_keion_app/feature/reservation/data/datasources/reservation_remote_data_source.dart';
 import 'package:cist_keion_app/feature/reservation/data/models/reservation_model.dart';
-import 'package:clock/clock.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -102,16 +101,11 @@ void main() {
   });
 
   group('addReservations', () {
-    final tNowTime = DateTime(2023, 06, 25, 12, 11);
-    final tAddReservationModels = tReservationModels
-        .map((model) => model.copyWith(createdAt: null, updatedAt: null))
-        .toList();
     test('should call firestore to add data', () async {
       // arrange
       setUserDataToFirestore();
       // act
-      await withClock(Clock(() => tNowTime),
-          () async => dataSource.addReservations(tAddReservationModels));
+      await dataSource.addReservations(tReservationModels);
 
       // assert
       final snapshot =
@@ -131,10 +125,8 @@ void main() {
           .toList();
       expect(
           result,
-          unorderedEquals(tReservationModels.map((model) => model.copyWith(
-              id: '',
-              createdAt: Timestamp.fromDate(tNowTime),
-              updatedAt: Timestamp.fromDate(tNowTime)))));
+          unorderedEquals(
+              tReservationModels.map((model) => model.copyWith(id: ''))));
     });
 
     /*

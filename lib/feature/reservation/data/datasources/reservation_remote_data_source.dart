@@ -1,4 +1,3 @@
-import 'package:clock/clock.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../../core/error/exception/firestore_exception.dart';
@@ -77,10 +76,6 @@ class ReservationRemoteDataSourceImpl implements ReservationRemoteDataSource {
           }
         }));
         final convertedReservation = Map.fromEntries(convertedReservationEntry);
-        convertedReservation.addAll({
-          'created_at': Timestamp.fromDate(clock.now()),
-          'updated_at': Timestamp.fromDate(clock.now())
-        });
         batch.set(firestore.collection(reservationCollectionName).doc(),
             convertedReservation);
       }

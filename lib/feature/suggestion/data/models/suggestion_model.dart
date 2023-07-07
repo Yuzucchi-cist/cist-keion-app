@@ -10,7 +10,7 @@ class SuggestionModel with _$SuggestionModel {
   const factory SuggestionModel({
     required String description,
     required String category,
-    @TimestampConverter() Timestamp? createdAt,
+    @TimestampConverter() required Timestamp createdAt,
   }) = _SuggestionModel;
 
   factory SuggestionModel.fromJson(Map<String, dynamic> json) =>

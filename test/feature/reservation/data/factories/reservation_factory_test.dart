@@ -6,6 +6,7 @@ import 'package:cist_keion_app/feature/reservation/data/models/reserved_member_m
 import 'package:cist_keion_app/feature/reservation/domain/entities/reservation.dart';
 import 'package:cist_keion_app/feature/reservation/domain/values/institute_time.dart';
 import 'package:cist_keion_app/feature/reservation/domain/values/reserved_member.dart';
+import 'package:clock/clock.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -111,18 +112,25 @@ void main() {
     });
 
     test('should return model when createdAt or updatedAt is null', () {
-      // arrange
-      final tValueWithNull = tValue.copyWith(createdAt: null, updatedAt: null);
-      final tModelWithNull = tModel.copyWith(createdAt: null, updatedAt: null);
-      when(mockReservedMemberFactory.convertToModel(any))
-          .thenReturn(tReservedMemberModel);
-      when(mockInstituteTimeFactory.convertToModel(any)).thenReturn(tTime.name);
-      // act
-      final result = factory.convertToModel(tValueWithNull);
-      // assert
-      verify(mockReservedMemberFactory.convertToModel(tReservedMember));
-      verify(mockInstituteTimeFactory.convertToModel(tTime));
-      expect(result, tModelWithNull);
+      final tNow = DateTime(2023, 07, 07, 18, 30);
+      withClock(Clock.fixed(tNow), () {
+        // arrange
+        final tValueWithNull =
+            tValue.copyWith(createdAt: null, updatedAt: null);
+        final tModelWithTimestamp = tModel.copyWith(
+            createdAt: Timestamp.fromDate(clock.now()),
+            updatedAt: Timestamp.fromDate(clock.now()));
+        when(mockReservedMemberFactory.convertToModel(any))
+            .thenReturn(tReservedMemberModel);
+        when(mockInstituteTimeFactory.convertToModel(any))
+            .thenReturn(tTime.name);
+        // act
+        final result = factory.convertToModel(tValueWithNull);
+        // assert
+        verify(mockReservedMemberFactory.convertToModel(tReservedMember));
+        verify(mockInstituteTimeFactory.convertToModel(tTime));
+        expect(result, tModelWithTimestamp);
+      });
     });
   });
 }

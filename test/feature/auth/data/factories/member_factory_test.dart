@@ -97,7 +97,7 @@ void main() {
       Models(authUserModel: tAuthModel, storeUserModel: tStoreModel);
 
   group('create', () {
-    test('should return band extends belonging', () {
+    test('should return entity', () {
       // arrange
       when(mockInstituteGradeFactory.create(any)).thenReturn(tInstituteGrade);
       when(mockUserStateFactory.create(any)).thenReturn(tUserState);
@@ -110,7 +110,7 @@ void main() {
   });
 
   group('createFromModel', () {
-    test('should return band extends belonging from belonging model', () {
+    test('should return entity from model', () {
       // arrange
       when(mockInstituteGradeFactory.createFromModel(any))
           .thenReturn(tInstituteGrade);
@@ -124,7 +124,7 @@ void main() {
   });
 
   group('convertToModel', () {
-    test('should return belonging model from band extends belonging', () {
+    test('should member model from entity', () {
       // arrange
       when(mockInstituteGradeFactory.convertToModel(any))
           .thenReturn(tInstituteGradeModel);
