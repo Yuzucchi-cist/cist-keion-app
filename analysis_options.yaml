@@ -27,7 +27,7 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     # Ignore firebase setting files
-    - lib/core/utils/firebase_settings.dart
+    - lib/core/utils/firebase_setting.dart
     - lib/firebase_options/firebase_options_dev.dart
     - lib/firebase_options/firebase_options_stg.dart
     - lib/firebase_options/firebase_options_prod.dart
