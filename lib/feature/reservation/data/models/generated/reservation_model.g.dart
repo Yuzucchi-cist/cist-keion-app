@@ -14,10 +14,10 @@ _$_ReservationModel _$$_ReservationModelFromJson(Map<String, dynamic> json) =>
       time: json['time'] as String,
       reservedMember: const ReservedMemberConverter()
           .fromJson(json['reserved_member'] as Map<String, dynamic>),
-      createdAt: _$JsonConverterFromJson<Timestamp, Timestamp>(
-          json['created_at'], const TimestampConverter().fromJson),
-      updatedAt: _$JsonConverterFromJson<Timestamp, Timestamp>(
-          json['updated_at'], const TimestampConverter().fromJson),
+      createdAt:
+          const TimestampConverter().fromJson(json['created_at'] as Timestamp),
+      updatedAt:
+          const TimestampConverter().fromJson(json['updated_at'] as Timestamp),
     );
 
 Map<String, dynamic> _$$_ReservationModelToJson(_$_ReservationModel instance) =>
@@ -28,20 +28,6 @@ Map<String, dynamic> _$$_ReservationModelToJson(_$_ReservationModel instance) =>
       'time': instance.time,
       'reserved_member':
           const ReservedMemberConverter().toJson(instance.reservedMember),
-      'created_at': _$JsonConverterToJson<Timestamp, Timestamp>(
-          instance.createdAt, const TimestampConverter().toJson),
-      'updated_at': _$JsonConverterToJson<Timestamp, Timestamp>(
-          instance.updatedAt, const TimestampConverter().toJson),
+      'created_at': const TimestampConverter().toJson(instance.createdAt),
+      'updated_at': const TimestampConverter().toJson(instance.updatedAt),
     };
-
-Value? _$JsonConverterFromJson<Json, Value>(
-  Object? json,
-  Value? Function(Json json) fromJson,
-) =>
-    json == null ? null : fromJson(json as Json);
-
-Json? _$JsonConverterToJson<Json, Value>(
-  Value? value,
-  Json? Function(Value value) toJson,
-) =>
-    value == null ? null : toJson(value);

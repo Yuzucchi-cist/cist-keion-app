@@ -28,9 +28,9 @@ mixin _$ReservationModel {
   @ReservedMemberConverter()
   ReservedMemberModel get reservedMember => throw _privateConstructorUsedError;
   @TimestampConverter()
-  Timestamp? get createdAt => throw _privateConstructorUsedError;
+  Timestamp get createdAt => throw _privateConstructorUsedError;
   @TimestampConverter()
-  Timestamp? get updatedAt => throw _privateConstructorUsedError;
+  Timestamp get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -50,8 +50,8 @@ abstract class $ReservationModelCopyWith<$Res> {
       @TimestampConverter() Timestamp date,
       String time,
       @ReservedMemberConverter() ReservedMemberModel reservedMember,
-      @TimestampConverter() Timestamp? createdAt,
-      @TimestampConverter() Timestamp? updatedAt});
+      @TimestampConverter() Timestamp createdAt,
+      @TimestampConverter() Timestamp updatedAt});
 
   $ReservedMemberModelCopyWith<$Res> get reservedMember;
 }
@@ -74,8 +74,8 @@ class _$ReservationModelCopyWithImpl<$Res, $Val extends ReservationModel>
     Object? date = null,
     Object? time = null,
     Object? reservedMember = null,
-    Object? createdAt = freezed,
-    Object? updatedAt = freezed,
+    Object? createdAt = null,
+    Object? updatedAt = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -98,14 +98,14 @@ class _$ReservationModelCopyWithImpl<$Res, $Val extends ReservationModel>
           ? _value.reservedMember
           : reservedMember // ignore: cast_nullable_to_non_nullable
               as ReservedMemberModel,
-      createdAt: freezed == createdAt
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as Timestamp?,
-      updatedAt: freezed == updatedAt
+              as Timestamp,
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as Timestamp?,
+              as Timestamp,
     ) as $Val);
   }
 
@@ -132,8 +132,8 @@ abstract class _$$_ReservationModelCopyWith<$Res>
       @TimestampConverter() Timestamp date,
       String time,
       @ReservedMemberConverter() ReservedMemberModel reservedMember,
-      @TimestampConverter() Timestamp? createdAt,
-      @TimestampConverter() Timestamp? updatedAt});
+      @TimestampConverter() Timestamp createdAt,
+      @TimestampConverter() Timestamp updatedAt});
 
   @override
   $ReservedMemberModelCopyWith<$Res> get reservedMember;
@@ -155,8 +155,8 @@ class __$$_ReservationModelCopyWithImpl<$Res>
     Object? date = null,
     Object? time = null,
     Object? reservedMember = null,
-    Object? createdAt = freezed,
-    Object? updatedAt = freezed,
+    Object? createdAt = null,
+    Object? updatedAt = null,
   }) {
     return _then(_$_ReservationModel(
       id: null == id
@@ -179,14 +179,14 @@ class __$$_ReservationModelCopyWithImpl<$Res>
           ? _value.reservedMember
           : reservedMember // ignore: cast_nullable_to_non_nullable
               as ReservedMemberModel,
-      createdAt: freezed == createdAt
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as Timestamp?,
-      updatedAt: freezed == updatedAt
+              as Timestamp,
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as Timestamp?,
+              as Timestamp,
     ));
   }
 }
@@ -201,8 +201,8 @@ class _$_ReservationModel extends _ReservationModel {
       @TimestampConverter() required this.date,
       required this.time,
       @ReservedMemberConverter() required this.reservedMember,
-      @TimestampConverter() this.createdAt,
-      @TimestampConverter() this.updatedAt})
+      @TimestampConverter() required this.createdAt,
+      @TimestampConverter() required this.updatedAt})
       : super._();
 
   factory _$_ReservationModel.fromJson(Map<String, dynamic> json) =>
@@ -222,10 +222,10 @@ class _$_ReservationModel extends _ReservationModel {
   final ReservedMemberModel reservedMember;
   @override
   @TimestampConverter()
-  final Timestamp? createdAt;
+  final Timestamp createdAt;
   @override
   @TimestampConverter()
-  final Timestamp? updatedAt;
+  final Timestamp updatedAt;
 
   @override
   String toString() {
@@ -278,9 +278,9 @@ abstract class _ReservationModel extends ReservationModel {
       @ReservedMemberConverter()
           required final ReservedMemberModel reservedMember,
       @TimestampConverter()
-          final Timestamp? createdAt,
+          required final Timestamp createdAt,
       @TimestampConverter()
-          final Timestamp? updatedAt}) = _$_ReservationModel;
+          required final Timestamp updatedAt}) = _$_ReservationModel;
   const _ReservationModel._() : super._();
 
   factory _ReservationModel.fromJson(Map<String, dynamic> json) =
@@ -300,10 +300,10 @@ abstract class _ReservationModel extends ReservationModel {
   ReservedMemberModel get reservedMember;
   @override
   @TimestampConverter()
-  Timestamp? get createdAt;
+  Timestamp get createdAt;
   @override
   @TimestampConverter()
-  Timestamp? get updatedAt;
+  Timestamp get updatedAt;
   @override
   @JsonKey(ignore: true)
   _$$_ReservationModelCopyWith<_$_ReservationModel> get copyWith =>

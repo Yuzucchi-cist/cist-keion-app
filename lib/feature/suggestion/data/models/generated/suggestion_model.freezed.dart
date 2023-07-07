@@ -23,7 +23,7 @@ mixin _$SuggestionModel {
   String get description => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   @TimestampConverter()
-  Timestamp? get createdAt => throw _privateConstructorUsedError;
+  Timestamp get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,7 +40,7 @@ abstract class $SuggestionModelCopyWith<$Res> {
   $Res call(
       {String description,
       String category,
-      @TimestampConverter() Timestamp? createdAt});
+      @TimestampConverter() Timestamp createdAt});
 }
 
 /// @nodoc
@@ -58,7 +58,7 @@ class _$SuggestionModelCopyWithImpl<$Res, $Val extends SuggestionModel>
   $Res call({
     Object? description = null,
     Object? category = null,
-    Object? createdAt = freezed,
+    Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
       description: null == description
@@ -69,10 +69,10 @@ class _$SuggestionModelCopyWithImpl<$Res, $Val extends SuggestionModel>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
-      createdAt: freezed == createdAt
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as Timestamp?,
+              as Timestamp,
     ) as $Val);
   }
 }
@@ -88,7 +88,7 @@ abstract class _$$_SuggestionModelCopyWith<$Res>
   $Res call(
       {String description,
       String category,
-      @TimestampConverter() Timestamp? createdAt});
+      @TimestampConverter() Timestamp createdAt});
 }
 
 /// @nodoc
@@ -104,7 +104,7 @@ class __$$_SuggestionModelCopyWithImpl<$Res>
   $Res call({
     Object? description = null,
     Object? category = null,
-    Object? createdAt = freezed,
+    Object? createdAt = null,
   }) {
     return _then(_$_SuggestionModel(
       description: null == description
@@ -115,10 +115,10 @@ class __$$_SuggestionModelCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
-      createdAt: freezed == createdAt
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as Timestamp?,
+              as Timestamp,
     ));
   }
 }
@@ -130,7 +130,7 @@ class _$_SuggestionModel implements _SuggestionModel {
   const _$_SuggestionModel(
       {required this.description,
       required this.category,
-      @TimestampConverter() this.createdAt});
+      @TimestampConverter() required this.createdAt});
 
   factory _$_SuggestionModel.fromJson(Map<String, dynamic> json) =>
       _$$_SuggestionModelFromJson(json);
@@ -141,7 +141,7 @@ class _$_SuggestionModel implements _SuggestionModel {
   final String category;
   @override
   @TimestampConverter()
-  final Timestamp? createdAt;
+  final Timestamp createdAt;
 
   @override
   String toString() {
@@ -182,9 +182,10 @@ class _$_SuggestionModel implements _SuggestionModel {
 
 abstract class _SuggestionModel implements SuggestionModel {
   const factory _SuggestionModel(
-      {required final String description,
-      required final String category,
-      @TimestampConverter() final Timestamp? createdAt}) = _$_SuggestionModel;
+          {required final String description,
+          required final String category,
+          @TimestampConverter() required final Timestamp createdAt}) =
+      _$_SuggestionModel;
 
   factory _SuggestionModel.fromJson(Map<String, dynamic> json) =
       _$_SuggestionModel.fromJson;
@@ -195,7 +196,7 @@ abstract class _SuggestionModel implements SuggestionModel {
   String get category;
   @override
   @TimestampConverter()
-  Timestamp? get createdAt;
+  Timestamp get createdAt;
   @override
   @JsonKey(ignore: true)
   _$$_SuggestionModelCopyWith<_$_SuggestionModel> get copyWith =>
