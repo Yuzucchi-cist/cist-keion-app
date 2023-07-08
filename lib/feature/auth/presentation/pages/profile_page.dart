@@ -24,6 +24,7 @@ class ProfilePage extends HookConsumerWidget {
                   children: [
                     Column(
                       children: [
+                        if (member.isAdmin) const Text('管理者'),
                         Text(member.name),
                         Text(member.studentNumber),
                         Text(member.instituteGrade.jpString),
