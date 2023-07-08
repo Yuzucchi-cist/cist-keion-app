@@ -27,6 +27,7 @@ mixin _$FirestoreUserModel {
   UserStateModel get userState => throw _privateConstructorUsedError;
   @BelongingModelListConverter()
   List<BelongingModel> get belongings => throw _privateConstructorUsedError;
+  bool get isAdmin => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +47,8 @@ abstract class $FirestoreUserModelCopyWith<$Res> {
       String name,
       InstituteGradeModel instituteGrade,
       UserStateModel userState,
-      @BelongingModelListConverter() List<BelongingModel> belongings});
+      @BelongingModelListConverter() List<BelongingModel> belongings,
+      bool isAdmin});
 }
 
 /// @nodoc
@@ -68,6 +70,7 @@ class _$FirestoreUserModelCopyWithImpl<$Res, $Val extends FirestoreUserModel>
     Object? instituteGrade = null,
     Object? userState = null,
     Object? belongings = null,
+    Object? isAdmin = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -94,6 +97,10 @@ class _$FirestoreUserModelCopyWithImpl<$Res, $Val extends FirestoreUserModel>
           ? _value.belongings
           : belongings // ignore: cast_nullable_to_non_nullable
               as List<BelongingModel>,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -112,7 +119,8 @@ abstract class _$$_FirestoreUserModelCopyWith<$Res>
       String name,
       InstituteGradeModel instituteGrade,
       UserStateModel userState,
-      @BelongingModelListConverter() List<BelongingModel> belongings});
+      @BelongingModelListConverter() List<BelongingModel> belongings,
+      bool isAdmin});
 }
 
 /// @nodoc
@@ -132,6 +140,7 @@ class __$$_FirestoreUserModelCopyWithImpl<$Res>
     Object? instituteGrade = null,
     Object? userState = null,
     Object? belongings = null,
+    Object? isAdmin = null,
   }) {
     return _then(_$_FirestoreUserModel(
       id: null == id
@@ -158,6 +167,10 @@ class __$$_FirestoreUserModelCopyWithImpl<$Res>
           ? _value._belongings
           : belongings // ignore: cast_nullable_to_non_nullable
               as List<BelongingModel>,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -173,7 +186,8 @@ class _$_FirestoreUserModel extends _FirestoreUserModel {
       required this.instituteGrade,
       required this.userState,
       @BelongingModelListConverter()
-          required final List<BelongingModel> belongings})
+          required final List<BelongingModel> belongings,
+      this.isAdmin = false})
       : _belongings = belongings,
         super._();
 
@@ -200,8 +214,12 @@ class _$_FirestoreUserModel extends _FirestoreUserModel {
   }
 
   @override
+  @JsonKey()
+  final bool isAdmin;
+
+  @override
   String toString() {
-    return 'FirestoreUserModel(id: $id, studentNumber: $studentNumber, name: $name, instituteGrade: $instituteGrade, userState: $userState, belongings: $belongings)';
+    return 'FirestoreUserModel(id: $id, studentNumber: $studentNumber, name: $name, instituteGrade: $instituteGrade, userState: $userState, belongings: $belongings, isAdmin: $isAdmin)';
   }
 
   @override
@@ -218,7 +236,8 @@ class _$_FirestoreUserModel extends _FirestoreUserModel {
             (identical(other.userState, userState) ||
                 other.userState == userState) &&
             const DeepCollectionEquality()
-                .equals(other._belongings, _belongings));
+                .equals(other._belongings, _belongings) &&
+            (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin));
   }
 
   @JsonKey(ignore: true)
@@ -230,7 +249,8 @@ class _$_FirestoreUserModel extends _FirestoreUserModel {
       name,
       instituteGrade,
       userState,
-      const DeepCollectionEquality().hash(_belongings));
+      const DeepCollectionEquality().hash(_belongings),
+      isAdmin);
 
   @JsonKey(ignore: true)
   @override
@@ -249,14 +269,14 @@ class _$_FirestoreUserModel extends _FirestoreUserModel {
 
 abstract class _FirestoreUserModel extends FirestoreUserModel {
   const factory _FirestoreUserModel(
-          {required final String id,
-          required final String studentNumber,
-          required final String name,
-          required final InstituteGradeModel instituteGrade,
-          required final UserStateModel userState,
-          @BelongingModelListConverter()
-              required final List<BelongingModel> belongings}) =
-      _$_FirestoreUserModel;
+      {required final String id,
+      required final String studentNumber,
+      required final String name,
+      required final InstituteGradeModel instituteGrade,
+      required final UserStateModel userState,
+      @BelongingModelListConverter()
+          required final List<BelongingModel> belongings,
+      final bool isAdmin}) = _$_FirestoreUserModel;
   const _FirestoreUserModel._() : super._();
 
   factory _FirestoreUserModel.fromJson(Map<String, dynamic> json) =
@@ -275,6 +295,8 @@ abstract class _FirestoreUserModel extends FirestoreUserModel {
   @override
   @BelongingModelListConverter()
   List<BelongingModel> get belongings;
+  @override
+  bool get isAdmin;
   @override
   @JsonKey(ignore: true)
   _$$_FirestoreUserModelCopyWith<_$_FirestoreUserModel> get copyWith =>

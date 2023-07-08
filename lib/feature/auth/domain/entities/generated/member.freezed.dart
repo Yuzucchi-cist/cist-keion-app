@@ -23,6 +23,7 @@ mixin _$Member {
   UserState get userState => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
   List<Belonging> get belongings => throw _privateConstructorUsedError;
+  bool get isAdmin => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MemberCopyWith<Member> get copyWith => throw _privateConstructorUsedError;
@@ -40,7 +41,8 @@ abstract class $MemberCopyWith<$Res> {
       InstituteGrade instituteGrade,
       UserState userState,
       bool isVerified,
-      List<Belonging> belongings});
+      List<Belonging> belongings,
+      bool isAdmin});
 }
 
 /// @nodoc
@@ -63,6 +65,7 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
     Object? userState = null,
     Object? isVerified = null,
     Object? belongings = null,
+    Object? isAdmin = null,
   }) {
     return _then(_value.copyWith(
       memberId: null == memberId
@@ -93,6 +96,10 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
           ? _value.belongings
           : belongings // ignore: cast_nullable_to_non_nullable
               as List<Belonging>,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -110,7 +117,8 @@ abstract class _$$_MemberCopyWith<$Res> implements $MemberCopyWith<$Res> {
       InstituteGrade instituteGrade,
       UserState userState,
       bool isVerified,
-      List<Belonging> belongings});
+      List<Belonging> belongings,
+      bool isAdmin});
 }
 
 /// @nodoc
@@ -130,6 +138,7 @@ class __$$_MemberCopyWithImpl<$Res>
     Object? userState = null,
     Object? isVerified = null,
     Object? belongings = null,
+    Object? isAdmin = null,
   }) {
     return _then(_$_Member(
       memberId: null == memberId
@@ -160,6 +169,10 @@ class __$$_MemberCopyWithImpl<$Res>
           ? _value._belongings
           : belongings // ignore: cast_nullable_to_non_nullable
               as List<Belonging>,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -174,7 +187,8 @@ class _$_Member implements _Member {
       required this.instituteGrade,
       required this.userState,
       required this.isVerified,
-      final List<Belonging> belongings = const []})
+      final List<Belonging> belongings = const [],
+      this.isAdmin = false})
       : _belongings = belongings;
 
   @override
@@ -199,8 +213,12 @@ class _$_Member implements _Member {
   }
 
   @override
+  @JsonKey()
+  final bool isAdmin;
+
+  @override
   String toString() {
-    return 'Member(memberId: $memberId, studentNumber: $studentNumber, name: $name, instituteGrade: $instituteGrade, userState: $userState, isVerified: $isVerified, belongings: $belongings)';
+    return 'Member(memberId: $memberId, studentNumber: $studentNumber, name: $name, instituteGrade: $instituteGrade, userState: $userState, isVerified: $isVerified, belongings: $belongings, isAdmin: $isAdmin)';
   }
 
   @override
@@ -220,7 +238,8 @@ class _$_Member implements _Member {
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
             const DeepCollectionEquality()
-                .equals(other._belongings, _belongings));
+                .equals(other._belongings, _belongings) &&
+            (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin));
   }
 
   @override
@@ -232,7 +251,8 @@ class _$_Member implements _Member {
       instituteGrade,
       userState,
       isVerified,
-      const DeepCollectionEquality().hash(_belongings));
+      const DeepCollectionEquality().hash(_belongings),
+      isAdmin);
 
   @JsonKey(ignore: true)
   @override
@@ -249,7 +269,8 @@ abstract class _Member implements Member {
       required final InstituteGrade instituteGrade,
       required final UserState userState,
       required final bool isVerified,
-      final List<Belonging> belongings}) = _$_Member;
+      final List<Belonging> belongings,
+      final bool isAdmin}) = _$_Member;
 
   @override
   String get memberId;
@@ -265,6 +286,8 @@ abstract class _Member implements Member {
   bool get isVerified;
   @override
   List<Belonging> get belongings;
+  @override
+  bool get isAdmin;
   @override
   @JsonKey(ignore: true)
   _$$_MemberCopyWith<_$_Member> get copyWith =>

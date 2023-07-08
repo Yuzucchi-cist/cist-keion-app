@@ -74,6 +74,7 @@ class MemberFactory implements DataFactory<Member, Models, Params> {
       userState: userState,
       isVerified: authUserModel.isEmailVerify,
       belongings: belongings,
+      isAdmin: storeUserModel.isAdmin,
     );
   }
 }
