@@ -121,6 +121,22 @@ void main() {
       // assert
       expect(result, tValue);
     });
+
+    test('should return suitable entity when member is admin', () {
+      // arrange
+      final tModelsIsAdmin = Models(
+          authUserModel: tAuthModel,
+          storeUserModel: tStoreModel.copyWith(isAdmin: true));
+      final tValueIsAdmin = tValue.copyWith(isAdmin: true);
+      when(mockInstituteGradeFactory.createFromModel(any))
+          .thenReturn(tInstituteGrade);
+      when(mockUserStateFactory.createFromModel(any)).thenReturn(tUserState);
+      when(mockBelongingFactory.createFromModel(any)).thenReturn(tBelonging);
+      // act
+      final result = factory.createFromModel(tModelsIsAdmin);
+      // assert
+      expect(result, tValueIsAdmin);
+    });
   });
 
   group('convertToModel', () {

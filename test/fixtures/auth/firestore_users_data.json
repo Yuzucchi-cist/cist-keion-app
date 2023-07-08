@@ -6,24 +6,24 @@
       "student_number": "b2202260",
       "institute_grade": "first",
       "user_state": "active",
+      "is_admin": true,
       "belongings": [
         {
           "type": "band",
           "id": "testBandId1",
           "name": "Unizon"
-        }],
-      "created_at": "20230621",
-      "updated_at": "20230621"
+        }]
     }
   },
   {
     "id": "testId123",
     "value": {
-    "name": "test name2",
-    "student_number": "b2102260",
-    "institute_grade": "second",
-    "user_state": "active",
-    "belongings": []
-    }
+      "name": "test name2",
+      "student_number": "b2102260",
+      "institute_grade": "second",
+      "user_state": "active",
+      "is_admin": false,
+      "belongings": []
+      }
   }
 ]

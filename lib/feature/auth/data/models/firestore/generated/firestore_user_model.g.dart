@@ -17,6 +17,7 @@ _$_FirestoreUserModel _$$_FirestoreUserModelFromJson(
       userState: $enumDecode(_$UserStateModelEnumMap, json['user_state']),
       belongings: const BelongingModelListConverter()
           .fromJson(json['belongings'] as List),
+      isAdmin: json['is_admin'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_FirestoreUserModelToJson(
@@ -29,6 +30,7 @@ Map<String, dynamic> _$$_FirestoreUserModelToJson(
       'user_state': _$UserStateModelEnumMap[instance.userState]!,
       'belongings':
           const BelongingModelListConverter().toJson(instance.belongings),
+      'is_admin': instance.isAdmin,
     };
 
 const _$InstituteGradeModelEnumMap = {

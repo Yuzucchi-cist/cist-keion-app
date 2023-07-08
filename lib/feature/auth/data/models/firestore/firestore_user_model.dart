@@ -21,6 +21,7 @@ class FirestoreUserModel with _$FirestoreUserModel {
     required InstituteGradeModel instituteGrade,
     required UserStateModel userState,
     @BelongingModelListConverter() required List<BelongingModel> belongings,
+    @Default(false) bool isAdmin,
   }) = _FirestoreUserModel;
 
   factory FirestoreUserModel.fromJson(Map<String, dynamic> json) =>

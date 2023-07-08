@@ -10,9 +10,8 @@ void main() {
   final tFirestoreJsonData = firestoreDataReader(firestoreUserDataPath, []);
 
   final tId = tFirestoreJsonData.first['id'] as String;
-  final tFirestoreDatum = (tFirestoreJsonData.first['value']
-      as Map<String, dynamic>)
-    ..removeWhere((key, value) => key == 'created_at' || key == 'updated_at');
+  final tFirestoreDatum =
+      tFirestoreJsonData.first['value'] as Map<String, dynamic>;
   final tStudentNumber = tFirestoreDatum['student_number'] as String;
   final tName = tFirestoreDatum['name'] as String;
   final tInstituteGrade = InstituteGradeModel.values
@@ -25,6 +24,7 @@ void main() {
           type: BelongingType.values.byName(belonging['type'] as String),
           name: belonging['name'] as String))
       .toList();
+  final tIsAdmin = tFirestoreDatum['is_admin'] as bool;
 
   final tFirestoreUserModel = FirestoreUserModel(
     id: tId,
@@ -33,6 +33,7 @@ void main() {
     instituteGrade: tInstituteGrade,
     userState: tUserState,
     belongings: tBelongings,
+    isAdmin: tIsAdmin,
   );
 
   test('should create model from json data', () {

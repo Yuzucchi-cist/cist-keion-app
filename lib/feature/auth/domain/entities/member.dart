@@ -16,5 +16,6 @@ class Member with _$Member {
     required UserState userState,
     required bool isVerified,
     @Default([]) List<Belonging> belongings,
+    @Default(false) bool isAdmin,
   }) = _Member;
 }
