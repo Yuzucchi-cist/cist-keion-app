@@ -2,6 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../feature/admin/presentation/pages/admin_page.dart';
+import '../../feature/admin/presentation/pages/admin_router_page.dart';
+import '../../feature/admin/presentation/pages/suggestion_detail_page.dart';
+import '../../feature/admin/presentation/pages/suggestions_page.dart';
 import '../../feature/auth/presentation/pages/auth_router_page.dart';
 import '../../feature/auth/presentation/pages/confirm_email_verify_page.dart';
 import '../../feature/auth/presentation/pages/login_page.dart';
@@ -69,6 +72,16 @@ class AppRouter extends _$AppRouter {
                 path: 'confirm_email', page: ConfirmEmailVerifyRoute.page),
           ],
         ),
-        CustomRoute(path: '/admin', page: AdminRoute.page),
+        CustomRoute(
+          path: '/admin',
+          page: AdminRouterRoute.page,
+          fullscreenDialog: true,
+          children: [
+            AutoRoute(initial: true, page: AdminRoute.page),
+            AutoRoute(path: 'suggestions', page: SuggestionsRoute.page),
+            AutoRoute(
+                path: 'suggestion_detail', page: SuggestionDetailRoute.page),
+          ],
+        ),
       ];
 }

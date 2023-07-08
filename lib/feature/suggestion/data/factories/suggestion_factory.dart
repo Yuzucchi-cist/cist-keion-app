@@ -15,6 +15,7 @@ class SuggestionFactory
   @override
   SuggestionModel convertToModel(Suggestion entity) {
     return SuggestionModel(
+        id: entity.id,
         description: entity.description,
         category: suggestionCategoryFactory.convertToModel(entity.category),
         createdAt: entity.createdAt != null
@@ -25,6 +26,7 @@ class SuggestionFactory
   @override
   Suggestion create(Params params) {
     return Suggestion(
+        id: '',
         description: params.description,
         category: suggestionCategoryFactory.create(params.category),
         createdAt: params.createdAt);
@@ -33,6 +35,7 @@ class SuggestionFactory
   @override
   Suggestion createFromModel(SuggestionModel model) {
     return Suggestion(
+        id: model.id,
         description: model.description,
         category: suggestionCategoryFactory.createFromModel(model.category),
         createdAt: model.createdAt.toDate());

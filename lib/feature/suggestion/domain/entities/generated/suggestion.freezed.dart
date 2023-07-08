@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Suggestion {
+  String get id => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   SuggestionCategory get category => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -32,7 +33,10 @@ abstract class $SuggestionCopyWith<$Res> {
       _$SuggestionCopyWithImpl<$Res, Suggestion>;
   @useResult
   $Res call(
-      {String description, SuggestionCategory category, DateTime? createdAt});
+      {String id,
+      String description,
+      SuggestionCategory category,
+      DateTime? createdAt});
 }
 
 /// @nodoc
@@ -48,11 +52,16 @@ class _$SuggestionCopyWithImpl<$Res, $Val extends Suggestion>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? description = null,
     Object? category = null,
     Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -78,7 +87,10 @@ abstract class _$$_SuggestionCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String description, SuggestionCategory category, DateTime? createdAt});
+      {String id,
+      String description,
+      SuggestionCategory category,
+      DateTime? createdAt});
 }
 
 /// @nodoc
@@ -92,11 +104,16 @@ class __$$_SuggestionCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? description = null,
     Object? category = null,
     Object? createdAt = freezed,
   }) {
     return _then(_$_Suggestion(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -117,8 +134,13 @@ class __$$_SuggestionCopyWithImpl<$Res>
 
 class _$_Suggestion implements _Suggestion {
   const _$_Suggestion(
-      {required this.description, required this.category, this.createdAt});
+      {required this.id,
+      required this.description,
+      required this.category,
+      this.createdAt});
 
+  @override
+  final String id;
   @override
   final String description;
   @override
@@ -128,7 +150,7 @@ class _$_Suggestion implements _Suggestion {
 
   @override
   String toString() {
-    return 'Suggestion(description: $description, category: $category, createdAt: $createdAt)';
+    return 'Suggestion(id: $id, description: $description, category: $category, createdAt: $createdAt)';
   }
 
   @override
@@ -136,6 +158,7 @@ class _$_Suggestion implements _Suggestion {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Suggestion &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.category, category) ||
@@ -146,7 +169,7 @@ class _$_Suggestion implements _Suggestion {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, description, category, createdAt);
+      Object.hash(runtimeType, id, description, category, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -157,10 +180,13 @@ class _$_Suggestion implements _Suggestion {
 
 abstract class _Suggestion implements Suggestion {
   const factory _Suggestion(
-      {required final String description,
+      {required final String id,
+      required final String description,
       required final SuggestionCategory category,
       final DateTime? createdAt}) = _$_Suggestion;
 
+  @override
+  String get id;
   @override
   String get description;
   @override

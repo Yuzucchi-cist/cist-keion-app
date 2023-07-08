@@ -1,16 +1,18 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/provider_di.dart';
-import '../../domain/entities/suggestion.dart';
 import '../../domain/usecases/add_suggestion.dart';
 import '../../domain/values/suggestion_category.dart';
+import '../states/suggestion.dart';
 
 final suggestionProvider =
-    StateNotifierProvider<SuggestionNotifier, Suggestion?>(
-        (ref) => SuggestionNotifier(ref.watch(addSuggestionProvider)));
+    StateNotifierProvider<SuggestionNotifier, SuggestionState?>(
+        (ref) => SuggestionNotifier(
+              addSuggestion: ref.watch(addSuggestionProvider),
+            ));
 
-class SuggestionNotifier extends StateNotifier<Suggestion?> {
-  SuggestionNotifier(this.addSuggestion) : super(null);
+class SuggestionNotifier extends StateNotifier<SuggestionState?> {
+  SuggestionNotifier({required this.addSuggestion}) : super(null);
 
   final AddSuggestion addSuggestion;
 
@@ -25,6 +27,6 @@ class SuggestionNotifier extends StateNotifier<Suggestion?> {
   }
 
   void makeSuggestion(SuggestionCategory category, String description) {
-    state = Suggestion(description: description, category: category);
+    state = SuggestionState(description: description, category: category);
   }
 }

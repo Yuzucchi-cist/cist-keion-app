@@ -21,8 +21,8 @@ void main() {
 
   final tParams = AddSuggestionParams(
       description: 'テストです。', category: SuggestionCategory.club_room);
-  final tSuggestion =
-      Suggestion(description: tParams.description, category: tParams.category);
+  final tSuggestion = Suggestion(
+      id: '', description: tParams.description, category: tParams.category);
 
   test('should return result from repository', () async {
     // arrange

@@ -62,4 +62,21 @@ class MockSuggestionRepository extends _i1.Mock
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, _i2.Unit>>);
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, List<_i6.Suggestion>>> getAll() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAll,
+          [],
+        ),
+        returnValue:
+            _i4.Future<_i2.Either<_i5.Failure, List<_i6.Suggestion>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i6.Suggestion>>(
+          this,
+          Invocation.method(
+            #getAll,
+            [],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, List<_i6.Suggestion>>>);
 }

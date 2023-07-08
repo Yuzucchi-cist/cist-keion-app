@@ -49,13 +49,29 @@ void main() {
     });
   }
 
-  const tSuggestion =
-      Suggestion(description: 'テストです。', category: SuggestionCategory.club_room);
+  const tSuggestion = Suggestion(
+      id: '', description: 'テストです。', category: SuggestionCategory.club_room);
   final tSuggestionModel = SuggestionModel(
+    id: '',
     description: tSuggestion.description,
     category: tSuggestion.category.name,
     createdAt: Timestamp.fromDate(DateTime(2023, 07, 07)),
   );
+
+  const tSuggestionList = [
+    Suggestion(
+        id: '', description: 'テスト1です。', category: SuggestionCategory.club_room),
+    Suggestion(
+        id: '', description: 'テスト2です。', category: SuggestionCategory.live),
+  ];
+  final tSuggestionModelList = tSuggestionList
+      .map((suggestion) => SuggestionModel(
+            id: 'testId',
+            description: suggestion.description,
+            category: suggestion.category.name,
+            createdAt: Timestamp.fromDate(DateTime(2023, 07, 07)),
+          ))
+      .toList();
 
   group('add', () {
     checkOnline(
@@ -109,6 +125,64 @@ void main() {
       test('should return server failure', () async {
         // act
         final result = await repository.add(tSuggestion);
+        // assert
+        expect(result, Left(ServerFailure()));
+      });
+    });
+  });
+
+  group('getAll', () {
+    checkOnline(
+      arrange: () {
+        when(mockSuggestionRemoteDataSource.getAll())
+            .thenAnswer((realInvocation) async => tSuggestionModelList);
+        tSuggestionModelList.asMap().forEach((index, model) {
+          when(mockSuggestionFactory.createFromModel(model))
+              .thenReturn(tSuggestionList.elementAt(index));
+        });
+      },
+      act: () {
+        repository.getAll();
+      },
+    );
+
+    group('device is online', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => true));
+      test('should return suggestion list when data source is successful',
+          () async {
+        // arrange
+        when(mockSuggestionRemoteDataSource.getAll())
+            .thenAnswer((realInvocation) async => tSuggestionModelList);
+        tSuggestionModelList.asMap().forEach((index, model) {
+          when(mockSuggestionFactory.createFromModel(model))
+              .thenReturn(tSuggestionList.elementAt(index));
+        });
+        // act
+        final result = (await repository.getAll()).fold((l) => l, (r) => r);
+        // assert
+        verify(mockSuggestionRemoteDataSource.getAll());
+        expect(result, unorderedEquals(tSuggestionList));
+      });
+
+      test('should return firestore failure when datasource failed', () async {
+        // arrange
+        when(mockSuggestionRemoteDataSource.getAll())
+            .thenThrow(FirestoreException('no-data'));
+        // act
+        final result = await repository.getAll();
+        // assert
+        expect(result, Left(SuggestionFailure(SuggestionFailureState.noData)));
+      });
+    });
+
+    group('device is offline', () {
+      setUp(() => when(mockNetworkInfo.isConnected)
+          .thenAnswer((realInvocation) async => false));
+
+      test('should return server failure', () async {
+        // act
+        final result = await repository.getAll();
         // assert
         expect(result, Left(ServerFailure()));
       });

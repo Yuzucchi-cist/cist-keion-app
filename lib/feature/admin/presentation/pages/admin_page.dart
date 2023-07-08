@@ -19,7 +19,18 @@ class AdminPage extends HookConsumerWidget {
           onPressed: () => context.navigateTo(const RootRoute()),
         ),
       ),
-      body: const Text('開発中...'),
+      body: Center(
+        child: Column(
+          children: [
+            ElevatedButton(
+              child: const Text('意見箱'),
+              onPressed: () {
+                context.router.push(const SuggestionsRoute());
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }

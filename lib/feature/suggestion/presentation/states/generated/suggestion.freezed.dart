@@ -15,28 +15,28 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$Suggestion {
+mixin _$SuggestionState {
   SuggestionCategory get category => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $SuggestionCopyWith<Suggestion> get copyWith =>
+  $SuggestionStateCopyWith<SuggestionState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SuggestionCopyWith<$Res> {
-  factory $SuggestionCopyWith(
-          Suggestion value, $Res Function(Suggestion) then) =
-      _$SuggestionCopyWithImpl<$Res, Suggestion>;
+abstract class $SuggestionStateCopyWith<$Res> {
+  factory $SuggestionStateCopyWith(
+          SuggestionState value, $Res Function(SuggestionState) then) =
+      _$SuggestionStateCopyWithImpl<$Res, SuggestionState>;
   @useResult
   $Res call({SuggestionCategory category, String description});
 }
 
 /// @nodoc
-class _$SuggestionCopyWithImpl<$Res, $Val extends Suggestion>
-    implements $SuggestionCopyWith<$Res> {
-  _$SuggestionCopyWithImpl(this._value, this._then);
+class _$SuggestionStateCopyWithImpl<$Res, $Val extends SuggestionState>
+    implements $SuggestionStateCopyWith<$Res> {
+  _$SuggestionStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -63,22 +63,22 @@ class _$SuggestionCopyWithImpl<$Res, $Val extends Suggestion>
 }
 
 /// @nodoc
-abstract class _$$_SuggestionCopyWith<$Res>
-    implements $SuggestionCopyWith<$Res> {
-  factory _$$_SuggestionCopyWith(
-          _$_Suggestion value, $Res Function(_$_Suggestion) then) =
-      __$$_SuggestionCopyWithImpl<$Res>;
+abstract class _$$_SuggestionStateCopyWith<$Res>
+    implements $SuggestionStateCopyWith<$Res> {
+  factory _$$_SuggestionStateCopyWith(
+          _$_SuggestionState value, $Res Function(_$_SuggestionState) then) =
+      __$$_SuggestionStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({SuggestionCategory category, String description});
 }
 
 /// @nodoc
-class __$$_SuggestionCopyWithImpl<$Res>
-    extends _$SuggestionCopyWithImpl<$Res, _$_Suggestion>
-    implements _$$_SuggestionCopyWith<$Res> {
-  __$$_SuggestionCopyWithImpl(
-      _$_Suggestion _value, $Res Function(_$_Suggestion) _then)
+class __$$_SuggestionStateCopyWithImpl<$Res>
+    extends _$SuggestionStateCopyWithImpl<$Res, _$_SuggestionState>
+    implements _$$_SuggestionStateCopyWith<$Res> {
+  __$$_SuggestionStateCopyWithImpl(
+      _$_SuggestionState _value, $Res Function(_$_SuggestionState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +87,7 @@ class __$$_SuggestionCopyWithImpl<$Res>
     Object? category = null,
     Object? description = null,
   }) {
-    return _then(_$_Suggestion(
+    return _then(_$_SuggestionState(
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -102,8 +102,8 @@ class __$$_SuggestionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Suggestion implements _Suggestion {
-  const _$_Suggestion({required this.category, required this.description});
+class _$_SuggestionState implements _SuggestionState {
+  const _$_SuggestionState({required this.category, required this.description});
 
   @override
   final SuggestionCategory category;
@@ -112,14 +112,14 @@ class _$_Suggestion implements _Suggestion {
 
   @override
   String toString() {
-    return 'Suggestion(category: $category, description: $description)';
+    return 'SuggestionState(category: $category, description: $description)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Suggestion &&
+            other is _$_SuggestionState &&
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.description, description) ||
@@ -132,14 +132,14 @@ class _$_Suggestion implements _Suggestion {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SuggestionCopyWith<_$_Suggestion> get copyWith =>
-      __$$_SuggestionCopyWithImpl<_$_Suggestion>(this, _$identity);
+  _$$_SuggestionStateCopyWith<_$_SuggestionState> get copyWith =>
+      __$$_SuggestionStateCopyWithImpl<_$_SuggestionState>(this, _$identity);
 }
 
-abstract class _Suggestion implements Suggestion {
-  const factory _Suggestion(
+abstract class _SuggestionState implements SuggestionState {
+  const factory _SuggestionState(
       {required final SuggestionCategory category,
-      required final String description}) = _$_Suggestion;
+      required final String description}) = _$_SuggestionState;
 
   @override
   SuggestionCategory get category;
@@ -147,6 +147,6 @@ abstract class _Suggestion implements Suggestion {
   String get description;
   @override
   @JsonKey(ignore: true)
-  _$$_SuggestionCopyWith<_$_Suggestion> get copyWith =>
+  _$$_SuggestionStateCopyWith<_$_SuggestionState> get copyWith =>
       throw _privateConstructorUsedError;
 }

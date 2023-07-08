@@ -31,6 +31,7 @@ import '../feature/suggestion/data/factories/suggestion_category_factory.dart';
 import '../feature/suggestion/data/factories/suggestion_factory.dart';
 import '../feature/suggestion/data/repositories/suggestion_repository_impl.dart';
 import '../feature/suggestion/domain/usecases/add_suggestion.dart';
+import '../feature/suggestion/domain/usecases/get_suggestions.dart';
 import 'network/network_info.dart';
 
 final connectivityProvider = Provider((ref) => Connectivity());
@@ -129,4 +130,6 @@ final suggestionRepositoryProvider = Provider((ref) => SuggestionRepositoryImpl(
     suggestionFactory: ref.watch(suggestionFactoryProvider)));
 
 final addSuggestionProvider = Provider((ref) => AddSuggestion(
+    suggestionRepository: ref.watch(suggestionRepositoryProvider)));
+final getSuggestionsProvider = Provider((ref) => GetSuggestions(
     suggestionRepository: ref.watch(suggestionRepositoryProvider)));

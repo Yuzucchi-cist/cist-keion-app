@@ -13,8 +13,8 @@ class AddSuggestion implements UseCase<Unit, AddSuggestionParams> {
 
   @override
   Future<Either<Failure, Unit>> call(AddSuggestionParams params) {
-    return suggestionRepository.add(
-        Suggestion(description: params.description, category: params.category));
+    return suggestionRepository.add(Suggestion(
+        id: '', description: params.description, category: params.category));
   }
 }
 

@@ -5,9 +5,9 @@ import '../../domain/values/suggestion_category.dart';
 part 'generated/suggestion.freezed.dart';
 
 @freezed
-class Suggestion with _$Suggestion {
-  const factory Suggestion({
+class SuggestionState with _$SuggestionState {
+  const factory SuggestionState({
     required SuggestionCategory category,
     required String description,
-  }) = _Suggestion;
+  }) = _SuggestionState;
 }

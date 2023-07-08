@@ -82,6 +82,15 @@ class MockSuggestionRemoteDataSource extends _i1.Mock
         returnValue: _i6.Future<void>.value(),
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
+  @override
+  _i6.Future<List<_i3.SuggestionModel>> getAll() => (super.noSuchMethod(
+        Invocation.method(
+          #getAll,
+          [],
+        ),
+        returnValue: _i6.Future<List<_i3.SuggestionModel>>.value(
+            <_i3.SuggestionModel>[]),
+      ) as _i6.Future<List<_i3.SuggestionModel>>);
 }
 
 /// A class which mocks [NetworkInfo].
