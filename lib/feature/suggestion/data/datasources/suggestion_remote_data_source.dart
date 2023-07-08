@@ -7,6 +7,7 @@ const suggestionCollectionName = 'suggestion';
 
 abstract class SuggestionRemoteDataSource {
   Future<void> add(SuggestionModel suggestionModel);
+  Future<List<SuggestionModel>> getAll();
 }
 
 class SuggestionRemoteDataSourceImpl implements SuggestionRemoteDataSource {
@@ -18,9 +19,18 @@ class SuggestionRemoteDataSourceImpl implements SuggestionRemoteDataSource {
     try {
       firestore
           .collection(suggestionCollectionName)
-          .add(suggestionModel.toJson());
+          .add(suggestionModel.toFirestoreJson);
     } on FirebaseException catch (e) {
       throw FirestoreException(e.code);
     }
+  }
+
+  @override
+  Future<List<SuggestionModel>> getAll() async {
+    final docs =
+        (await firestore.collection(suggestionCollectionName).get()).docs;
+    return docs
+        .map((doc) => SuggestionModel.fromFirestoreJson(doc.id, doc.data()))
+        .toList();
   }
 }

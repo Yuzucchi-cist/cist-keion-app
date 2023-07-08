@@ -1,3 +1,5 @@
+// ignore_for_file: sort_constructors_first
+
 enum WeekDay {
   sun('日'),
   mon('月'),
@@ -9,10 +11,8 @@ enum WeekDay {
 
   final String value;
 
-  // ignore: sort_constructors_first
   const WeekDay(this.value);
 
-  // ignore: sort_constructors_first
   factory WeekDay.fromDate(DateTime date) {
     return WeekDay.values[(date.weekday % DateTime.daysPerWeek)];
   }

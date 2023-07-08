@@ -20,6 +20,7 @@ SuggestionModel _$SuggestionModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SuggestionModel {
+  String get id => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   @TimestampConverter()
@@ -38,7 +39,8 @@ abstract class $SuggestionModelCopyWith<$Res> {
       _$SuggestionModelCopyWithImpl<$Res, SuggestionModel>;
   @useResult
   $Res call(
-      {String description,
+      {String id,
+      String description,
       String category,
       @TimestampConverter() Timestamp createdAt});
 }
@@ -56,11 +58,16 @@ class _$SuggestionModelCopyWithImpl<$Res, $Val extends SuggestionModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? description = null,
     Object? category = null,
     Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -86,7 +93,8 @@ abstract class _$$_SuggestionModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String description,
+      {String id,
+      String description,
       String category,
       @TimestampConverter() Timestamp createdAt});
 }
@@ -102,11 +110,16 @@ class __$$_SuggestionModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? description = null,
     Object? category = null,
     Object? createdAt = null,
   }) {
     return _then(_$_SuggestionModel(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -126,15 +139,19 @@ class __$$_SuggestionModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$_SuggestionModel implements _SuggestionModel {
+class _$_SuggestionModel extends _SuggestionModel {
   const _$_SuggestionModel(
-      {required this.description,
+      {required this.id,
+      required this.description,
       required this.category,
-      @TimestampConverter() required this.createdAt});
+      @TimestampConverter() required this.createdAt})
+      : super._();
 
   factory _$_SuggestionModel.fromJson(Map<String, dynamic> json) =>
       _$$_SuggestionModelFromJson(json);
 
+  @override
+  final String id;
   @override
   final String description;
   @override
@@ -145,7 +162,7 @@ class _$_SuggestionModel implements _SuggestionModel {
 
   @override
   String toString() {
-    return 'SuggestionModel(description: $description, category: $category, createdAt: $createdAt)';
+    return 'SuggestionModel(id: $id, description: $description, category: $category, createdAt: $createdAt)';
   }
 
   @override
@@ -153,6 +170,7 @@ class _$_SuggestionModel implements _SuggestionModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SuggestionModel &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.category, category) ||
@@ -164,7 +182,7 @@ class _$_SuggestionModel implements _SuggestionModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, description, category, createdAt);
+      Object.hash(runtimeType, id, description, category, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -180,16 +198,20 @@ class _$_SuggestionModel implements _SuggestionModel {
   }
 }
 
-abstract class _SuggestionModel implements SuggestionModel {
+abstract class _SuggestionModel extends SuggestionModel {
   const factory _SuggestionModel(
-          {required final String description,
+          {required final String id,
+          required final String description,
           required final String category,
           @TimestampConverter() required final Timestamp createdAt}) =
       _$_SuggestionModel;
+  const _SuggestionModel._() : super._();
 
   factory _SuggestionModel.fromJson(Map<String, dynamic> json) =
       _$_SuggestionModel.fromJson;
 
+  @override
+  String get id;
   @override
   String get description;
   @override

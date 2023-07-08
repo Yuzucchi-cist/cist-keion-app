@@ -125,6 +125,28 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AdminPage(),
       );
     },
+    AdminRouterRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AdminRouterPage(),
+      );
+    },
+    SuggestionsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SuggestionsPage(),
+      );
+    },
+    SuggestionDetailRoute.name: (routeData) {
+      final args = routeData.argsAs<SuggestionDetailRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SuggestionDetailPage(
+          args.suggestionId,
+          key: args.key,
+        ),
+      );
+    },
   };
 }
 
@@ -444,4 +466,70 @@ class AdminRoute extends PageRouteInfo<void> {
   static const String name = 'AdminRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AdminRouterPage]
+class AdminRouterRoute extends PageRouteInfo<void> {
+  const AdminRouterRoute({List<PageRouteInfo>? children})
+      : super(
+          AdminRouterRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AdminRouterRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SuggestionsPage]
+class SuggestionsRoute extends PageRouteInfo<void> {
+  const SuggestionsRoute({List<PageRouteInfo>? children})
+      : super(
+          SuggestionsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SuggestionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SuggestionDetailPage]
+class SuggestionDetailRoute extends PageRouteInfo<SuggestionDetailRouteArgs> {
+  SuggestionDetailRoute({
+    required String suggestionId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SuggestionDetailRoute.name,
+          args: SuggestionDetailRouteArgs(
+            suggestionId: suggestionId,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SuggestionDetailRoute';
+
+  static const PageInfo<SuggestionDetailRouteArgs> page =
+      PageInfo<SuggestionDetailRouteArgs>(name);
+}
+
+class SuggestionDetailRouteArgs {
+  const SuggestionDetailRouteArgs({
+    required this.suggestionId,
+    this.key,
+  });
+
+  final String suggestionId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'SuggestionDetailRouteArgs{suggestionId: $suggestionId, key: $key}';
+  }
 }

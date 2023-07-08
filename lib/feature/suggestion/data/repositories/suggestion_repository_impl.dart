@@ -35,4 +35,20 @@ class SuggestionRepositoryImpl implements SuggestionRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<Suggestion>>> getAll() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final suggestionModel = await remoteDataSource.getAll();
+        return Right(suggestionModel
+            .map((model) => suggestionFactory.createFromModel(model))
+            .toList());
+      } on FirestoreException catch (e) {
+        return Left(SuggestionFailure.fromCode(e.code));
+      }
+    } else {
+      return Left(ServerFailure());
+    }
+  }
 }

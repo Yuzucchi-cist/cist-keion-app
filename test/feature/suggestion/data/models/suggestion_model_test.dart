@@ -6,25 +6,28 @@ import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tFirestoreData =
-      firestoreDataReader(firestoreSuggestionDataPath, ['created_at'])
-          .first['value'] as Map<String, dynamic>;
+      firestoreDataReader(firestoreSuggestionDataPath, ['created_at']).first;
+
+  final tId = tFirestoreData['id'] as String;
+  final tFirestoreJson = tFirestoreData['value'] as Map<String, dynamic>;
 
   final tModel = SuggestionModel(
-      description: tFirestoreData['description'] as String,
-      category: tFirestoreData['category'] as String,
-      createdAt: tFirestoreData['created_at'] as Timestamp);
+      id: tId,
+      description: tFirestoreJson['description'] as String,
+      category: tFirestoreJson['category'] as String,
+      createdAt: tFirestoreJson['created_at'] as Timestamp);
 
   test('should create model from json data', () {
     // act
-    final result = SuggestionModel.fromJson(tFirestoreData);
+    final result = SuggestionModel.fromFirestoreJson(tId, tFirestoreJson);
     // assert
     expect(result, tModel);
   });
 
   test('should should return suitable fire store map from model', () {
     // act
-    final result = tModel.toJson();
+    final result = tModel.toFirestoreJson;
     // assert
-    expect(result, tFirestoreData);
+    expect(result, tFirestoreJson);
   });
 }

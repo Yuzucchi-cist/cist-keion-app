@@ -23,11 +23,13 @@ void main() {
   });
 
   final tValue = Suggestion(
+      id: 'testId',
       description: 'テストです。',
       category: SuggestionCategory.club_room,
       createdAt: DateTime(2023, 07, 04));
 
   final tModel = SuggestionModel(
+      id: 'testId',
       description: tValue.description,
       category: tValue.category.name,
       createdAt: Timestamp.fromDate(tValue.createdAt!));
@@ -40,13 +42,14 @@ void main() {
   group('create', () {
     test('should return suggestion', () {
       // arrange
+      final tValueWithEmptyId = tValue.copyWith(id: '');
       when(mockSuggestionCategoryFactory.create(any))
           .thenAnswer((realInvocation) => tValue.category);
       // act
       final result = factory.create(params);
       // assert
       verify(mockSuggestionCategoryFactory.create(params.category));
-      expect(result, tValue);
+      expect(result, tValueWithEmptyId);
     });
   });
 

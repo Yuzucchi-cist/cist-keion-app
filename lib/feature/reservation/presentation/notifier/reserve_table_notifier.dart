@@ -67,22 +67,25 @@ class ReserveTableNotifier extends StateNotifier<ReserveTable> {
 
   Future<void> update() async {
     final result = await getReservations(NoParams());
-    result.fold((l) {
-      if (l is ServerFailure) {
-        throw Exception(l);
-      } else if (l is ReservationFailure) {
-        switch (l.state) {
-          case ReservationFailureState.noData:
-          case ReservationFailureState.cannotCached:
-            return;
-          case ReservationFailureState.unexpected:
-            throw Exception('Unexpected Error');
+    result.fold(
+      (l) {
+        if (l is ServerFailure) {
+          throw Exception(l);
+        } else if (l is ReservationFailure) {
+          switch (l.state) {
+            case ReservationFailureState.noData:
+            case ReservationFailureState.cannotCached:
+              return;
+            case ReservationFailureState.unexpected:
+              throw Exception('Unexpected Error');
+          }
         }
-      }
-    }, (reservations) {
-      state = ReserveTable.fromReservationList(reservations, startDateOfWeek,
-          oldTable: state);
-    });
+      },
+      (reservations) {
+        state = ReserveTable.fromReservationList(reservations, startDateOfWeek,
+            oldTable: state);
+      },
+    );
   }
 
   Future<void> add() async {
