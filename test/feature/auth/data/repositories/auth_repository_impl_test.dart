@@ -98,7 +98,6 @@ void main() {
       name: 'testName',
       instituteGrade: InstituteGrade.first,
       userState: UserState.active,
-      isAdmin: false,
       isVerified: false);
 
   group('registerMember', () {
