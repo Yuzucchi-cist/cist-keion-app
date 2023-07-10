@@ -16,7 +16,7 @@ class AdminPage extends HookConsumerWidget {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.home),
-          onPressed: () => context.navigateTo(const RootRoute()),
+          onPressed: () => context.navigateTo(const UnauthenticatedHomeRoute()),
         ),
       ),
       body: Center(

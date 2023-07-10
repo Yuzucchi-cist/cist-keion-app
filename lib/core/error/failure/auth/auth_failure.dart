@@ -1,3 +1,4 @@
+import '../../exception/firebase_auth_exception.dart';
 import '../failure.dart';
 import 'auth_failure_state.dart';
 
@@ -7,6 +8,8 @@ class AuthFailure extends Failure {
   factory AuthFailure.fromRemoteDataSourceExceptionCode(String code) {
     final AuthFailureState state;
     switch (code) {
+      case errorCodeUserNotLoggedIn:
+        state = AuthFailureState.userNotLogin;
       case 'invalid-email':
         state = AuthFailureState.invalidEmail;
       case 'user-not-found':

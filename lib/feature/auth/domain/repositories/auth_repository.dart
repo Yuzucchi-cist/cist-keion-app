@@ -15,5 +15,5 @@ abstract class AuthRepository {
 
   Future<Either<Failure, Member>> getCurrentMember();
 
-  Stream<Either<Failure, Member>> getAuthChange();
+  Stream<Either<Failure, Member?>> getAuthChange();
 }

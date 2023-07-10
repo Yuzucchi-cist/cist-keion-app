@@ -1,16 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../feature/admin/presentation/pages/admin_page.dart';
 import '../../feature/admin/presentation/pages/admin_router_page.dart';
 import '../../feature/admin/presentation/pages/suggestion_detail_page.dart';
 import '../../feature/admin/presentation/pages/suggestions_page.dart';
+import '../../feature/auth/presentation/notifier/auth_notifier.dart';
 import '../../feature/auth/presentation/pages/auth_router_page.dart';
 import '../../feature/auth/presentation/pages/confirm_email_verify_page.dart';
 import '../../feature/auth/presentation/pages/login_page.dart';
 import '../../feature/auth/presentation/pages/profile_page.dart';
 import '../../feature/auth/presentation/pages/register_page.dart';
 import '../../feature/home/presentation/pages/home_page.dart';
+import '../../feature/home/presentation/pages/unauthenticated_home_page.dart';
 import '../../feature/reservation/presentation/pages/cancel_reservation_page.dart';
 import '../../feature/reservation/presentation/pages/choose_reserve_table_page.dart';
 import '../../feature/reservation/presentation/pages/confirm_reservation_page.dart';
@@ -23,12 +26,19 @@ import '../../feature/suggestion/presentation/pages/suggestion_router_page.dart'
 
 part 'app_router.gr.dart';
 
+final appRouterProvider = Provider((ref) => AppRouter(ref: ref));
+
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
-class AppRouter extends _$AppRouter {
+class AppRouter extends _$AppRouter implements AutoRouteGuard {
+  AppRouter({required this.ref});
+
+  final Ref ref;
+
   @override
   List<AutoRoute> get routes => [
+        AutoRoute(path: '/', page: UnauthenticatedHomeRoute.page),
         AutoRoute(
-          path: '/',
+          path: '/:id',
           page: RootRoute.page,
           children: [
             AutoRoute(initial: true, page: HomeRoute.page),
@@ -84,4 +94,45 @@ class AppRouter extends _$AppRouter {
           ],
         ),
       ];
+
+  @override
+  void onNavigation(NavigationResolver resolver, StackRouter router) {
+    final routeName = resolver.routeName;
+
+    final unauthenticatedPage = [
+      UnauthenticatedHomeRoute.name,
+      AuthRouterRoute.name,
+      LoginRoute.name,
+      RegisterRoute.name,
+      ConfirmEmailVerifyRoute.name,
+    ];
+
+    final adminPage = [
+      AdminRoute.name,
+      SuggestionsRoute.name,
+      SuggestionDetailRoute.name,
+    ];
+
+    final authState = ref.read(authProvider);
+    if (authState.isAuthenticated) {
+      if (unauthenticatedPage.contains(routeName)) {
+        router
+            .push(RootRoute(id: authState.id))
+            .then((value) => resolver.next());
+        return;
+      }
+      if ((!authState.isAdmin) && adminPage.contains(routeName)) {
+        router
+            .push(RootRoute(id: authState.id))
+            .then((value) => resolver.next());
+        return;
+      }
+      return resolver.next();
+    } else {
+      if (unauthenticatedPage.contains(routeName)) {
+        return resolver.next();
+      }
+      resolver.redirect(const UnauthenticatedHomeRoute());
+    }
+  }
 }

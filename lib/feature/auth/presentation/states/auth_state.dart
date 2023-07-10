@@ -12,7 +12,19 @@ class AuthState with _$AuthState {
   const factory AuthState.authenticated(Member member) = _authenticated;
 
   bool get isAuthenticated => when(
-      unAuthenticated: () => false,
-      unVerified: (_) => false,
-      authenticated: (_) => true);
+        unAuthenticated: () => false,
+        unVerified: (_) => false,
+        authenticated: (_) => true,
+      );
+
+  bool get isAdmin => when(
+        unAuthenticated: () => false,
+        unVerified: (_) => false,
+        authenticated: (member) => member.isAdmin,
+      );
+
+  String get id => when(
+      unAuthenticated: () => '',
+      unVerified: (_) => '',
+      authenticated: (member) => member.memberId);
 }
