@@ -97,33 +97,39 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<Either<Failure, Member?>> getAuthChange() {
-    return authDataSource
-        .getAuthStateChanges()
-        .transform<Either<Failure, Member?>>(
-            StreamTransformer.fromHandlers(handleData: (authModel, sink) async {
-          if (authModel == null) {
-            sink.add(const Right(null));
-          } else {
-            try {
-              final storeModel = await storeDataSource
-                  .getMemberByStudentNumber(authModel.studentNumber);
-              sink.add(Right<Failure, Member>(memberFactory.createFromModel(
-                  Models(
-                      authUserModel: authModel, storeUserModel: storeModel))));
-            } on FirestoreException catch (e) {
-              sink.add(
-                  Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code)));
+    try {
+      return authDataSource
+          .getAuthStateChanges()
+          .transform<Either<Failure, Member?>>(StreamTransformer.fromHandlers(
+              handleData: (authModel, sink) async {
+            if (authModel == null) {
+              sink.add(const Right(null));
+            } else {
+              try {
+                final storeModel = await storeDataSource
+                    .getMemberByStudentNumber(authModel.studentNumber);
+                sink.add(Right<Failure, Member>(memberFactory.createFromModel(
+                    Models(
+                        authUserModel: authModel,
+                        storeUserModel: storeModel))));
+              } on FirestoreException catch (e) {
+                sink.add(Left(
+                    AuthFailure.fromRemoteDataSourceExceptionCode(e.code)));
+              }
             }
-          }
-        }, handleError: (error, stackTrace, sink) {
-          if (error is FireAuthException) {
-            sink.add(Left(
-                AuthFailure.fromRemoteDataSourceExceptionCode(error.code)));
-          } else if (error is Exception) {
-            throw error;
-          }
-          throw Exception(error);
-        }));
+          }, handleError: (error, stackTrace, sink) {
+            if (error is FireAuthException) {
+              sink.add(Left(
+                  AuthFailure.fromRemoteDataSourceExceptionCode(error.code)));
+            } else if (error is Exception) {
+              throw error;
+            }
+            throw Exception(error);
+          }));
+    } on FireAuthException catch (e) {
+      return Stream.value(
+          Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code)));
+    }
   }
 
   @override
