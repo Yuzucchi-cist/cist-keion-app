@@ -10,7 +10,7 @@ class GetMemberStream {
 
   final AuthRepository authRepository;
 
-  Stream<Either<Failure, Member>> call(NoParams params) {
+  Stream<Either<Failure, Member?>> call(NoParams params) {
     return authRepository.getAuthChange();
   }
 }

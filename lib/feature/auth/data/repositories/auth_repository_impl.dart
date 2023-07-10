@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/exception/firebase_auth_exception.dart';
@@ -94,20 +96,38 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Stream<Either<Failure, Member>> getAuthChange() {
+  Stream<Either<Failure, Member?>> getAuthChange() {
     try {
-      return authDataSource.getAuthStateChanges().asyncMap((authModel) async {
-        try {
-          final storeModel = await storeDataSource
-              .getMemberByStudentNumber(authModel.studentNumber);
-          return Right<Failure, Member>(memberFactory.createFromModel(
-              Models(authUserModel: authModel, storeUserModel: storeModel)));
-        } on FirestoreException catch (e) {
-          return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
-        }
-      });
+      return authDataSource
+          .getAuthStateChanges()
+          .transform<Either<Failure, Member?>>(StreamTransformer.fromHandlers(
+              handleData: (authModel, sink) async {
+            if (authModel == null) {
+              sink.add(const Right(null));
+            } else {
+              try {
+                final storeModel = await storeDataSource
+                    .getMemberByStudentNumber(authModel.studentNumber);
+                sink.add(Right<Failure, Member>(memberFactory.createFromModel(
+                    Models(
+                        authUserModel: authModel,
+                        storeUserModel: storeModel))));
+              } on FirestoreException catch (e) {
+                sink.add(Left(
+                    AuthFailure.fromRemoteDataSourceExceptionCode(e.code)));
+              }
+            }
+          }, handleError: (error, stackTrace, sink) {
+            if (error is FireAuthException) {
+              sink.add(Left(
+                  AuthFailure.fromRemoteDataSourceExceptionCode(error.code)));
+            } else if (error is Exception) {
+              throw error;
+            }
+            throw Exception(error);
+          }));
     } on FireAuthException catch (e) {
-      return Stream<Either<Failure, Member>>.value(
+      return Stream.value(
           Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code)));
     }
   }

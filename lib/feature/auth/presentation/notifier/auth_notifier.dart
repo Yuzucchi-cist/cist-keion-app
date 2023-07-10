@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/error/failure/auth/auth_failure.dart';
@@ -118,13 +120,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
   }
 
-  Stream<Member?> authStateChanges() {
-    return getMemberStream(NoParams()).map((result) {
+  Stream<AuthState> authStateChanges() {
+    return getMemberStream(NoParams())
+        .transform(StreamTransformer.fromHandlers(handleData: (result, sink) {
       return result.fold((failure) {
         if (failure is AuthFailure) {
-          if (failure.state == AuthFailureState.userNotLogin) {
-            return null;
-          }
           throw Exception(failure.state.toString());
         } else if (failure is ServerFailure) {
           throw Exception('ネットワークに接続してください。');
@@ -132,13 +132,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
           throw Exception('unknown error occurred');
         }
       }, (member) {
-        if (member.isVerified) {
-          state = AuthState.authenticated(member);
+        final oldState = state;
+        if (member == null) {
+          state = const AuthState.unAuthenticated();
         } else {
-          state = AuthState.unVerified(member);
+          if (member.isVerified) {
+            state = AuthState.authenticated(member);
+          } else {
+            state = AuthState.unVerified(member);
+          }
         }
-        return member;
+        if (oldState != state) {
+          sink.add(state);
+        }
       });
-    });
+    }));
   }
 }
