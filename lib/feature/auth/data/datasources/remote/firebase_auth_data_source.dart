@@ -23,7 +23,7 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
       await auth.createUserWithEmailAndPassword(
           email: studentNumber + emailDomainOfInstitute, password: password);
     } on FirebaseAuthException catch (e) {
-      throw FireAuthException(e.message);
+      throw FireAuthException.fromMessage(e.message);
     }
   }
 
@@ -37,7 +37,7 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
       return FirebaseAuthUserModel.fromEmail(
           email: user.email!, isEmailVerify: user.emailVerified);
     } on FirebaseAuthException catch (e) {
-      throw FireAuthException(e.message);
+      throw FireAuthException.fromMessage(e.message);
     }
   }
 
@@ -51,7 +51,7 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
         throw FireAuthException(errorCodeUserNotLoggedIn);
       }
     } on FirebaseAuthException catch (e) {
-      throw FireAuthException(e.message);
+      throw FireAuthException.fromMessage(e.message);
     }
   }
 
@@ -67,7 +67,7 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
         throw FireAuthException(errorCodeUserNotLoggedIn);
       }
     } on FirebaseAuthException catch (e) {
-      throw FireAuthException(e.message);
+      throw FireAuthException.fromMessage(e.message);
     }
   }
 
@@ -83,7 +83,7 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
         }
       });
     } on FirebaseAuthException catch (e) {
-      throw FireAuthException(e.message);
+      throw FireAuthException.fromMessage(e.message);
     }
   }
 

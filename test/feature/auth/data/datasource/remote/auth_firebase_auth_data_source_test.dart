@@ -26,7 +26,9 @@ void main() {
   const tUserModel = FirebaseAuthUserModel(
       email: tEmail, studentNumber: tStudentNumber, isEmailVerify: false);
 
-  const testErrorCode = 'testErrorCode';
+  const testErrorCode = 'test-error-code';
+  const testErrorMessage =
+      'An unknown error occurred: FirebaseError: Firebase: Test error occurred. (auth/$testErrorCode).';
 
   when(mockUserCredential.user).thenAnswer((_) => mockUser);
   when(mockUser.email).thenAnswer((realInvocation) => tEmail);
@@ -49,7 +51,8 @@ void main() {
       // arrange
       when(mockFirebaseAuth.createUserWithEmailAndPassword(
               email: tEmail, password: tPassword))
-          .thenThrow(FirebaseAuthException(code: testErrorCode));
+          .thenThrow(FirebaseAuthException(
+              code: testErrorCode, message: testErrorMessage));
       try {
         // act
         await dataSource.createUser(tStudentNumber, tPassword);
@@ -80,7 +83,8 @@ void main() {
       // arrange
       when(mockFirebaseAuth.signInWithEmailAndPassword(
               email: anyNamed('email'), password: anyNamed('password')))
-          .thenThrow(FirebaseAuthException(code: testErrorCode));
+          .thenThrow(FirebaseAuthException(
+              code: testErrorCode, message: testErrorMessage));
       try {
         // act
         await dataSource.login(tStudentNumber, tPassword);
@@ -122,8 +126,8 @@ void main() {
         () async {
       // arrange
       when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
-      when(mockUser.sendEmailVerification())
-          .thenThrow(FirebaseAuthException(code: testErrorCode));
+      when(mockUser.sendEmailVerification()).thenThrow(FirebaseAuthException(
+          code: testErrorCode, message: testErrorMessage));
       try {
         // act
         await dataSource.sendEmailVerify(tStudentNumber);
