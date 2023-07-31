@@ -2,27 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../feature/admin/presentation/pages/admin_page.dart';
-import '../../feature/admin/presentation/pages/admin_router_page.dart';
-import '../../feature/admin/presentation/pages/suggestion_detail_page.dart';
-import '../../feature/admin/presentation/pages/suggestions_page.dart';
-import '../../feature/auth/presentation/notifier/auth_notifier.dart';
-import '../../feature/auth/presentation/pages/auth_router_page.dart';
-import '../../feature/auth/presentation/pages/confirm_email_verify_page.dart';
-import '../../feature/auth/presentation/pages/login_page.dart';
-import '../../feature/auth/presentation/pages/profile_page.dart';
-import '../../feature/auth/presentation/pages/register_page.dart';
-import '../../feature/home/presentation/pages/home_page.dart';
-import '../../feature/home/presentation/pages/unauthenticated_home_page.dart';
-import '../../feature/reservation/presentation/pages/cancel_reservation_page.dart';
-import '../../feature/reservation/presentation/pages/choose_reserve_table_page.dart';
-import '../../feature/reservation/presentation/pages/confirm_reservation_page.dart';
-import '../../feature/reservation/presentation/pages/make_reservation_detail_page.dart';
-import '../../feature/reservation/presentation/pages/reservetion_router_page.dart';
-import '../../feature/root_page.dart';
-import '../../feature/suggestion/presentation/pages/confirm_suggestion_page.dart';
-import '../../feature/suggestion/presentation/pages/create_suggestion_page.dart';
-import '../../feature/suggestion/presentation/pages/suggestion_router_page.dart';
+import '../../feature/presentation/page/page_importer.dart';
+import '../../feature/presentation/provider/notifier/auth/auth_notifier.dart';
 
 part 'app_router.gr.dart';
 
