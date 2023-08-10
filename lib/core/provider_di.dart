@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../feature/data/datasource/firebase_auth_data_source.dart';
-import '../feature/data/datasource/firestore_data_source.dart';
+import '../feature/data/datasource/authentication_data_source.dart';
+import '../feature/data/datasource/member_detail_data_source.dart';
 import '../feature/data/datasource/reservation_local_data_source.dart';
 import '../feature/data/datasource/reservation_remote_data_source.dart';
-import '../feature/data/datasource/suggestion_remote_data_source.dart';
+import '../feature/data/datasource/suggestion_data_source.dart';
 import '../feature/data/factory/auth/belonging_factory.dart';
 import '../feature/data/factory/auth/institute_grade_factory.dart';
 import '../feature/data/factory/auth/member_factory.dart';
@@ -45,8 +45,8 @@ final firebaseAuthProvider = Provider((ref) => FirebaseAuth.instance);
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 
 // auth
-final firebaseAuthDataSourceProvider = Provider(
-    (ref) => FirebaseAuthDataSourceImpl(auth: ref.watch(firebaseAuthProvider)));
+final firebaseAuthDataSourceProvider = Provider((ref) =>
+    AuthenticationDataSourceImpl(auth: ref.watch(firebaseAuthProvider)));
 final firestoreDataSourceProvider = Provider(
     (ref) => FirestoreDataSourceImpl(firestore: ref.watch(firestoreProvider)));
 
@@ -63,8 +63,8 @@ final memberFactoryProvider = Provider((ref) => MemberFactory(
 final authRepositoryProvider = Provider(
   (ref) => AuthRepositoryImpl(
     networkInfo: ref.watch(networkInfoProvider),
-    authDataSource: ref.watch(firebaseAuthDataSourceProvider),
-    storeDataSource: ref.watch(firestoreDataSourceProvider),
+    authenticationDataSource: ref.watch(firebaseAuthDataSourceProvider),
+    memberDetailDataSource: ref.watch(firestoreDataSourceProvider),
     memberFactory: ref.watch(memberFactoryProvider),
   ),
 );
@@ -116,8 +116,8 @@ final deleteReservationsProvider = Provider((ref) => DeleteReservations(
     reservationRepository: ref.watch(reservationRepositoryProvider)));
 
 // suggestion
-final suggestionRemoteDataSourceProvider = Provider((ref) =>
-    SuggestionRemoteDataSourceImpl(firestore: ref.watch(firestoreProvider)));
+final suggestionRemoteDataSourceProvider = Provider(
+    (ref) => SuggestionDataSourceImpl(firestore: ref.watch(firestoreProvider)));
 
 final suggestionCategoryFactoryProvider =
     Provider((ref) => SuggestionCategoryFactory());
@@ -125,7 +125,7 @@ final suggestionFactoryProvider = Provider((ref) => SuggestionFactory(
     suggestionCategoryFactory: ref.watch(suggestionCategoryFactoryProvider)));
 
 final suggestionRepositoryProvider = Provider((ref) => SuggestionRepositoryImpl(
-    remoteDataSource: ref.watch(suggestionRemoteDataSourceProvider),
+    suggestionDataSource: ref.watch(suggestionRemoteDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
     suggestionFactory: ref.watch(suggestionFactoryProvider)));
 

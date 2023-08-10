@@ -1,5 +1,5 @@
 import 'package:cist_keion_app/feature/data/factory/auth/belonging_factory.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/belonging_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/belonging_model.dart';
 import 'package:cist_keion_app/feature/domain/value/belongings/band.dart';
 import 'package:cist_keion_app/feature/domain/value/belongings/belonging.dart';
 import 'package:flutter_test/flutter_test.dart';

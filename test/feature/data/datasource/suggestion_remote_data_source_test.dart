@@ -1,4 +1,4 @@
-import 'package:cist_keion_app/feature/data/datasource/suggestion_remote_data_source.dart';
+import 'package:cist_keion_app/feature/data/datasource/suggestion_data_source.dart';
 import 'package:cist_keion_app/feature/data/model/suggestion/suggestion_model.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,12 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../fixtures/fixture_reader.dart';
 
 void main() {
-  late SuggestionRemoteDataSourceImpl dataSource;
+  late SuggestionDataSourceImpl dataSource;
   late FakeFirebaseFirestore mockFirestore;
 
   setUp(() {
     mockFirestore = FakeFirebaseFirestore();
-    dataSource = SuggestionRemoteDataSourceImpl(firestore: mockFirestore);
+    dataSource = SuggestionDataSourceImpl(firestore: mockFirestore);
   });
 
   final tFirestoreData =

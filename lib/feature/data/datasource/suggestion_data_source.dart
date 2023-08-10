@@ -5,13 +5,13 @@ import '../model/suggestion/suggestion_model.dart';
 
 const suggestionCollectionName = 'suggestion';
 
-abstract class SuggestionRemoteDataSource {
+abstract class SuggestionDataSource {
   Future<void> add(SuggestionModel suggestionModel);
   Future<List<SuggestionModel>> getAll();
 }
 
-class SuggestionRemoteDataSourceImpl implements SuggestionRemoteDataSource {
-  SuggestionRemoteDataSourceImpl({required this.firestore});
+class SuggestionDataSourceImpl implements SuggestionDataSource {
+  SuggestionDataSourceImpl({required this.firestore});
 
   final FirebaseFirestore firestore;
   @override

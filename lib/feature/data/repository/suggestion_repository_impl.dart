@@ -7,17 +7,17 @@ import '../../../core/error/failure/suggestion/suggestion_failure.dart';
 import '../../../core/network/network_info.dart';
 import '../../domain/entity/suggestion/suggestion.dart';
 import '../../domain/repository/suggestion_repository.dart';
-import '../datasource/suggestion_remote_data_source.dart';
+import '../datasource/suggestion_data_source.dart';
 import '../factory/suggestion/suggestion_factory.dart';
 
 class SuggestionRepositoryImpl implements SuggestionRepository {
   SuggestionRepositoryImpl({
-    required this.remoteDataSource,
+    required this.suggestionDataSource,
     required this.networkInfo,
     required this.suggestionFactory,
   });
 
-  final SuggestionRemoteDataSource remoteDataSource;
+  final SuggestionDataSource suggestionDataSource;
   final NetworkInfo networkInfo;
   final SuggestionFactory suggestionFactory;
 
@@ -25,7 +25,7 @@ class SuggestionRepositoryImpl implements SuggestionRepository {
   Future<Either<Failure, Unit>> add(Suggestion suggestion) async {
     if (await networkInfo.isConnected) {
       try {
-        await remoteDataSource
+        await suggestionDataSource
             .add(suggestionFactory.convertToModel(suggestion));
         return const Right(unit);
       } on FirestoreException catch (e) {
@@ -40,7 +40,7 @@ class SuggestionRepositoryImpl implements SuggestionRepository {
   Future<Either<Failure, List<Suggestion>>> getAll() async {
     if (await networkInfo.isConnected) {
       try {
-        final suggestionModel = await remoteDataSource.getAll();
+        final suggestionModel = await suggestionDataSource.getAll();
         return Right(suggestionModel
             .map((model) => suggestionFactory.createFromModel(model))
             .toList());

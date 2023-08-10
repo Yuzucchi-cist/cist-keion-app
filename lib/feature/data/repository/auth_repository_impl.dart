@@ -10,22 +10,22 @@ import '../../../core/error/failure/server/server_failure.dart';
 import '../../../core/network/network_info.dart';
 import '../../domain/entity/auth/member.dart';
 import '../../domain/repository/auth_repository.dart';
-import '../datasource/firebase_auth_data_source.dart';
-import '../datasource/firestore_data_source.dart';
+import '../datasource/authentication_data_source.dart';
+import '../datasource/member_detail_data_source.dart';
 import '../factory/auth/member_factory.dart';
-import '../model/auth/firebase_auth/firebase_auth_user_model.dart';
+import '../model/auth/authentication/authentication_user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this.networkInfo,
-    required this.authDataSource,
-    required this.storeDataSource,
+    required this.authenticationDataSource,
+    required this.memberDetailDataSource,
     required this.memberFactory,
   });
 
   final NetworkInfo networkInfo;
-  final FirebaseAuthDataSource authDataSource;
-  final FirestoreDataSource storeDataSource;
+  final AuthenticationDataSource authenticationDataSource;
+  final MemberDetailDataSource memberDetailDataSource;
   final MemberFactory memberFactory;
 
   @override
@@ -33,8 +33,8 @@ class AuthRepositoryImpl implements AuthRepository {
       String studentNumber, String password) async {
     if (await networkInfo.isConnected) {
       try {
-        await storeDataSource.getMemberByStudentNumber(studentNumber);
-        await authDataSource.createUser(studentNumber, password);
+        await memberDetailDataSource.getMemberByStudentNumber(studentNumber);
+        await authenticationDataSource.createUser(studentNumber, password);
         return const Right(unit);
       } on FireAuthException catch (e) {
         return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
@@ -50,7 +50,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, Unit>> sendEmailVerify(String studentNumber) async {
     if (await networkInfo.isConnected) {
       try {
-        await authDataSource.sendEmailVerify(studentNumber);
+        await authenticationDataSource.sendEmailVerify(studentNumber);
         return const Right(unit);
       } on FireAuthException catch (e) {
         return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
@@ -65,25 +65,26 @@ class AuthRepositoryImpl implements AuthRepository {
       String studentNumber, String password) async {
     return getMember(
         getAuthUserModel: () async =>
-            authDataSource.login(studentNumber, password));
+            authenticationDataSource.login(studentNumber, password));
   }
 
   @override
   Future<Either<Failure, Member>> getCurrentMember() async {
     return getMember(
-        getAuthUserModel: () async => authDataSource.getCurrentUser());
+        getAuthUserModel: () async =>
+            authenticationDataSource.getCurrentUser());
   }
 
   Future<Either<Failure, Member>> getMember(
-      {required Future<FirebaseAuthUserModel> Function()
+      {required Future<AuthenticationUserModel> Function()
           getAuthUserModel}) async {
     if (await networkInfo.isConnected) {
       try {
         final authUserModel = await getAuthUserModel();
-        final storeUserModel = await storeDataSource
+        final storeUserModel = await memberDetailDataSource
             .getMemberByStudentNumber(authUserModel.studentNumber);
         final member = memberFactory.createFromModel(Models(
-            authUserModel: authUserModel, storeUserModel: storeUserModel));
+            authUserModel: authUserModel, memberDetailModel: storeUserModel));
         return Right(member);
       } on FireAuthException catch (e) {
         return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));
@@ -98,7 +99,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Stream<Either<Failure, Member?>> getAuthChange() {
     try {
-      return authDataSource
+      return authenticationDataSource
           .getAuthStateChanges()
           .transform<Either<Failure, Member?>>(StreamTransformer.fromHandlers(
               handleData: (authModel, sink) async {
@@ -106,12 +107,12 @@ class AuthRepositoryImpl implements AuthRepository {
               sink.add(const Right(null));
             } else {
               try {
-                final storeModel = await storeDataSource
+                final storeModel = await memberDetailDataSource
                     .getMemberByStudentNumber(authModel.studentNumber);
                 sink.add(Right<Failure, Member>(memberFactory.createFromModel(
                     Models(
                         authUserModel: authModel,
-                        storeUserModel: storeModel))));
+                        memberDetailModel: storeModel))));
               } on FirestoreException catch (e) {
                 sink.add(Left(
                     AuthFailure.fromRemoteDataSourceExceptionCode(e.code)));
@@ -136,7 +137,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, Unit>> logout(String studentNumber) async {
     if (await networkInfo.isConnected) {
       try {
-        authDataSource.logout(studentNumber);
+        authenticationDataSource.logout(studentNumber);
         return const Right(unit);
       } on FireAuthException catch (e) {
         return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));

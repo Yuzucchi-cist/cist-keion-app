@@ -1,29 +1,29 @@
 import 'package:cist_keion_app/core/error/exception/firebase_auth_exception.dart';
-import 'package:cist_keion_app/feature/data/datasource/firebase_auth_data_source.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firebase_auth/firebase_auth_user_model.dart';
+import 'package:cist_keion_app/feature/data/datasource/authentication_data_source.dart';
+import 'package:cist_keion_app/feature/data/model/auth/authentication/authentication_user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'auth_firebase_auth_data_source_test.mocks.dart';
+import 'authentication_data_source_test.mocks.dart';
 
 @GenerateMocks([FirebaseAuth, UserCredential, User])
 void main() {
-  late FirebaseAuthDataSourceImpl dataSource;
+  late AuthenticationDataSourceImpl dataSource;
   late MockFirebaseAuth mockFirebaseAuth;
   final mockUserCredential = MockUserCredential();
   final mockUser = MockUser();
 
   setUp(() {
     mockFirebaseAuth = MockFirebaseAuth();
-    dataSource = FirebaseAuthDataSourceImpl(auth: mockFirebaseAuth);
+    dataSource = AuthenticationDataSourceImpl(auth: mockFirebaseAuth);
   });
 
   const tStudentNumber = 'b2202260';
   const tEmail = tStudentNumber + emailDomainOfInstitute;
   const tPassword = 'Cist1234';
-  const tUserModel = FirebaseAuthUserModel(
+  const tUserModel = AuthenticationUserModel(
       email: tEmail, studentNumber: tStudentNumber, isEmailVerify: false);
 
   const testErrorCode = 'test-error-code';

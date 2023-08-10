@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/factories/data_factory.dart';
 import '../../../domain/entity/auth/member.dart';
-import '../../model/auth/firebase_auth/firebase_auth_user_model.dart';
-import '../../model/auth/firestore/firestore_user_model.dart';
+import '../../model/auth/authentication/authentication_user_model.dart';
+import '../../model/auth/member_detail/member_detail_model.dart';
 import 'belonging_factory.dart';
 import 'institute_grade_factory.dart';
 import 'user_state_factory.dart';
@@ -26,16 +26,17 @@ class MemberFactory implements DataFactory<Member, Models, Params> {
     final belongings = entity.belongings
         .map((entity) => belongingFactory.convertToModel(entity))
         .toList();
-    final authUserModel = FirebaseAuthUserModel.fromStudentNumber(
+    final authUserModel = AuthenticationUserModel.fromStudentNumber(
         studentNumber: entity.studentNumber, isEmailVerify: entity.isVerified);
-    final storeUserModel = FirestoreUserModel(
+    final memberDetailModel = MemberDetailModel(
         id: entity.memberId,
         studentNumber: entity.studentNumber,
         name: entity.name,
         instituteGrade: instituteGrade,
         userState: userState,
         belongings: belongings);
-    return Models(authUserModel: authUserModel, storeUserModel: storeUserModel);
+    return Models(
+        authUserModel: authUserModel, memberDetailModel: memberDetailModel);
   }
 
   @override
@@ -58,23 +59,23 @@ class MemberFactory implements DataFactory<Member, Models, Params> {
   @override
   Member createFromModel(Models model) {
     final authUserModel = model.authUserModel;
-    final storeUserModel = model.storeUserModel;
+    final memberDetailModel = model.memberDetailModel;
     final instituteGrade =
-        instituteGradeFactory.createFromModel(storeUserModel.instituteGrade);
+        instituteGradeFactory.createFromModel(memberDetailModel.instituteGrade);
     final userState =
-        userStateFactory.createFromModel(storeUserModel.userState);
-    final belongings = storeUserModel.belongings
+        userStateFactory.createFromModel(memberDetailModel.userState);
+    final belongings = memberDetailModel.belongings
         .map((model) => belongingFactory.createFromModel(model))
         .toList();
     return Member(
-      memberId: storeUserModel.id,
+      memberId: memberDetailModel.id,
       studentNumber: authUserModel.studentNumber,
-      name: storeUserModel.name,
+      name: memberDetailModel.name,
       instituteGrade: instituteGrade,
       userState: userState,
       isVerified: authUserModel.isEmailVerify,
       belongings: belongings,
-      isAdmin: storeUserModel.isAdmin,
+      isAdmin: memberDetailModel.isAdmin,
     );
   }
 }
@@ -100,11 +101,11 @@ class Params {
 }
 
 class Models extends Equatable {
-  const Models({required this.authUserModel, required this.storeUserModel});
+  const Models({required this.authUserModel, required this.memberDetailModel});
 
-  final FirebaseAuthUserModel authUserModel;
-  final FirestoreUserModel storeUserModel;
+  final AuthenticationUserModel authUserModel;
+  final MemberDetailModel memberDetailModel;
 
   @override
-  List<Object?> get props => [authUserModel, storeUserModel];
+  List<Object?> get props => [authUserModel, memberDetailModel];
 }

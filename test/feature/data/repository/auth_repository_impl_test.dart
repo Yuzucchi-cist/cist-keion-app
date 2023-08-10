@@ -5,13 +5,13 @@ import 'package:cist_keion_app/core/error/failure/auth/auth_failure_state.dart';
 import 'package:cist_keion_app/core/error/failure/failure.dart';
 import 'package:cist_keion_app/core/error/failure/server/server_failure.dart';
 import 'package:cist_keion_app/core/network/network_info.dart';
-import 'package:cist_keion_app/feature/data/datasource/firebase_auth_data_source.dart';
-import 'package:cist_keion_app/feature/data/datasource/firestore_data_source.dart';
+import 'package:cist_keion_app/feature/data/datasource/authentication_data_source.dart';
+import 'package:cist_keion_app/feature/data/datasource/member_detail_data_source.dart';
 import 'package:cist_keion_app/feature/data/factory/auth/member_factory.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firebase_auth/firebase_auth_user_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/firestore_user_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/institute_grade_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/user_state_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/authentication/authentication_user_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/institute_grade_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/member_detail_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/user_state_model.dart';
 import 'package:cist_keion_app/feature/data/repository/auth_repository_impl.dart';
 import 'package:cist_keion_app/feature/domain/entity/auth/member.dart';
 import 'package:cist_keion_app/feature/domain/value/institute_grade.dart';
@@ -23,24 +23,28 @@ import 'package:mockito/mockito.dart';
 
 import 'auth_repository_impl_test.mocks.dart';
 
-@GenerateMocks(
-    [NetworkInfo, FirebaseAuthDataSource, FirestoreDataSource, MemberFactory])
+@GenerateMocks([
+  NetworkInfo,
+  AuthenticationDataSource,
+  MemberDetailDataSource,
+  MemberFactory
+])
 void main() {
   late AuthRepositoryImpl repository;
   late MockNetworkInfo mockNetworkInfo;
-  late MockFirebaseAuthDataSource mockAuthDataSource;
-  late MockFirestoreDataSource mockStoreDataSource;
+  late MockAuthenticationDataSource mockAuthenticationDataSource;
+  late MockMemberDetailDataSource mockMemberDetailDataSource;
   late MockMemberFactory mockMemberFactory;
 
   setUp(() {
     mockNetworkInfo = MockNetworkInfo();
-    mockAuthDataSource = MockFirebaseAuthDataSource();
-    mockStoreDataSource = MockFirestoreDataSource();
+    mockAuthenticationDataSource = MockAuthenticationDataSource();
+    mockMemberDetailDataSource = MockMemberDetailDataSource();
     mockMemberFactory = MockMemberFactory();
     repository = AuthRepositoryImpl(
       networkInfo: mockNetworkInfo,
-      authDataSource: mockAuthDataSource,
-      storeDataSource: mockStoreDataSource,
+      authenticationDataSource: mockAuthenticationDataSource,
+      memberDetailDataSource: mockMemberDetailDataSource,
       memberFactory: mockMemberFactory,
     );
   });
@@ -76,12 +80,12 @@ void main() {
   const tStudentNumber = 'b2202260';
   const tPassword = 'Cist1234';
 
-  const tAuthUserModel = FirebaseAuthUserModel(
+  const tAuthUserModel = AuthenticationUserModel(
       email: tStudentNumber + emailDomainOfInstitute,
       studentNumber: tStudentNumber,
       isEmailVerify: false);
 
-  const tFirestoreUserModel = FirestoreUserModel(
+  const tMemberDetailModel = MemberDetailModel(
       id: 'testId',
       studentNumber: 'b2202260',
       name: 'testName',
@@ -90,7 +94,7 @@ void main() {
       belongings: []);
 
   const tModels = Models(
-      authUserModel: tAuthUserModel, storeUserModel: tFirestoreUserModel);
+      authUserModel: tAuthUserModel, memberDetailModel: tMemberDetailModel);
 
   const tMember = Member(
       memberId: 'testId',
@@ -103,10 +107,10 @@ void main() {
   group('registerMember', () {
     checkOnline(
       arrange: () {
-        when(mockAuthDataSource.createUser(any, any))
+        when(mockAuthenticationDataSource.createUser(any, any))
             .thenAnswer((realInvocation) async {});
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
-            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tMemberDetailModel);
       },
       act: () async {
         await repository.registerMember(tStudentNumber, tPassword);
@@ -119,24 +123,25 @@ void main() {
 
       test('should call create member', () async {
         // arrange
-        when(mockAuthDataSource.createUser(any, any))
+        when(mockAuthenticationDataSource.createUser(any, any))
             .thenAnswer((realInvocation) async {});
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
-            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tMemberDetailModel);
         // act
         final result =
             await repository.registerMember(tStudentNumber, tPassword);
         // assert
-        verify(mockAuthDataSource.createUser(tStudentNumber, tPassword));
+        verify(
+            mockAuthenticationDataSource.createUser(tStudentNumber, tPassword));
         expect(result, const Right(unit));
       });
 
       test('should return the auth failure when the auth datasource failed',
           () async {
         // arrange
-        when(mockAuthDataSource.createUser(any, any))
+        when(mockAuthenticationDataSource.createUser(any, any))
             .thenThrow(FireAuthException('invalid-email'));
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
             .thenThrow(FirestoreException('no-member'));
         // act
         final result =
@@ -148,16 +153,17 @@ void main() {
           'should return the auth failure when member does not exist in data base',
           () async {
         // arrange
-        when(mockAuthDataSource.createUser(any, any))
+        when(mockAuthenticationDataSource.createUser(any, any))
             .thenAnswer((realInvocation) async {});
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
             .thenThrow(FirestoreException('no-member'));
         // act
         final result =
             await repository.registerMember(tStudentNumber, tPassword);
         // assert
-        verify(mockStoreDataSource.getMemberByStudentNumber(tStudentNumber));
-        verifyNever(mockAuthDataSource.createUser(any, any));
+        verify(mockMemberDetailDataSource
+            .getMemberByStudentNumber(tStudentNumber));
+        verifyNever(mockAuthenticationDataSource.createUser(any, any));
         expect(result, Left(AuthFailure(AuthFailureState.noMemberExists)));
       });
     });
@@ -169,7 +175,7 @@ void main() {
   group('sendEmailVerify', () {
     checkOnline(
       arrange: () {
-        when(mockAuthDataSource.sendEmailVerify(any))
+        when(mockAuthenticationDataSource.sendEmailVerify(any))
             .thenAnswer((realInvocation) async => {});
       },
       act: () async {
@@ -182,18 +188,18 @@ void main() {
           .thenAnswer((realInvocation) async => true));
       test('should call data source to send email verify', () async {
         // arrange
-        when(mockAuthDataSource.sendEmailVerify(any))
+        when(mockAuthenticationDataSource.sendEmailVerify(any))
             .thenAnswer((realInvocation) async => {});
         // act
         final result = await repository.sendEmailVerify(tStudentNumber);
         // assert
-        verify(mockAuthDataSource.sendEmailVerify(tStudentNumber));
+        verify(mockAuthenticationDataSource.sendEmailVerify(tStudentNumber));
         expect(result, const Right(unit));
       });
 
       test('should return auth failure when sending email failed', () async {
         // arrange
-        when(mockAuthDataSource.sendEmailVerify(tStudentNumber))
+        when(mockAuthenticationDataSource.sendEmailVerify(tStudentNumber))
             .thenThrow(FireAuthException('invalid-email'));
         // act
         final result = await repository.sendEmailVerify(tStudentNumber);
@@ -209,10 +215,10 @@ void main() {
   group('login', () {
     checkOnline(
       arrange: () {
-        when(mockAuthDataSource.login(any, any))
+        when(mockAuthenticationDataSource.login(any, any))
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
-            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
       },
       act: () async {
@@ -226,25 +232,26 @@ void main() {
 
       test('should return member when data sources are successful', () async {
         // arrange
-        when(mockAuthDataSource.login(any, any))
+        when(mockAuthenticationDataSource.login(any, any))
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
-            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
         // act
         final result = await repository.login(tStudentNumber, tPassword);
         // assert
-        verify(mockAuthDataSource.login(tStudentNumber, tPassword));
-        verify(mockStoreDataSource.getMemberByStudentNumber(tStudentNumber));
+        verify(mockAuthenticationDataSource.login(tStudentNumber, tPassword));
+        verify(mockMemberDetailDataSource
+            .getMemberByStudentNumber(tStudentNumber));
         expect(result, const Right(tMember));
       });
 
       test('should call factory to convert model', () async {
         // arrange
-        when(mockAuthDataSource.login(any, any))
+        when(mockAuthenticationDataSource.login(any, any))
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
-            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
         // act
         final result = await repository.login(tStudentNumber, tPassword);
@@ -255,12 +262,12 @@ void main() {
 
       test('should return auth failure when auth data source failed', () async {
         // arrange
-        when(mockAuthDataSource.login(any, any))
+        when(mockAuthenticationDataSource.login(any, any))
             .thenThrow(FireAuthException('invalid-email'));
         // act
         final result = await repository.login(tStudentNumber, tPassword);
         // assert
-        verifyNever(mockStoreDataSource.getMemberByStudentNumber(any));
+        verifyNever(mockMemberDetailDataSource.getMemberByStudentNumber(any));
         verifyNever(mockMemberFactory.createFromModel(any));
         expect(result, Left(AuthFailure(AuthFailureState.invalidEmail)));
       });
@@ -269,9 +276,9 @@ void main() {
           'should return the auth failure when member does not exist in data base',
           () async {
         // arrange
-        when(mockAuthDataSource.login(any, any))
+        when(mockAuthenticationDataSource.login(any, any))
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
             .thenThrow(FirestoreException('no-member'));
         // act
         final result = await repository.login(tStudentNumber, tPassword);
@@ -287,10 +294,10 @@ void main() {
   group('getCurrentMember', () {
     checkOnline(
       arrange: () {
-        when(mockAuthDataSource.getCurrentUser())
+        when(mockAuthenticationDataSource.getCurrentUser())
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
-            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
       },
       act: () async {
@@ -304,28 +311,29 @@ void main() {
 
       test('should return member when data sources are successful', () async {
         // arrange
-        when(mockAuthDataSource.getCurrentUser())
+        when(mockAuthenticationDataSource.getCurrentUser())
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
-            .thenAnswer((realInvocation) async => tFirestoreUserModel);
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
+            .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
         // act
         final result = await repository.getCurrentMember();
         // assert
-        verify(mockAuthDataSource.getCurrentUser());
-        verify(mockStoreDataSource.getMemberByStudentNumber(tStudentNumber));
+        verify(mockAuthenticationDataSource.getCurrentUser());
+        verify(mockMemberDetailDataSource
+            .getMemberByStudentNumber(tStudentNumber));
         verify(mockMemberFactory.createFromModel(tModels));
         expect(result, const Right(tMember));
       });
 
       test('should return auth failure when auth data source failed', () async {
         // arrange
-        when(mockAuthDataSource.getCurrentUser())
+        when(mockAuthenticationDataSource.getCurrentUser())
             .thenThrow(FireAuthException('invalid-email'));
         // act
         final result = await repository.getCurrentMember();
         // assert
-        verifyNever(mockStoreDataSource.getMemberByStudentNumber(any));
+        verifyNever(mockMemberDetailDataSource.getMemberByStudentNumber(any));
         verifyNever(mockMemberFactory.createFromModel(any));
         expect(result, Left(AuthFailure(AuthFailureState.invalidEmail)));
       });
@@ -334,9 +342,9 @@ void main() {
           'should return the auth failure when member does not exist in data base',
           () async {
         // arrange
-        when(mockAuthDataSource.getCurrentUser())
+        when(mockAuthenticationDataSource.getCurrentUser())
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockStoreDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
             .thenThrow(FirestoreException('no-member'));
         // act
         final result = await repository.getCurrentMember();
@@ -362,18 +370,18 @@ void main() {
 
       test('should call logout member to log out', () async {
         // arrange
-        when(mockAuthDataSource.logout(any))
+        when(mockAuthenticationDataSource.logout(any))
             .thenAnswer((realInvocation) async {});
         // act
         final result = await repository.logout(tStudentNumber);
         // assert
-        verify(mockAuthDataSource.logout(tStudentNumber));
+        verify(mockAuthenticationDataSource.logout(tStudentNumber));
         expect(result, const Right(unit));
       });
 
       test('should return auth failure when auth data source failed', () async {
         // arrange
-        when(mockAuthDataSource.logout(tStudentNumber))
+        when(mockAuthenticationDataSource.logout(tStudentNumber))
             .thenThrow(FireAuthException('invalid-email'));
         // act
         final result = await repository.logout(tStudentNumber);
@@ -389,12 +397,12 @@ void main() {
   group('getAuthState', () {
     test('should return stream', () {
       // arrange
-      when(mockAuthDataSource.getAuthStateChanges())
+      when(mockAuthenticationDataSource.getAuthStateChanges())
           .thenAnswer((realInvocation) async* {
         yield tAuthUserModel;
       });
-      when(mockStoreDataSource.getMemberByStudentNumber(tStudentNumber))
-          .thenAnswer((realInvocation) async => tFirestoreUserModel);
+      when(mockMemberDetailDataSource.getMemberByStudentNumber(tStudentNumber))
+          .thenAnswer((realInvocation) async => tMemberDetailModel);
       when(mockMemberFactory.createFromModel(any))
           .thenAnswer((realInvocation) => tMember);
       // act
@@ -407,7 +415,7 @@ void main() {
 
     test('should return auth failure when auth data source failed', () async {
       // arrange
-      when(mockAuthDataSource.getAuthStateChanges())
+      when(mockAuthenticationDataSource.getAuthStateChanges())
           .thenThrow(FireAuthException('invalid-email'));
       // act
       final result = repository.getAuthChange();
@@ -421,11 +429,11 @@ void main() {
         'should return the auth failure when member does not exist in data base',
         () async {
       // arrange
-      when(mockAuthDataSource.getAuthStateChanges())
+      when(mockAuthenticationDataSource.getAuthStateChanges())
           .thenAnswer((realInvocation) async* {
         yield tAuthUserModel;
       });
-      when(mockStoreDataSource.getMemberByStudentNumber(any))
+      when(mockMemberDetailDataSource.getMemberByStudentNumber(any))
           .thenThrow(FirestoreException('no-member'));
       // act
       final result = repository.getAuthChange();

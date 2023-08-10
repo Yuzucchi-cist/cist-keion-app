@@ -1,4 +1,4 @@
-import 'package:cist_keion_app/feature/data/model/auth/firebase_auth/firebase_auth_user_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/authentication/authentication_user_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -6,14 +6,14 @@ void main() {
   const tEmail = '$tStudentNumber@photon.chitose.ac.jp';
   const tIsEmailVerify = false;
 
-  const tModel = FirebaseAuthUserModel(
+  const tModel = AuthenticationUserModel(
       email: tEmail,
       studentNumber: tStudentNumber,
       isEmailVerify: tIsEmailVerify);
 
   test('should create model from email address and isEmailVerify', () {
     // act
-    final result = FirebaseAuthUserModel.fromEmail(
+    final result = AuthenticationUserModel.fromEmail(
         email: tEmail, isEmailVerify: tIsEmailVerify);
     // assert
     expect(result, tModel);
@@ -21,7 +21,7 @@ void main() {
 
   test('should create model from student number and isEmailVerify', () {
     // act
-    final result = FirebaseAuthUserModel.fromStudentNumber(
+    final result = AuthenticationUserModel.fromStudentNumber(
         studentNumber: tStudentNumber, isEmailVerify: tIsEmailVerify);
     // assert
     expect(result, tModel);

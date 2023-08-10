@@ -1,7 +1,7 @@
-import 'package:cist_keion_app/feature/data/model/auth/firestore/belonging_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/firestore_user_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/institute_grade_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/user_state_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/belonging_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/institute_grade_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/member_detail_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/user_state_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../../fixtures/fixture_reader.dart';
@@ -26,7 +26,7 @@ void main() {
       .toList();
   final tIsAdmin = tFirestoreDatum['is_admin'] as bool;
 
-  final tFirestoreUserModel = FirestoreUserModel(
+  final tMemberDetailModel = MemberDetailModel(
     id: tId,
     studentNumber: tStudentNumber,
     name: tName,
@@ -38,14 +38,14 @@ void main() {
 
   test('should create model from json data', () {
     // act
-    final result = FirestoreUserModel.fromFirestoreJson(tId, tFirestoreDatum);
+    final result = MemberDetailModel.fromFirestoreJson(tId, tFirestoreDatum);
     // assert
-    expect(result, tFirestoreUserModel);
+    expect(result, tMemberDetailModel);
   });
 
   test('should should return suitable fire store map from model', () {
     // act
-    final result = tFirestoreUserModel.toFirestoreJson();
+    final result = tMemberDetailModel.toFirestoreJson();
     // assert
     expect(result, tFirestoreDatum);
   });

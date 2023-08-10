@@ -3,7 +3,7 @@ import 'package:cist_keion_app/core/error/failure/server/server_failure.dart';
 import 'package:cist_keion_app/core/error/failure/suggestion/suggestion_failure.dart';
 import 'package:cist_keion_app/core/error/failure/suggestion/suggestion_failure_state.dart';
 import 'package:cist_keion_app/core/network/network_info.dart';
-import 'package:cist_keion_app/feature/data/datasource/suggestion_remote_data_source.dart';
+import 'package:cist_keion_app/feature/data/datasource/suggestion_data_source.dart';
 import 'package:cist_keion_app/feature/data/factory/suggestion/suggestion_factory.dart';
 import 'package:cist_keion_app/feature/data/model/suggestion/suggestion_model.dart';
 import 'package:cist_keion_app/feature/data/repository/suggestion_repository_impl.dart';
@@ -17,19 +17,19 @@ import 'package:mockito/mockito.dart';
 
 import 'suggestion_repository_impl_test.mocks.dart';
 
-@GenerateMocks([SuggestionRemoteDataSource, NetworkInfo, SuggestionFactory])
+@GenerateMocks([SuggestionDataSource, NetworkInfo, SuggestionFactory])
 void main() {
   late SuggestionRepositoryImpl repository;
-  late MockSuggestionRemoteDataSource mockSuggestionRemoteDataSource;
+  late MockSuggestionDataSource mockSuggestionDataSource;
   late MockNetworkInfo mockNetworkInfo;
   late MockSuggestionFactory mockSuggestionFactory;
 
   setUp(() {
-    mockSuggestionRemoteDataSource = MockSuggestionRemoteDataSource();
+    mockSuggestionDataSource = MockSuggestionDataSource();
     mockNetworkInfo = MockNetworkInfo();
     mockSuggestionFactory = MockSuggestionFactory();
     repository = SuggestionRepositoryImpl(
-      remoteDataSource: mockSuggestionRemoteDataSource,
+      suggestionDataSource: mockSuggestionDataSource,
       networkInfo: mockNetworkInfo,
       suggestionFactory: mockSuggestionFactory,
     );
@@ -78,7 +78,7 @@ void main() {
       arrange: () {
         when(mockSuggestionFactory.convertToModel(any))
             .thenReturn(tSuggestionModel);
-        when(mockSuggestionRemoteDataSource.add(any))
+        when(mockSuggestionDataSource.add(any))
             .thenAnswer((realInvocation) async {});
       },
       act: () {
@@ -90,17 +90,16 @@ void main() {
       setUp(() => when(mockNetworkInfo.isConnected)
           .thenAnswer((realInvocation) async => true));
 
-      test('should return unit(void) when remote date source is successful',
-          () async {
+      test('should return unit(void) when data source is successful', () async {
         // arrange
         when(mockSuggestionFactory.convertToModel(any))
             .thenReturn(tSuggestionModel);
-        when(mockSuggestionRemoteDataSource.add(any))
+        when(mockSuggestionDataSource.add(any))
             .thenAnswer((realInvocation) async {});
         // act
         final result = await repository.add(tSuggestion);
         // assert
-        verify(mockSuggestionRemoteDataSource.add(tSuggestionModel));
+        verify(mockSuggestionDataSource.add(tSuggestionModel));
         verify(mockSuggestionFactory.convertToModel(tSuggestion));
         expect(result, const Right(unit));
       });
@@ -109,7 +108,7 @@ void main() {
         // arrange
         when(mockSuggestionFactory.convertToModel(any))
             .thenReturn(tSuggestionModel);
-        when(mockSuggestionRemoteDataSource.add(any))
+        when(mockSuggestionDataSource.add(any))
             .thenThrow(FirestoreException('no-data'));
         // act
         final result = await repository.add(tSuggestion);
@@ -134,7 +133,7 @@ void main() {
   group('getAll', () {
     checkOnline(
       arrange: () {
-        when(mockSuggestionRemoteDataSource.getAll())
+        when(mockSuggestionDataSource.getAll())
             .thenAnswer((realInvocation) async => tSuggestionModelList);
         tSuggestionModelList.asMap().forEach((index, model) {
           when(mockSuggestionFactory.createFromModel(model))
@@ -152,7 +151,7 @@ void main() {
       test('should return suggestion list when data source is successful',
           () async {
         // arrange
-        when(mockSuggestionRemoteDataSource.getAll())
+        when(mockSuggestionDataSource.getAll())
             .thenAnswer((realInvocation) async => tSuggestionModelList);
         tSuggestionModelList.asMap().forEach((index, model) {
           when(mockSuggestionFactory.createFromModel(model))
@@ -161,13 +160,13 @@ void main() {
         // act
         final result = (await repository.getAll()).fold((l) => l, (r) => r);
         // assert
-        verify(mockSuggestionRemoteDataSource.getAll());
+        verify(mockSuggestionDataSource.getAll());
         expect(result, unorderedEquals(tSuggestionList));
       });
 
       test('should return firestore failure when datasource failed', () async {
         // arrange
-        when(mockSuggestionRemoteDataSource.getAll())
+        when(mockSuggestionDataSource.getAll())
             .thenThrow(FirestoreException('no-data'));
         // act
         final result = await repository.getAll();

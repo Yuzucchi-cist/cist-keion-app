@@ -2,11 +2,11 @@ import 'package:cist_keion_app/feature/data/factory/auth/belonging_factory.dart'
 import 'package:cist_keion_app/feature/data/factory/auth/institute_grade_factory.dart';
 import 'package:cist_keion_app/feature/data/factory/auth/member_factory.dart';
 import 'package:cist_keion_app/feature/data/factory/auth/user_state_factory.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firebase_auth/firebase_auth_user_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/belonging_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/firestore_user_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/institute_grade_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/firestore/user_state_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/authentication/authentication_user_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/belonging_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/institute_grade_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/member_detail_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/member_detail/user_state_model.dart';
 import 'package:cist_keion_app/feature/domain/entity/auth/member.dart';
 import 'package:cist_keion_app/feature/domain/value/belongings/band.dart';
 import 'package:cist_keion_app/feature/domain/value/institute_grade.dart';
@@ -81,11 +81,11 @@ void main() {
     isVerified: tIsVerified,
     belongings: tBelongings,
   );
-  const tAuthModel = FirebaseAuthUserModel(
+  const tAuthModel = AuthenticationUserModel(
       email: '$tStudentNumber@photon.chitose.ac.jp',
       studentNumber: tStudentNumber,
       isEmailVerify: tIsVerified);
-  final tStoreModel = FirestoreUserModel(
+  final tStoreModel = MemberDetailModel(
       id: tMemberId,
       studentNumber: tStudentNumber,
       name: tName,
@@ -94,7 +94,7 @@ void main() {
       belongings: tBelongingModels);
 
   final tModels =
-      Models(authUserModel: tAuthModel, storeUserModel: tStoreModel);
+      Models(authUserModel: tAuthModel, memberDetailModel: tStoreModel);
 
   group('create', () {
     test('should return entity', () {
@@ -126,7 +126,7 @@ void main() {
       // arrange
       final tModelsIsAdmin = Models(
           authUserModel: tAuthModel,
-          storeUserModel: tStoreModel.copyWith(isAdmin: true));
+          memberDetailModel: tStoreModel.copyWith(isAdmin: true));
       final tValueIsAdmin = tValue.copyWith(isAdmin: true);
       when(mockInstituteGradeFactory.createFromModel(any))
           .thenReturn(tInstituteGrade);
@@ -156,7 +156,7 @@ void main() {
         isA<Models>()
             .having(
                 (models) => models.authUserModel, 'authUserModel', tAuthModel)
-            .having((models) => models.storeUserModel, 'storeUserModel',
+            .having((models) => models.memberDetailModel, 'storeUserModel',
                 tStoreModel),
       );
     });

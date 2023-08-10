@@ -1,19 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/error/exception/firebase_auth_exception.dart';
-import '../model/auth/firebase_auth/firebase_auth_user_model.dart';
+import '../model/auth/authentication/authentication_user_model.dart';
 
-abstract class FirebaseAuthDataSource {
+abstract class AuthenticationDataSource {
   Future<void> createUser(String studentNumber, String password);
-  Future<FirebaseAuthUserModel> login(String studentNumber, String password);
+  Future<AuthenticationUserModel> login(String studentNumber, String password);
   Future<void> logout(String studentNumber);
   Future<void> sendEmailVerify(String studentNumber);
-  Future<FirebaseAuthUserModel> getCurrentUser();
-  Stream<FirebaseAuthUserModel?> getAuthStateChanges();
+  Future<AuthenticationUserModel> getCurrentUser();
+  Stream<AuthenticationUserModel?> getAuthStateChanges();
 }
 
-class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
-  FirebaseAuthDataSourceImpl({required this.auth});
+class AuthenticationDataSourceImpl implements AuthenticationDataSource {
+  AuthenticationDataSourceImpl({required this.auth});
 
   final FirebaseAuth auth;
 
@@ -28,13 +28,13 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   }
 
   @override
-  Future<FirebaseAuthUserModel> login(
+  Future<AuthenticationUserModel> login(
       String studentNumber, String password) async {
     try {
       final userCredential = await auth.signInWithEmailAndPassword(
           email: studentNumber + emailDomainOfInstitute, password: password);
       final user = userCredential.user!;
-      return FirebaseAuthUserModel.fromEmail(
+      return AuthenticationUserModel.fromEmail(
           email: user.email!, isEmailVerify: user.emailVerified);
     } on FirebaseAuthException catch (e) {
       throw FireAuthException.fromMessage(e.message);
@@ -56,11 +56,11 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   }
 
   @override
-  Future<FirebaseAuthUserModel> getCurrentUser() async {
+  Future<AuthenticationUserModel> getCurrentUser() async {
     try {
       final currentUser = auth.currentUser;
       if (currentUser != null) {
-        return FirebaseAuthUserModel.fromEmail(
+        return AuthenticationUserModel.fromEmail(
             email: currentUser.email!,
             isEmailVerify: currentUser.emailVerified);
       } else {
@@ -72,11 +72,11 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   }
 
   @override
-  Stream<FirebaseAuthUserModel?> getAuthStateChanges() {
+  Stream<AuthenticationUserModel?> getAuthStateChanges() {
     try {
       return auth.authStateChanges().map((user) {
         if (user != null) {
-          return FirebaseAuthUserModel.fromEmail(
+          return AuthenticationUserModel.fromEmail(
               email: user.email!, isEmailVerify: user.emailVerified);
         } else {
           return null;

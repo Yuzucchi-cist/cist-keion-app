@@ -6,15 +6,15 @@ import 'belonging_model.dart';
 import 'institute_grade_model.dart';
 import 'user_state_model.dart';
 
-part 'generated/firestore_user_model.freezed.dart';
-part 'generated/firestore_user_model.g.dart';
+part 'generated/member_detail_model.freezed.dart';
+part 'generated/member_detail_model.g.dart';
 
 @freezed
-class FirestoreUserModel with _$FirestoreUserModel {
-  const FirestoreUserModel._();
+class MemberDetailModel with _$MemberDetailModel {
+  const MemberDetailModel._();
 
   @JsonSerializable(fieldRename: FieldRename.snake)
-  const factory FirestoreUserModel({
+  const factory MemberDetailModel({
     required String id,
     required String studentNumber,
     required String name,
@@ -22,15 +22,15 @@ class FirestoreUserModel with _$FirestoreUserModel {
     required UserStateModel userState,
     @BelongingModelListConverter() required List<BelongingModel> belongings,
     @Default(false) bool isAdmin,
-  }) = _FirestoreUserModel;
+  }) = _MemberDetailModel;
 
-  factory FirestoreUserModel.fromJson(Map<String, dynamic> json) =>
-      _$FirestoreUserModelFromJson(json);
+  factory MemberDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$MemberDetailModelFromJson(json);
 
-  factory FirestoreUserModel.fromFirestoreJson(
+  factory MemberDetailModel.fromFirestoreJson(
       String id, Map<String, dynamic> json) {
     final convertedJson = {'id': id, ...json};
-    return FirestoreUserModel.fromJson(convertedJson);
+    return MemberDetailModel.fromJson(convertedJson);
   }
 
   Map<String, dynamic> toFirestoreJson() {

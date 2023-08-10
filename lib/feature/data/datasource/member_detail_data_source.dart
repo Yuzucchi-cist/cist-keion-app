@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/error/exception/firestore_exception.dart';
-import '../model/auth/firestore/firestore_user_model.dart';
+import '../model/auth/member_detail/member_detail_model.dart';
 
 const authCollectionName = 'users';
 
-abstract class FirestoreDataSource {
-  Future<FirestoreUserModel> getMemberByStudentNumber(String studentNumber);
+abstract class MemberDetailDataSource {
+  Future<MemberDetailModel> getMemberByStudentNumber(String studentNumber);
 }
 
-class FirestoreDataSourceImpl implements FirestoreDataSource {
+class FirestoreDataSourceImpl implements MemberDetailDataSource {
   FirestoreDataSourceImpl({required this.firestore});
 
   final FirebaseFirestore firestore;
 
   @override
-  Future<FirestoreUserModel> getMemberByStudentNumber(
+  Future<MemberDetailModel> getMemberByStudentNumber(
       String studentNumber) async {
     try {
       final firestoreDocs = (await firestore
@@ -24,7 +24,7 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
               .get())
           .docs;
       if (firestoreDocs.isNotEmpty) {
-        return FirestoreUserModel.fromFirestoreJson(
+        return MemberDetailModel.fromFirestoreJson(
             firestoreDocs.first.id, firestoreDocs.first.data());
       } else {
         throw FirestoreException('no-member');
