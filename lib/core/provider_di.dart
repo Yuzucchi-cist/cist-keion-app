@@ -4,34 +4,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../feature/auth/data/datasources/remote/firebase_auth_data_source.dart';
-import '../feature/auth/data/datasources/remote/firestore_data_source.dart';
-import '../feature/auth/data/factories/belonging_factory.dart';
-import '../feature/auth/data/factories/institute_grade_factory.dart';
-import '../feature/auth/data/factories/member_factory.dart';
-import '../feature/auth/data/factories/user_state_factory.dart';
-import '../feature/auth/data/repositories/auth_repository_impl.dart';
-import '../feature/auth/domain/usecases/get_member_stream.dart';
-import '../feature/auth/domain/usecases/initialize_auth.dart';
-import '../feature/auth/domain/usecases/login.dart';
-import '../feature/auth/domain/usecases/logout.dart';
-import '../feature/auth/domain/usecases/register_member.dart';
-import '../feature/reservation/data/datasources/reservation_local_data_source.dart';
-import '../feature/reservation/data/datasources/reservation_remote_data_source.dart';
-import '../feature/reservation/data/factories/institute_time_factory.dart';
-import '../feature/reservation/data/factories/reservation_factory.dart';
-import '../feature/reservation/data/factories/reserved_member_factory.dart';
-import '../feature/reservation/data/repositories/reservation_repository_impl.dart';
-import '../feature/reservation/domain/usecases/add_reservations.dart';
-import '../feature/reservation/domain/usecases/delete_reservations.dart';
-import '../feature/reservation/domain/usecases/get_reservations_next_week.dart';
-import '../feature/reservation/domain/usecases/get_reservations_this_week.dart';
-import '../feature/suggestion/data/datasources/suggestion_remote_data_source.dart';
-import '../feature/suggestion/data/factories/suggestion_category_factory.dart';
-import '../feature/suggestion/data/factories/suggestion_factory.dart';
-import '../feature/suggestion/data/repositories/suggestion_repository_impl.dart';
-import '../feature/suggestion/domain/usecases/add_suggestion.dart';
-import '../feature/suggestion/domain/usecases/get_suggestions.dart';
+import '../feature/data/datasource/authentication_data_source.dart';
+import '../feature/data/datasource/member_detail_data_source.dart';
+import '../feature/data/datasource/reservation_local_data_source.dart';
+import '../feature/data/datasource/reservation_remote_data_source.dart';
+import '../feature/data/datasource/suggestion_data_source.dart';
+import '../feature/data/factory/auth/belonging_factory.dart';
+import '../feature/data/factory/auth/institute_grade_factory.dart';
+import '../feature/data/factory/auth/member_factory.dart';
+import '../feature/data/factory/auth/user_state_factory.dart';
+import '../feature/data/factory/reservation/institute_time_factory.dart';
+import '../feature/data/factory/reservation/reservation_factory.dart';
+import '../feature/data/factory/reservation/reserved_member_factory.dart';
+import '../feature/data/factory/suggestion/suggestion_category_factory.dart';
+import '../feature/data/factory/suggestion/suggestion_factory.dart';
+import '../feature/data/repository/auth_repository_impl.dart';
+import '../feature/data/repository/reservation_repository_impl.dart';
+import '../feature/data/repository/suggestion_repository_impl.dart';
+import '../feature/domain/usecase/auth/get_member_stream.dart';
+import '../feature/domain/usecase/auth/initialize_auth.dart';
+import '../feature/domain/usecase/auth/login.dart';
+import '../feature/domain/usecase/auth/logout.dart';
+import '../feature/domain/usecase/auth/register_member.dart';
+import '../feature/domain/usecase/reservation/add_reservations.dart';
+import '../feature/domain/usecase/reservation/delete_reservations.dart';
+import '../feature/domain/usecase/reservation/get_reservations_next_week.dart';
+import '../feature/domain/usecase/reservation/get_reservations_this_week.dart';
+import '../feature/domain/usecase/suggestion/add_suggestion.dart';
+import '../feature/domain/usecase/suggestion/get_suggestions.dart';
 import 'network/network_info.dart';
 
 final connectivityProvider = Provider((ref) => Connectivity());
@@ -45,8 +45,8 @@ final firebaseAuthProvider = Provider((ref) => FirebaseAuth.instance);
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 
 // auth
-final firebaseAuthDataSourceProvider = Provider(
-    (ref) => FirebaseAuthDataSourceImpl(auth: ref.watch(firebaseAuthProvider)));
+final firebaseAuthDataSourceProvider = Provider((ref) =>
+    AuthenticationDataSourceImpl(auth: ref.watch(firebaseAuthProvider)));
 final firestoreDataSourceProvider = Provider(
     (ref) => FirestoreDataSourceImpl(firestore: ref.watch(firestoreProvider)));
 
@@ -63,8 +63,8 @@ final memberFactoryProvider = Provider((ref) => MemberFactory(
 final authRepositoryProvider = Provider(
   (ref) => AuthRepositoryImpl(
     networkInfo: ref.watch(networkInfoProvider),
-    authDataSource: ref.watch(firebaseAuthDataSourceProvider),
-    storeDataSource: ref.watch(firestoreDataSourceProvider),
+    authenticationDataSource: ref.watch(firebaseAuthDataSourceProvider),
+    memberDetailDataSource: ref.watch(firestoreDataSourceProvider),
     memberFactory: ref.watch(memberFactoryProvider),
   ),
 );
@@ -116,8 +116,8 @@ final deleteReservationsProvider = Provider((ref) => DeleteReservations(
     reservationRepository: ref.watch(reservationRepositoryProvider)));
 
 // suggestion
-final suggestionRemoteDataSourceProvider = Provider((ref) =>
-    SuggestionRemoteDataSourceImpl(firestore: ref.watch(firestoreProvider)));
+final suggestionRemoteDataSourceProvider = Provider(
+    (ref) => SuggestionDataSourceImpl(firestore: ref.watch(firestoreProvider)));
 
 final suggestionCategoryFactoryProvider =
     Provider((ref) => SuggestionCategoryFactory());
@@ -125,7 +125,7 @@ final suggestionFactoryProvider = Provider((ref) => SuggestionFactory(
     suggestionCategoryFactory: ref.watch(suggestionCategoryFactoryProvider)));
 
 final suggestionRepositoryProvider = Provider((ref) => SuggestionRepositoryImpl(
-    remoteDataSource: ref.watch(suggestionRemoteDataSourceProvider),
+    suggestionDataSource: ref.watch(suggestionRemoteDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
     suggestionFactory: ref.watch(suggestionFactoryProvider)));
 

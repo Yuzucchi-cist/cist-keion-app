@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../core/router/app_router.dart';
-import 'auth/presentation/notifier/auth_notifier.dart';
+import 'presentation/provider/notifier/auth/auth_notifier.dart';
 
 class App extends HookConsumerWidget {
   const App({super.key});
