@@ -10,7 +10,7 @@ import '../../../../domain/entity/reservation/reservation.dart';
 import '../../../../domain/usecase/reservation/add_reservations.dart';
 import '../../../../domain/value/institute_time.dart';
 import '../../state/reservation/reserve_table.dart';
-import '../../state/reservation/week_day.dart';
+import '../../values/week_day.dart';
 
 final reserveTableForDisplayInThisWeekProvider =
     StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {

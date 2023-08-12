@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../domain/value/institute_time.dart';
 import '../../provider/notifier/reservation/reserve_table_notifier.dart';
 import '../../provider/state/reservation/reserve_table.dart';
-import '../../provider/state/reservation/week_day.dart';
+import '../../provider/values/week_day.dart';
 
 Widget reservationTable(BuildContext context, WidgetRef ref,
     {required StateNotifierProvider<ReserveTableNotifier, ReserveTable>

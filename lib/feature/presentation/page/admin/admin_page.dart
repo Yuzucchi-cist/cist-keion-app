@@ -27,7 +27,13 @@ class AdminPage extends HookConsumerWidget {
               onPressed: () {
                 context.router.push(const SuggestionsRoute());
               },
-            )
+            ),
+            ElevatedButton(
+              child: const Text('メンバー追加'),
+              onPressed: () {
+                context.router.push(const AddMembersRoute());
+              },
+            ),
           ],
         ),
       ),
