@@ -1,7 +1,7 @@
 import '../../../../core/factories/data_factory.dart';
 import '../../../domain/value/belongings/band.dart';
 import '../../../domain/value/belongings/belonging.dart';
-import '../../model/auth/member_detail/belonging_model.dart';
+import '../../model/member_detail/belonging_model.dart';
 
 abstract class BelongingFactory
     implements DataFactory<Belonging, BelongingModel, BelongingParams> {}

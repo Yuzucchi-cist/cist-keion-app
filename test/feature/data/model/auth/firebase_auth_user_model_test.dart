@@ -1,4 +1,4 @@
-import 'package:cist_keion_app/feature/data/model/auth/authentication/authentication_user_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/authentication_user_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

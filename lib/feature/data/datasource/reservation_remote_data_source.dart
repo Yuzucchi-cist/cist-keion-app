@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../../core/error/exception/firestore_exception.dart';
 import '../model/reservation/reservation_model.dart';
-import 'member_detail_data_source.dart';
+import 'member_detail_remote_data_source.dart';
 
 const reservationCollectionName = 'reservations';
 

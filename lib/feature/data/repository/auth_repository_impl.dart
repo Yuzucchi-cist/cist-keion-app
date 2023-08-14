@@ -11,9 +11,9 @@ import '../../../core/network/network_info.dart';
 import '../../domain/entity/auth/member.dart';
 import '../../domain/repository/auth_repository.dart';
 import '../datasource/authentication_data_source.dart';
-import '../datasource/member_detail_data_source.dart';
+import '../datasource/member_detail_remote_data_source.dart';
 import '../factory/auth/member_factory.dart';
-import '../model/auth/authentication/authentication_user_model.dart';
+import '../model/auth/authentication_user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
@@ -25,7 +25,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   final NetworkInfo networkInfo;
   final AuthenticationDataSource authenticationDataSource;
-  final MemberDetailDataSource memberDetailDataSource;
+  final MemberDetailRemoteDataSource memberDetailDataSource;
   final MemberFactory memberFactory;
 
   @override

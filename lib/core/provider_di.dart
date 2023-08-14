@@ -1,24 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../feature/data/datasource/authentication_data_source.dart';
-import '../feature/data/datasource/member_detail_data_source.dart';
+import '../feature/data/datasource/member_detail_local_data_source.dart';
+import '../feature/data/datasource/member_detail_remote_data_source.dart';
 import '../feature/data/datasource/reservation_local_data_source.dart';
 import '../feature/data/datasource/reservation_remote_data_source.dart';
 import '../feature/data/datasource/suggestion_data_source.dart';
-import '../feature/data/factory/auth/belonging_factory.dart';
-import '../feature/data/factory/auth/institute_grade_factory.dart';
 import '../feature/data/factory/auth/member_factory.dart';
-import '../feature/data/factory/auth/user_state_factory.dart';
+import '../feature/data/factory/member_detail/belonging_factory.dart';
+import '../feature/data/factory/member_detail/institute_grade_factory.dart';
+import '../feature/data/factory/member_detail/member_detail_factory.dart';
+import '../feature/data/factory/member_detail/user_state_factory.dart';
 import '../feature/data/factory/reservation/institute_time_factory.dart';
 import '../feature/data/factory/reservation/reservation_factory.dart';
 import '../feature/data/factory/reservation/reserved_member_factory.dart';
 import '../feature/data/factory/suggestion/suggestion_category_factory.dart';
 import '../feature/data/factory/suggestion/suggestion_factory.dart';
 import '../feature/data/repository/auth_repository_impl.dart';
+import '../feature/data/repository/member_detail_repository_impl.dart';
 import '../feature/data/repository/reservation_repository_impl.dart';
 import '../feature/data/repository/suggestion_repository_impl.dart';
 import '../feature/domain/usecase/auth/get_member_stream.dart';
@@ -26,6 +30,7 @@ import '../feature/domain/usecase/auth/initialize_auth.dart';
 import '../feature/domain/usecase/auth/login.dart';
 import '../feature/domain/usecase/auth/logout.dart';
 import '../feature/domain/usecase/auth/register_member.dart';
+import '../feature/domain/usecase/member_detail/get_member_detail_from_file.dart';
 import '../feature/domain/usecase/reservation/add_reservations.dart';
 import '../feature/domain/usecase/reservation/delete_reservations.dart';
 import '../feature/domain/usecase/reservation/get_reservations_next_week.dart';
@@ -40,6 +45,7 @@ final networkInfoProvider =
 
 final sharedPreferencesProvider =
     Provider<SharedPreferences>((_) => throw UnimplementedError());
+final filePickerProvider = Provider<FilePicker>((ref) => FilePicker.platform);
 
 final firebaseAuthProvider = Provider((ref) => FirebaseAuth.instance);
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
@@ -47,8 +53,8 @@ final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 // auth
 final firebaseAuthDataSourceProvider = Provider((ref) =>
     AuthenticationDataSourceImpl(auth: ref.watch(firebaseAuthProvider)));
-final firestoreDataSourceProvider = Provider(
-    (ref) => FirestoreDataSourceImpl(firestore: ref.watch(firestoreProvider)));
+final firestoreDataSourceProvider = Provider((ref) =>
+    MemberDetailRemoteDataSourceImpl(firestore: ref.watch(firestoreProvider)));
 
 final instituteGradeFactoryProvider =
     Provider((ref) => InstituteGradeFactoryImpl());
@@ -68,6 +74,26 @@ final authRepositoryProvider = Provider(
     memberFactory: ref.watch(memberFactoryProvider),
   ),
 );
+
+// member_detail
+final memberDetailLocalDataSource = Provider((ref) =>
+    MemberDetailLocalDataSourceImpl(filePicker: ref.watch(filePickerProvider)));
+
+final memberDetailFactoryProvider = Provider((ref) => MemberDetailFactory(
+      instituteGradeFactory: ref.watch(instituteGradeFactoryProvider),
+      userStateFactory: ref.watch(userStateFactoryProvider),
+      belongingFactory: ref.watch(belongingFactoryProvider),
+    ));
+
+final memberDetailRepositoryProvider =
+    Provider((ref) => MemberDetailRepositoryImpl(
+          memberDetailLLocalDataSource: ref.watch(memberDetailLocalDataSource),
+          memberDetailFactory: ref.watch(memberDetailFactoryProvider),
+        ));
+
+final getMemberDetailFromFileProvider = Provider((ref) =>
+    GetMemberDetailFromFile(
+        memberDetailRepository: ref.watch(memberDetailRepositoryProvider)));
 
 final registerMemberProvider = Provider(
     (ref) => RegisterMember(authRepository: ref.watch(authRepositoryProvider)));

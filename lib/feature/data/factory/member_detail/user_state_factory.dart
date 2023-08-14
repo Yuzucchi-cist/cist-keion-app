@@ -1,6 +1,6 @@
 import '../../../../core/factories/data_factory.dart';
 import '../../../domain/value/user_state.dart';
-import '../../model/auth/member_detail/user_state_model.dart';
+import '../../model/member_detail/user_state_model.dart';
 
 abstract class UserStateFactory
     implements DataFactory<UserState, UserStateModel, String> {}

@@ -1,21 +1,21 @@
 import 'package:cist_keion_app/core/error/exception/firestore_exception.dart';
-import 'package:cist_keion_app/feature/data/datasource/member_detail_data_source.dart';
-import 'package:cist_keion_app/feature/data/model/auth/member_detail/belonging_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/member_detail/institute_grade_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/member_detail/member_detail_model.dart';
-import 'package:cist_keion_app/feature/data/model/auth/member_detail/user_state_model.dart';
+import 'package:cist_keion_app/feature/data/datasource/member_detail_remote_data_source.dart';
+import 'package:cist_keion_app/feature/data/model/member_detail/belonging_model.dart';
+import 'package:cist_keion_app/feature/data/model/member_detail/institute_grade_model.dart';
+import 'package:cist_keion_app/feature/data/model/member_detail/member_detail_model.dart';
+import 'package:cist_keion_app/feature/data/model/member_detail/user_state_model.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
 void main() {
-  late MemberDetailDataSource dataSource;
+  late MemberDetailRemoteDataSource dataSource;
   late FakeFirebaseFirestore mockFirestore;
 
   setUp(() {
     mockFirestore = FakeFirebaseFirestore();
-    dataSource = FirestoreDataSourceImpl(firestore: mockFirestore);
+    dataSource = MemberDetailRemoteDataSourceImpl(firestore: mockFirestore);
   });
 
   final tFirestoreJsonData = firestoreDataReader(firestoreUserDataPath, []);

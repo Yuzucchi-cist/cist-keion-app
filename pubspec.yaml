@@ -49,6 +49,8 @@ dependencies:
   connectivity_plus: ^4.0.1
   shared_preferences: ^2.1.2
   clock: ^1.1.1
+  file_picker: ^5.3.3
+  excel: ^2.1.0
 
 
 dev_dependencies:

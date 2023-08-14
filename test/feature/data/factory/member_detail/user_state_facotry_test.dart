@@ -1,5 +1,5 @@
-import 'package:cist_keion_app/feature/data/factory/auth/user_state_factory.dart';
-import 'package:cist_keion_app/feature/data/model/auth/member_detail/user_state_model.dart';
+import 'package:cist_keion_app/feature/data/factory/member_detail/user_state_factory.dart';
+import 'package:cist_keion_app/feature/data/model/member_detail/user_state_model.dart';
 import 'package:cist_keion_app/feature/domain/value/user_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 

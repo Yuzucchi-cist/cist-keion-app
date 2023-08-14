@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/error/exception/firestore_exception.dart';
-import '../model/auth/member_detail/member_detail_model.dart';
+import '../model/member_detail/member_detail_model.dart';
 
 const authCollectionName = 'users';
 
-abstract class MemberDetailDataSource {
+abstract class MemberDetailRemoteDataSource {
   Future<MemberDetailModel> getMemberByStudentNumber(String studentNumber);
 }
 
-class FirestoreDataSourceImpl implements MemberDetailDataSource {
-  FirestoreDataSourceImpl({required this.firestore});
+class MemberDetailRemoteDataSourceImpl implements MemberDetailRemoteDataSource {
+  MemberDetailRemoteDataSourceImpl({required this.firestore});
 
   final FirebaseFirestore firestore;
 

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/error/exception/firebase_auth_exception.dart';
-import '../model/auth/authentication/authentication_user_model.dart';
+import '../model/auth/authentication_user_model.dart';
 
 abstract class AuthenticationDataSource {
   Future<void> createUser(String studentNumber, String password);

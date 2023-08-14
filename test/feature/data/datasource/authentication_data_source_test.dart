@@ -1,6 +1,6 @@
 import 'package:cist_keion_app/core/error/exception/firebase_auth_exception.dart';
 import 'package:cist_keion_app/feature/data/datasource/authentication_data_source.dart';
-import 'package:cist_keion_app/feature/data/model/auth/authentication/authentication_user_model.dart';
+import 'package:cist_keion_app/feature/data/model/auth/authentication_user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -56,6 +56,7 @@ void main() {
       try {
         // act
         await dataSource.createUser(tStudentNumber, tPassword);
+        fail('');
         // assert
       } on FireAuthException catch (e) {
         expect(e.code, testErrorCode);

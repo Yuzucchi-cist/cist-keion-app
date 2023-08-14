@@ -1,0 +1,27 @@
+[
+  {
+    "name": "竹中 啓太",
+    "student_number": "b1904180",
+    "institute_grade": "other"
+  },
+  {
+    "name": "森園 正己",
+    "student_number": "b2209040",
+    "institute_grade": "second"
+  },
+  {
+    "name": "平田 忠司",
+    "student_number": "b2308590",
+    "institute_grade": "first"
+  },
+  {
+    "name": "矢吹 拓磨",
+    "student_number": "b2005820",
+    "institute_grade": "forth"
+  },
+  {
+    "name": "山口 由布子",
+    "student_number": "b2104310",
+    "institute_grade": "third"
+  }
+]
