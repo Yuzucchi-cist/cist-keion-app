@@ -81,7 +81,7 @@ void main() {
     when(mockMemberDetailRepository.addToDatabase(any))
         .thenAnswer((realInvocation) async => Right(tMemberDetailList));
     when(mockMemberDetailRepository.getAll())
-        .thenAnswer((realInvocation) async => Right([]));
+        .thenAnswer((realInvocation) async => const Right([]));
     // act
     await usecase(tDuplicatedMemberDetailList);
     // assert
