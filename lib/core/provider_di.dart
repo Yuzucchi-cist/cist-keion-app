@@ -30,6 +30,7 @@ import '../feature/domain/usecase/auth/initialize_auth.dart';
 import '../feature/domain/usecase/auth/login.dart';
 import '../feature/domain/usecase/auth/logout.dart';
 import '../feature/domain/usecase/auth/register_member.dart';
+import '../feature/domain/usecase/member_detail/add_member_detail_to_database.dart';
 import '../feature/domain/usecase/member_detail/get_member_detail_from_file.dart';
 import '../feature/domain/usecase/reservation/add_reservations.dart';
 import '../feature/domain/usecase/reservation/delete_reservations.dart';
@@ -53,7 +54,7 @@ final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 // auth
 final firebaseAuthDataSourceProvider = Provider((ref) =>
     AuthenticationDataSourceImpl(auth: ref.watch(firebaseAuthProvider)));
-final firestoreDataSourceProvider = Provider((ref) =>
+final memberDetailRemoteDataSourceProvider = Provider((ref) =>
     MemberDetailRemoteDataSourceImpl(firestore: ref.watch(firestoreProvider)));
 
 final instituteGradeFactoryProvider =
@@ -70,7 +71,7 @@ final authRepositoryProvider = Provider(
   (ref) => AuthRepositoryImpl(
     networkInfo: ref.watch(networkInfoProvider),
     authenticationDataSource: ref.watch(firebaseAuthDataSourceProvider),
-    memberDetailDataSource: ref.watch(firestoreDataSourceProvider),
+    memberDetailDataSource: ref.watch(memberDetailRemoteDataSourceProvider),
     memberFactory: ref.watch(memberFactoryProvider),
   ),
 );
@@ -87,13 +88,18 @@ final memberDetailFactoryProvider = Provider((ref) => MemberDetailFactory(
 
 final memberDetailRepositoryProvider =
     Provider((ref) => MemberDetailRepositoryImpl(
+          networkInfo: ref.watch(networkInfoProvider),
           memberDetailLLocalDataSource: ref.watch(memberDetailLocalDataSource),
+          memberDetailRemoteDataSource:
+              ref.watch(memberDetailRemoteDataSourceProvider),
           memberDetailFactory: ref.watch(memberDetailFactoryProvider),
         ));
 
 final getMemberDetailFromFileProvider = Provider((ref) =>
     GetMemberDetailFromFile(
         memberDetailRepository: ref.watch(memberDetailRepositoryProvider)));
+final addMemberToDatabaseProvider = Provider((ref) => AddMemberDetailToDatabase(
+    memberDetailRepository: ref.watch(memberDetailRepositoryProvider)));
 
 final registerMemberProvider = Provider(
     (ref) => RegisterMember(authRepository: ref.watch(authRepositoryProvider)));

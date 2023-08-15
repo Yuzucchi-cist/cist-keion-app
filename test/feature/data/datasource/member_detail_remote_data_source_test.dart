@@ -29,32 +29,35 @@ void main() {
     }
   }
 
-  final tId = tFirestoreJsonData.first['id'] as String;
-  final tFirestoreDatum =
-      tFirestoreJsonData.first['value'] as Map<String, dynamic>;
-  final tStudentNumber = tFirestoreDatum['student_number'] as String;
-  final tName = tFirestoreDatum['name'] as String;
-  final tInstituteGrade = InstituteGradeModel.values
-      .byName(tFirestoreDatum['institute_grade'] as String);
-  final tUserState =
-      UserStateModel.values.byName(tFirestoreDatum['user_state'] as String);
-  final tBelongings = (tFirestoreDatum['belongings'] as List<dynamic>)
-      .map((belonging) => BelongingModel(
-          id: (belonging as Map<String, dynamic>)['id'] as String,
-          type: BelongingType.values.byName(belonging['type'] as String),
-          name: belonging['name'] as String))
-      .toList();
-  final tIsAdmin = tFirestoreDatum['is_admin'] as bool;
+  final tMemberDetailModelList = tFirestoreJsonData.map((json) {
+    final id = json['id'] as String;
+    final jsonValue = json['value'] as Map<String, dynamic>;
+    final studentNumber = jsonValue['student_number'] as String;
+    final name = jsonValue['name'] as String;
+    final instituteGrade = InstituteGradeModel.values
+        .byName(jsonValue['institute_grade'] as String);
+    final userState =
+        UserStateModel.values.byName(jsonValue['user_state'] as String);
+    final belongings = (jsonValue['belongings'] as List<dynamic>)
+        .map((belonging) => BelongingModel(
+            id: (belonging as Map<String, dynamic>)['id'] as String,
+            type: BelongingType.values.byName(belonging['type'] as String),
+            name: belonging['name'] as String))
+        .toList();
+    final isAdmin = jsonValue['is_admin'] as bool;
 
-  final tFirestoreUserModel = MemberDetailModel(
-    id: tId,
-    studentNumber: tStudentNumber,
-    name: tName,
-    instituteGrade: tInstituteGrade,
-    userState: tUserState,
-    belongings: tBelongings,
-    isAdmin: tIsAdmin,
-  );
+    return MemberDetailModel(
+      id: id,
+      studentNumber: studentNumber,
+      name: name,
+      instituteGrade: instituteGrade,
+      userState: userState,
+      belongings: belongings,
+      isAdmin: isAdmin,
+    );
+  }).toList();
+
+  final tMemberDetailModel = tMemberDetailModelList.first;
 
   group('getMemberByStudentNumber', () {
     test('should return member model when the FireStore is successful',
@@ -62,9 +65,10 @@ void main() {
       // arrange
       setFirestoreToData();
       // act
-      final result = await dataSource.getMemberByStudentNumber(tStudentNumber);
+      final result =
+          await dataSource.getByStudentNumber(tMemberDetailModel.studentNumber);
       // assert
-      expect(result, tFirestoreUserModel);
+      expect(result, tMemberDetailModel);
     });
 
     test('should throw the FirestoreException when data does not exist',
@@ -73,7 +77,7 @@ void main() {
       setFirestoreToData();
       try {
         // act
-        await dataSource.getMemberByStudentNumber('b0000000');
+        await dataSource.getByStudentNumber('b0000000');
         fail('');
       } on FirestoreException catch (e) {
         expect(e.code, 'no-member');
@@ -81,5 +85,49 @@ void main() {
         fail('Not-expect object was thrown: $e');
       }
     });
+  });
+
+  group('getAll', () {
+    test('should return member model list when the FireStore is successful',
+        () async {
+      // arrange
+      setFirestoreToData();
+      // act
+      final result = await dataSource.getAll();
+      // assert
+      expect(result, unorderedEquals(tMemberDetailModelList));
+    });
+
+    // test('should throw firestore exception ', () => null);
+  });
+
+  group('add', () {
+    test('should call firestore to add data', () async {
+      // act
+      await dataSource.add(tMemberDetailModelList);
+      // assert
+      final result = (await mockFirestore.collection(authCollectionName).get())
+          .docs
+          .map((doc) => doc.data());
+      expect(
+          result,
+          unorderedEquals(
+              tMemberDetailModelList.map((model) => model.toFirestoreJson())));
+    });
+
+    test('should return added data when firestore is successful', () async {
+      // act
+      final result = await dataSource.add(tMemberDetailModelList);
+      // assert
+      final expected = (await mockFirestore
+              .collection(authCollectionName)
+              .get())
+          .docs
+          .map((doc) => MemberDetailModel.fromFirestoreJson(doc.id, doc.data()))
+          .toList();
+      expect(result, unorderedEquals(expected));
+    });
+
+    // test('should throw firestore exception ', () => null);
   });
 }

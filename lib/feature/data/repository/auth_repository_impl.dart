@@ -33,7 +33,7 @@ class AuthRepositoryImpl implements AuthRepository {
       String studentNumber, String password) async {
     if (await networkInfo.isConnected) {
       try {
-        await memberDetailDataSource.getMemberByStudentNumber(studentNumber);
+        await memberDetailDataSource.getByStudentNumber(studentNumber);
         await authenticationDataSource.createUser(studentNumber, password);
         return const Right(unit);
       } on FireAuthException catch (e) {
@@ -82,7 +82,7 @@ class AuthRepositoryImpl implements AuthRepository {
       try {
         final authUserModel = await getAuthUserModel();
         final storeUserModel = await memberDetailDataSource
-            .getMemberByStudentNumber(authUserModel.studentNumber);
+            .getByStudentNumber(authUserModel.studentNumber);
         final member = memberFactory.createFromModel(Models(
             authUserModel: authUserModel, memberDetailModel: storeUserModel));
         return Right(member);
@@ -108,7 +108,7 @@ class AuthRepositoryImpl implements AuthRepository {
             } else {
               try {
                 final storeModel = await memberDetailDataSource
-                    .getMemberByStudentNumber(authModel.studentNumber);
+                    .getByStudentNumber(authModel.studentNumber);
                 sink.add(Right<Failure, Member>(memberFactory.createFromModel(
                     Models(
                         authUserModel: authModel,

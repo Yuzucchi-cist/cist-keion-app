@@ -106,7 +106,7 @@ void main() {
       arrange: () {
         when(mockAuthenticationDataSource.createUser(any, any))
             .thenAnswer((realInvocation) async {});
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenAnswer((realInvocation) async => tMemberDetailModel);
       },
       act: () async {
@@ -122,7 +122,7 @@ void main() {
         // arrange
         when(mockAuthenticationDataSource.createUser(any, any))
             .thenAnswer((realInvocation) async {});
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenAnswer((realInvocation) async => tMemberDetailModel);
         // act
         final result =
@@ -138,7 +138,7 @@ void main() {
         // arrange
         when(mockAuthenticationDataSource.createUser(any, any))
             .thenThrow(FireAuthException('invalid-email'));
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenThrow(FirestoreException('no-member'));
         // act
         final result =
@@ -152,14 +152,14 @@ void main() {
         // arrange
         when(mockAuthenticationDataSource.createUser(any, any))
             .thenAnswer((realInvocation) async {});
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenThrow(FirestoreException('no-member'));
         // act
         final result =
             await repository.registerMember(tStudentNumber, tPassword);
         // assert
         verify(mockMemberDetailRemoteDataSource
-            .getMemberByStudentNumber(tStudentNumber));
+            .getByStudentNumber(tStudentNumber));
         verifyNever(mockAuthenticationDataSource.createUser(any, any));
         expect(result, Left(AuthFailure(AuthFailureState.noMemberExists)));
       });
@@ -214,7 +214,7 @@ void main() {
       arrange: () {
         when(mockAuthenticationDataSource.login(any, any))
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
       },
@@ -231,7 +231,7 @@ void main() {
         // arrange
         when(mockAuthenticationDataSource.login(any, any))
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
         // act
@@ -239,7 +239,7 @@ void main() {
         // assert
         verify(mockAuthenticationDataSource.login(tStudentNumber, tPassword));
         verify(mockMemberDetailRemoteDataSource
-            .getMemberByStudentNumber(tStudentNumber));
+            .getByStudentNumber(tStudentNumber));
         expect(result, const Right(tMember));
       });
 
@@ -247,7 +247,7 @@ void main() {
         // arrange
         when(mockAuthenticationDataSource.login(any, any))
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
         // act
@@ -264,8 +264,7 @@ void main() {
         // act
         final result = await repository.login(tStudentNumber, tPassword);
         // assert
-        verifyNever(
-            mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any));
+        verifyNever(mockMemberDetailRemoteDataSource.getByStudentNumber(any));
         verifyNever(mockMemberFactory.createFromModel(any));
         expect(result, Left(AuthFailure(AuthFailureState.invalidEmail)));
       });
@@ -276,7 +275,7 @@ void main() {
         // arrange
         when(mockAuthenticationDataSource.login(any, any))
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenThrow(FirestoreException('no-member'));
         // act
         final result = await repository.login(tStudentNumber, tPassword);
@@ -294,7 +293,7 @@ void main() {
       arrange: () {
         when(mockAuthenticationDataSource.getCurrentUser())
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
       },
@@ -311,7 +310,7 @@ void main() {
         // arrange
         when(mockAuthenticationDataSource.getCurrentUser())
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenAnswer((realInvocation) async => tMemberDetailModel);
         when(mockMemberFactory.createFromModel(any)).thenReturn(tMember);
         // act
@@ -319,7 +318,7 @@ void main() {
         // assert
         verify(mockAuthenticationDataSource.getCurrentUser());
         verify(mockMemberDetailRemoteDataSource
-            .getMemberByStudentNumber(tStudentNumber));
+            .getByStudentNumber(tStudentNumber));
         verify(mockMemberFactory.createFromModel(tModels));
         expect(result, const Right(tMember));
       });
@@ -331,8 +330,7 @@ void main() {
         // act
         final result = await repository.getCurrentMember();
         // assert
-        verifyNever(
-            mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any));
+        verifyNever(mockMemberDetailRemoteDataSource.getByStudentNumber(any));
         verifyNever(mockMemberFactory.createFromModel(any));
         expect(result, Left(AuthFailure(AuthFailureState.invalidEmail)));
       });
@@ -343,7 +341,7 @@ void main() {
         // arrange
         when(mockAuthenticationDataSource.getCurrentUser())
             .thenAnswer((realInvocation) async => tAuthUserModel);
-        when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+        when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
             .thenThrow(FirestoreException('no-member'));
         // act
         final result = await repository.getCurrentMember();
@@ -400,8 +398,7 @@ void main() {
           .thenAnswer((realInvocation) async* {
         yield tAuthUserModel;
       });
-      when(mockMemberDetailRemoteDataSource
-              .getMemberByStudentNumber(tStudentNumber))
+      when(mockMemberDetailRemoteDataSource.getByStudentNumber(tStudentNumber))
           .thenAnswer((realInvocation) async => tMemberDetailModel);
       when(mockMemberFactory.createFromModel(any))
           .thenAnswer((realInvocation) => tMember);
@@ -433,7 +430,7 @@ void main() {
           .thenAnswer((realInvocation) async* {
         yield tAuthUserModel;
       });
-      when(mockMemberDetailRemoteDataSource.getMemberByStudentNumber(any))
+      when(mockMemberDetailRemoteDataSource.getByStudentNumber(any))
           .thenThrow(FirestoreException('no-member'));
       // act
       final result = repository.getAuthChange();
