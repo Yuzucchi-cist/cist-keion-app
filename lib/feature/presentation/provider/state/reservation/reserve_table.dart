@@ -5,8 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../../../core/utils/date_time_utils.dart';
 import '../../../../domain/entity/reservation/reservation.dart';
 import '../../../../domain/value/institute_time.dart';
-import 'reserve_table_cell.dart';
-import 'week_day.dart';
+import '../../values/reserve_table_cell.dart';
+import '../../values/week_day.dart';
 
 part 'generated/reserve_table.freezed.dart';
 

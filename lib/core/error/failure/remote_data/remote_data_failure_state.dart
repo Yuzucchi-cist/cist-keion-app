@@ -1,0 +1,4 @@
+enum RemoteDataFailureState {
+  unexpected,
+  noData,
+}

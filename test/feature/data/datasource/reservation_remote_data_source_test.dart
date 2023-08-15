@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_redundant_argument_values
 
-import 'package:cist_keion_app/feature/data/datasource/member_detail_data_source.dart';
+import 'package:cist_keion_app/feature/data/datasource/member_detail_remote_data_source.dart';
 import 'package:cist_keion_app/feature/data/datasource/reservation_remote_data_source.dart';
 import 'package:cist_keion_app/feature/data/model/reservation/reservation_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

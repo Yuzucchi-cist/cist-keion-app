@@ -1,6 +1,6 @@
 import '../../../../domain/entity/reservation/reservation.dart';
 import '../../../../domain/value/institute_time.dart';
-import 'week_day.dart';
+import '../../values/week_day.dart';
 
 class MemberReservation {
   MemberReservation({required Reservation reservation, this.isChecked = false})

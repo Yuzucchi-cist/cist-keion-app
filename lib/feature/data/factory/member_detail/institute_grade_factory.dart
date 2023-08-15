@@ -1,6 +1,6 @@
 import '../../../../core/factories/data_factory.dart';
 import '../../../domain/value/institute_grade.dart';
-import '../../model/auth/member_detail/institute_grade_model.dart';
+import '../../model/member_detail/institute_grade_model.dart';
 
 abstract class InstituteGradeFactory
     implements DataFactory<InstituteGrade, InstituteGradeModel, String> {}

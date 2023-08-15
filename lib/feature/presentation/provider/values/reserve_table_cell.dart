@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../domain/entity/reservation/reservation.dart';
+import '../../../domain/entity/reservation/reservation.dart';
 
 part 'generated/reserve_table_cell.freezed.dart';
 

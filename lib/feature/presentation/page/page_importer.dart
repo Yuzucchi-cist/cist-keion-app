@@ -1,7 +1,6 @@
 export 'admin/admin_page.dart';
 export 'admin/admin_router_page.dart';
-export 'admin/suggestion_detail_page.dart';
-export 'admin/suggestions_page.dart';
+export 'auth/add_members_page.dart';
 export 'auth/auth_router_page.dart';
 export 'auth/confirm_email_verify_page.dart';
 export 'auth/login_page.dart';
@@ -17,4 +16,6 @@ export 'reservation/reservation_router_page.dart';
 export 'root/root_page.dart';
 export 'suggestion/confirm_suggestion_page.dart';
 export 'suggestion/create_suggestion_page.dart';
+export 'suggestion/suggestion_detail_page.dart';
 export 'suggestion/suggestion_router_page.dart';
+export 'suggestion/suggestions_page.dart';

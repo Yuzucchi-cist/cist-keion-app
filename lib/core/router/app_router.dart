@@ -72,6 +72,7 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
             AutoRoute(path: 'suggestions', page: SuggestionsRoute.page),
             AutoRoute(
                 path: 'suggestion_detail', page: SuggestionDetailRoute.page),
+            AutoRoute(path: 'add_members', page: AddMembersRoute.page)
           ],
         ),
       ];
@@ -92,6 +93,7 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
       AdminRoute.name,
       SuggestionsRoute.name,
       SuggestionDetailRoute.name,
+      AddMembersRoute.name,
     ];
 
     final authState = ref.read(authProvider);

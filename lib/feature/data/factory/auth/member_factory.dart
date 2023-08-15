@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/factories/data_factory.dart';
 import '../../../domain/entity/auth/member.dart';
-import '../../model/auth/authentication/authentication_user_model.dart';
-import '../../model/auth/member_detail/member_detail_model.dart';
-import 'belonging_factory.dart';
-import 'institute_grade_factory.dart';
-import 'user_state_factory.dart';
+import '../../model/auth/authentication_user_model.dart';
+import '../../model/member_detail/member_detail_model.dart';
+import '../member_detail/belonging_factory.dart';
+import '../member_detail/institute_grade_factory.dart';
+import '../member_detail/user_state_factory.dart';
 
 class MemberFactory implements DataFactory<Member, Models, Params> {
   MemberFactory({

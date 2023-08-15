@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../../provider/notifier/auth/member_detail_list_notifier.dart';
 
 @RoutePage()
 class AdminPage extends HookConsumerWidget {
@@ -27,7 +28,14 @@ class AdminPage extends HookConsumerWidget {
               onPressed: () {
                 context.router.push(const SuggestionsRoute());
               },
-            )
+            ),
+            ElevatedButton(
+              child: const Text('メンバー追加'),
+              onPressed: () {
+                ref.read(memberDetailListProvider.notifier).reset();
+                context.router.push(const AddMembersRoute());
+              },
+            ),
           ],
         ),
       ),

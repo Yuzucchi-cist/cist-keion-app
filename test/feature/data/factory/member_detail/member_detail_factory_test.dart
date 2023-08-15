@@ -1,13 +1,12 @@
-import 'package:cist_keion_app/feature/data/factory/auth/member_factory.dart';
 import 'package:cist_keion_app/feature/data/factory/member_detail/belonging_factory.dart';
 import 'package:cist_keion_app/feature/data/factory/member_detail/institute_grade_factory.dart';
+import 'package:cist_keion_app/feature/data/factory/member_detail/member_detail_factory.dart';
 import 'package:cist_keion_app/feature/data/factory/member_detail/user_state_factory.dart';
-import 'package:cist_keion_app/feature/data/model/auth/authentication_user_model.dart';
 import 'package:cist_keion_app/feature/data/model/member_detail/belonging_model.dart';
 import 'package:cist_keion_app/feature/data/model/member_detail/institute_grade_model.dart';
 import 'package:cist_keion_app/feature/data/model/member_detail/member_detail_model.dart';
 import 'package:cist_keion_app/feature/data/model/member_detail/user_state_model.dart';
-import 'package:cist_keion_app/feature/domain/entity/auth/member.dart';
+import 'package:cist_keion_app/feature/domain/entity/member_detail/member_detail.dart';
 import 'package:cist_keion_app/feature/domain/value/belongings/band.dart';
 import 'package:cist_keion_app/feature/domain/value/institute_grade.dart';
 import 'package:cist_keion_app/feature/domain/value/user_state.dart';
@@ -15,11 +14,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'member_factory_test.mocks.dart';
+import '../auth/member_factory_test.mocks.dart';
 
 @GenerateMocks([InstituteGradeFactory, UserStateFactory, BelongingFactory])
 void main() {
-  late MemberFactory factory;
+  late MemberDetailFactory factory;
   late MockInstituteGradeFactory mockInstituteGradeFactory;
   late MockUserStateFactory mockUserStateFactory;
   late MockBelongingFactory mockBelongingFactory;
@@ -28,7 +27,7 @@ void main() {
     mockInstituteGradeFactory = MockInstituteGradeFactory();
     mockUserStateFactory = MockUserStateFactory();
     mockBelongingFactory = MockBelongingFactory();
-    factory = MemberFactory(
+    factory = MemberDetailFactory(
         instituteGradeFactory: mockInstituteGradeFactory,
         userStateFactory: mockUserStateFactory,
         belongingFactory: mockBelongingFactory);
@@ -44,7 +43,7 @@ void main() {
   const tUserStateString = 'active';
   final tUserState = UserState.values.byName(tUserStateString);
   final tUserStateModel = UserStateModel.values.byName(tUserStateString);
-  const tIsVerified = false;
+  const tIsAdmin = false;
   const tBelongingParams = BelongingParams(
     id: 'testId',
     type: BelongingType.band,
@@ -62,39 +61,34 @@ void main() {
     name: tBelongingParams.name,
   );
   final tBelongingModels = [tBelongingModel];
-  final tParams = Params(
-    memberId: tMemberId,
+
+  final tParams = MemberDetailParams(
+    id: tMemberId,
     studentNumber: tStudentNumber,
     name: tName,
     instituteGrade: tInstituteGradeString,
     userState: tUserStateString,
-    isVerified: tIsVerified,
+    isAdmin: tIsAdmin,
     belongingParams: tBelongingsParams,
   );
 
-  final tValue = Member(
-    memberId: tMemberId,
+  final tValue = MemberDetail(
+    id: tMemberId,
     studentNumber: tStudentNumber,
-    name: tName,
+    name: tParams.name,
     instituteGrade: tInstituteGrade,
     userState: tUserState,
-    isVerified: tIsVerified,
     belongings: tBelongings,
   );
-  const tAuthModel = AuthenticationUserModel(
-      email: '$tStudentNumber@photon.chitose.ac.jp',
-      studentNumber: tStudentNumber,
-      isEmailVerify: tIsVerified);
-  final tStoreModel = MemberDetailModel(
-      id: tMemberId,
-      studentNumber: tStudentNumber,
-      name: tName,
-      instituteGrade: tInstituteGradeModel,
-      userState: tUserStateModel,
-      belongings: tBelongingModels);
 
-  final tModels =
-      Models(authUserModel: tAuthModel, memberDetailModel: tStoreModel);
+  final tModel = MemberDetailModel(
+    id: tMemberId,
+    studentNumber: tStudentNumber,
+    name: tParams.name,
+    instituteGrade: tInstituteGradeModel,
+    userState: tUserStateModel,
+    belongings: tBelongingModels,
+  );
 
   group('create', () {
     test('should return entity', () {
@@ -117,30 +111,14 @@ void main() {
       when(mockUserStateFactory.createFromModel(any)).thenReturn(tUserState);
       when(mockBelongingFactory.createFromModel(any)).thenReturn(tBelonging);
       // act
-      final result = factory.createFromModel(tModels);
+      final result = factory.createFromModel(tModel);
       // assert
       expect(result, tValue);
-    });
-
-    test('should return suitable entity when member is admin', () {
-      // arrange
-      final tModelsIsAdmin = Models(
-          authUserModel: tAuthModel,
-          memberDetailModel: tStoreModel.copyWith(isAdmin: true));
-      final tValueIsAdmin = tValue.copyWith(isAdmin: true);
-      when(mockInstituteGradeFactory.createFromModel(any))
-          .thenReturn(tInstituteGrade);
-      when(mockUserStateFactory.createFromModel(any)).thenReturn(tUserState);
-      when(mockBelongingFactory.createFromModel(any)).thenReturn(tBelonging);
-      // act
-      final result = factory.createFromModel(tModelsIsAdmin);
-      // assert
-      expect(result, tValueIsAdmin);
     });
   });
 
   group('convertToModel', () {
-    test('should member model from entity', () {
+    test('should return model from entity', () {
       // arrange
       when(mockInstituteGradeFactory.convertToModel(any))
           .thenReturn(tInstituteGradeModel);
@@ -151,14 +129,7 @@ void main() {
       // act
       final result = factory.convertToModel(tValue);
       // assert
-      expect(
-        result,
-        isA<Models>()
-            .having(
-                (models) => models.authUserModel, 'authUserModel', tAuthModel)
-            .having((models) => models.memberDetailModel, 'storeUserModel',
-                tStoreModel),
-      );
+      expect(result, tModel);
     });
   });
 }

@@ -15,12 +15,12 @@ class MemberDetailModel with _$MemberDetailModel {
 
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory MemberDetailModel({
-    required String id,
+    @Default('') String id,
     required String studentNumber,
     required String name,
     required InstituteGradeModel instituteGrade,
-    required UserStateModel userState,
-    @BelongingModelListConverter() required List<BelongingModel> belongings,
+    @Default(UserStateModel.active) UserStateModel userState,
+    @Default([]) @BelongingModelListConverter() List<BelongingModel> belongings,
     @Default(false) bool isAdmin,
   }) = _MemberDetailModel;
 

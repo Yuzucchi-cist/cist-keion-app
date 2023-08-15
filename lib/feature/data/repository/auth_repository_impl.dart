@@ -11,9 +11,9 @@ import '../../../core/network/network_info.dart';
 import '../../domain/entity/auth/member.dart';
 import '../../domain/repository/auth_repository.dart';
 import '../datasource/authentication_data_source.dart';
-import '../datasource/member_detail_data_source.dart';
+import '../datasource/member_detail_remote_data_source.dart';
 import '../factory/auth/member_factory.dart';
-import '../model/auth/authentication/authentication_user_model.dart';
+import '../model/auth/authentication_user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
@@ -25,7 +25,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   final NetworkInfo networkInfo;
   final AuthenticationDataSource authenticationDataSource;
-  final MemberDetailDataSource memberDetailDataSource;
+  final MemberDetailRemoteDataSource memberDetailDataSource;
   final MemberFactory memberFactory;
 
   @override
@@ -33,7 +33,7 @@ class AuthRepositoryImpl implements AuthRepository {
       String studentNumber, String password) async {
     if (await networkInfo.isConnected) {
       try {
-        await memberDetailDataSource.getMemberByStudentNumber(studentNumber);
+        await memberDetailDataSource.getByStudentNumber(studentNumber);
         await authenticationDataSource.createUser(studentNumber, password);
         return const Right(unit);
       } on FireAuthException catch (e) {
@@ -82,7 +82,7 @@ class AuthRepositoryImpl implements AuthRepository {
       try {
         final authUserModel = await getAuthUserModel();
         final storeUserModel = await memberDetailDataSource
-            .getMemberByStudentNumber(authUserModel.studentNumber);
+            .getByStudentNumber(authUserModel.studentNumber);
         final member = memberFactory.createFromModel(Models(
             authUserModel: authUserModel, memberDetailModel: storeUserModel));
         return Right(member);
@@ -108,7 +108,7 @@ class AuthRepositoryImpl implements AuthRepository {
             } else {
               try {
                 final storeModel = await memberDetailDataSource
-                    .getMemberByStudentNumber(authModel.studentNumber);
+                    .getByStudentNumber(authModel.studentNumber);
                 sink.add(Right<Failure, Member>(memberFactory.createFromModel(
                     Models(
                         authUserModel: authModel,
