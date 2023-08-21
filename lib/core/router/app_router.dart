@@ -72,7 +72,8 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
             AutoRoute(initial: true, page: AdminRoute.page),
             AutoRoute(path: 'suggestions', page: SuggestionsRoute.page),
             AutoRoute(
-                path: 'suggestion_detail', page: SuggestionDetailRoute.page),
+                path: 'suggestion_detail/:suggestionId',
+                page: SuggestionDetailRoute.page),
             AutoRoute(path: 'add_members', page: AddMembersRoute.page)
           ],
         ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../../core/error/failure/server/server_failure.dart';
@@ -6,24 +8,21 @@ import '../../../../../core/error/failure/suggestion/suggestion_failure_state.da
 import '../../../../../core/provider_di.dart';
 import '../../../../../core/usecases/usecase.dart';
 import '../../../../domain/entity/suggestion/suggestion.dart';
-import '../../../../domain/usecase/suggestion/get_suggestions.dart';
 
 final suggestionListProvider =
-    StateNotifierProvider<SuggestionListNotifier, List<Suggestion>>((ref) =>
-        SuggestionListNotifier(
-            getSuggestions: ref.watch(getSuggestionsProvider)));
+    AsyncNotifierProvider<SuggestionListNotifier, List<Suggestion>>(
+        () => SuggestionListNotifier());
 
-class SuggestionListNotifier extends StateNotifier<List<Suggestion>> {
-  SuggestionListNotifier({required this.getSuggestions}) : super([]);
+class SuggestionListNotifier extends AsyncNotifier<List<Suggestion>> {
+  SuggestionListNotifier();
 
-  final GetSuggestions getSuggestions;
-
-  Future<List<Suggestion>> getAll() async {
-    final result = await getSuggestions(NoParams());
-    final suggestions = result.fold<List<Suggestion>>(
+  @override
+  FutureOr<List<Suggestion>> build() async {
+    final result = await ref.read(getSuggestionsProvider)(NoParams());
+    return result.fold(
       (failure) {
         if (failure is ServerFailure) {
-          throw Exception(failure);
+          throw Exception('$failure');
         } else if (failure is SuggestionFailure) {
           switch (failure.state) {
             case SuggestionFailureState.noData:
@@ -32,16 +31,38 @@ class SuggestionListNotifier extends StateNotifier<List<Suggestion>> {
               throw Exception('Unexpected Error');
           }
         }
-        return [];
+        throw Exception('Unexpected Error');
       },
       (suggestions) => suggestions,
     );
-
-    state = suggestions;
-    return suggestions;
   }
 
-  Suggestion getById(String id) {
-    return state.firstWhere((suggestion) => suggestion.id == id);
+  Future<AsyncValue<List<Suggestion>>> getAll() async {
+    final result = await ref.read(getSuggestionsProvider)(NoParams());
+    result.fold(
+      (failure) {
+        if (failure is ServerFailure) {
+          state = AsyncError(failure, StackTrace.current);
+        } else if (failure is SuggestionFailure) {
+          switch (failure.state) {
+            case SuggestionFailureState.noData:
+              state = const AsyncData([]);
+            case SuggestionFailureState.unexpected:
+              state = AsyncError('Unexpected Error', StackTrace.current);
+          }
+        }
+        state = AsyncError('Unexpected Error', StackTrace.current);
+      },
+      (suggestions) => state = AsyncData(suggestions),
+    );
+    return state;
+  }
+
+  Future<AsyncValue<Suggestion>> getById(String id) async {
+    if (state.value?.isEmpty ?? true) {
+      await getAll();
+    }
+    return state.whenData((suggestionList) =>
+        suggestionList.firstWhere((suggestion) => suggestion.id == id));
   }
 }

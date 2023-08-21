@@ -14,37 +14,44 @@ Widget suggestionList(BuildContext context, WidgetRef ref) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        final data = snapshot.data;
-        if (data != null) {
-          data.sort((a, b) {
-            final cResult = a.category.index - b.category.index;
-            return cResult == 0
-                ? a.createdAt!.compareTo(b.createdAt!)
-                : cResult;
-          });
-          return Column(
-            children: data.map((suggestion) {
-              final description =
-                  suggestion.description.length < _descriptionLabelMaxLength
-                      ? suggestion.description
-                      : suggestion.description
-                          .substring(0, _descriptionLabelMaxLength - 1);
-              return Row(
-                children: [
-                  Text('${suggestion.category.jpString.padRight(6)}: '),
-                  ElevatedButton(
-                    child: Text(description),
-                    onPressed: () {
-                      context.router.push(
-                          SuggestionDetailRoute(suggestionId: suggestion.id));
-                    },
-                  ),
-                  Text('${suggestion.createdAt}'),
-                ],
-              );
-            }).toList(),
-          );
-        }
-        return const Text('ERROR!!!');
+        final suggestionListState = snapshot.data ?? const AsyncLoading();
+        return suggestionListState.when(
+          data: (suggestionList) {
+            suggestionList.sort((a, b) {
+              final cResult = a.category.index - b.category.index;
+              return cResult == 0
+                  ? a.createdAt!.compareTo(b.createdAt!)
+                  : cResult;
+            });
+            return Column(
+              children: suggestionList.map((suggestion) {
+                final description =
+                    suggestion.description.length < _descriptionLabelMaxLength
+                        ? suggestion.description
+                        : suggestion.description
+                            .substring(0, _descriptionLabelMaxLength - 1);
+                return Row(
+                  children: [
+                    Text('${suggestion.category.jpString.padRight(6)}: '),
+                    ElevatedButton(
+                      child: Text(description),
+                      onPressed: () {
+                        context.router.push(
+                            SuggestionDetailRoute(suggestionId: suggestion.id));
+                      },
+                    ),
+                    Text('${suggestion.createdAt}'),
+                  ],
+                );
+              }).toList(),
+            );
+          },
+          error: (error, stackTrace) {
+            return Text('$error');
+          },
+          loading: () {
+            return const Center(child: CircularProgressIndicator());
+          },
+        );
       });
 }
