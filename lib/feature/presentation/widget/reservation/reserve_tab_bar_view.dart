@@ -38,7 +38,7 @@ Widget reserveTabBarView(BuildContext context, WidgetRef ref,
                 onPressed: isDisplay
                     ? () {}
                     : () {
-                        if (reserveTableNotifier.isChosen()) {
+                        if (reserveTableNotifier.hasChosenCell()) {
                           context.router.push(MakeReservationDetailRoute(
                               isAdditionalReservation: isThisWeek));
                         }

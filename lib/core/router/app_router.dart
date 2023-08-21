@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../feature/presentation/page/page_importer.dart';
 import '../../feature/presentation/provider/notifier/auth/auth_notifier.dart';
+import '../../feature/presentation/provider/state/auth/auth_state.dart';
 
 part 'app_router.gr.dart';
 
@@ -71,7 +72,8 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
             AutoRoute(initial: true, page: AdminRoute.page),
             AutoRoute(path: 'suggestions', page: SuggestionsRoute.page),
             AutoRoute(
-                path: 'suggestion_detail', page: SuggestionDetailRoute.page),
+                path: 'suggestion_detail/:suggestionId',
+                page: SuggestionDetailRoute.page),
             AutoRoute(path: 'add_members', page: AddMembersRoute.page)
           ],
         ),
@@ -96,17 +98,18 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
       AddMembersRoute.name,
     ];
 
-    final authState = ref.read(authProvider);
+    final authState =
+        ref.read(authProvider).value ?? const AuthState.unAuthenticated();
     if (authState.isAuthenticated) {
       if (unauthenticatedPage.contains(routeName)) {
         router
-            .push(RootRoute(id: authState.id))
+            .push(RootRoute(id: authState.member?.memberId ?? ''))
             .then((value) => resolver.next());
         return;
       }
       if ((!authState.isAdmin) && adminPage.contains(routeName)) {
         router
-            .push(RootRoute(id: authState.id))
+            .push(RootRoute(id: authState.member?.memberId ?? ''))
             .then((value) => resolver.next());
         return;
       }

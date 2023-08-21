@@ -23,8 +23,8 @@ class AuthState with _$AuthState {
         authenticated: (member) => member.isAdmin,
       );
 
-  String get id => when(
-      unAuthenticated: () => '',
-      unVerified: (_) => '',
-      authenticated: (member) => member.memberId);
+  Member? get member => when(
+      unAuthenticated: () => null,
+      unVerified: (_) => null,
+      authenticated: (member) => member);
 }

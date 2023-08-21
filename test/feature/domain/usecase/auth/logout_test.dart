@@ -1,3 +1,4 @@
+import 'package:cist_keion_app/core/usecases/usecase.dart';
 import 'package:cist_keion_app/feature/domain/repository/auth_repository.dart';
 import 'package:cist_keion_app/feature/domain/usecase/auth/logout.dart';
 import 'package:dartz/dartz.dart';
@@ -17,16 +18,14 @@ void main() {
     logout = Logout(authRepository: mockAuthRepository);
   });
 
-  const tStudentNumber = 'b2202260';
-
   test('should return result from repository', () async {
     // arrange
-    when(mockAuthRepository.logout(any))
+    when(mockAuthRepository.logout())
         .thenAnswer((realInvocation) async => const Right(unit));
     // act
-    final result = await logout(tStudentNumber);
+    final result = await logout(NoParams());
     // assert
-    verify(mockAuthRepository.logout(tStudentNumber));
+    verify(mockAuthRepository.logout());
     expect(result, const Right(unit));
   });
 }

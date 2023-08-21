@@ -6,7 +6,7 @@ import '../model/auth/authentication_user_model.dart';
 abstract class AuthenticationDataSource {
   Future<void> createUser(String studentNumber, String password);
   Future<AuthenticationUserModel> login(String studentNumber, String password);
-  Future<void> logout(String studentNumber);
+  Future<void> logout();
   Future<void> sendEmailVerify(String studentNumber);
   Future<AuthenticationUserModel> getCurrentUser();
   Stream<AuthenticationUserModel?> getAuthStateChanges();
@@ -88,7 +88,7 @@ class AuthenticationDataSourceImpl implements AuthenticationDataSource {
   }
 
   @override
-  Future<void> logout(String studentNumber) async {
+  Future<void> logout() async {
     if (auth.currentUser != null) {
       auth.signOut();
     } else {
