@@ -174,7 +174,7 @@ void main() {
       when(mockFirebaseAuth.signOut()).thenAnswer((realInvocation) async {});
       when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
       // act
-      await dataSource.logout(tStudentNumber);
+      await dataSource.logout();
       // assert
       verify(mockFirebaseAuth.signOut());
     });
@@ -184,7 +184,7 @@ void main() {
       when(mockFirebaseAuth.currentUser).thenReturn(null);
       try {
         // act
-        await dataSource.logout(tStudentNumber);
+        await dataSource.logout();
         // assert
         verify(mockFirebaseAuth.currentUser);
         fail('');

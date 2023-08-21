@@ -11,7 +11,7 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isAdmin = ref.watch(authProvider).isAdmin;
+    final isAdmin = ref.watch(authProvider).value?.isAdmin ?? false;
     return homeWidget(
         context: context, ref: ref, isAuthenticated: true, isAdmin: isAdmin);
   }

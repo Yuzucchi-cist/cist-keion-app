@@ -134,10 +134,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> logout(String studentNumber) async {
+  Future<Either<Failure, Unit>> logout() async {
     if (await networkInfo.isConnected) {
       try {
-        authenticationDataSource.logout(studentNumber);
+        authenticationDataSource.logout();
         return const Right(unit);
       } on FireAuthException catch (e) {
         return Left(AuthFailure.fromRemoteDataSourceExceptionCode(e.code));

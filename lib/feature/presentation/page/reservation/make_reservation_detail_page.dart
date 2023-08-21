@@ -22,10 +22,7 @@ class MakeReservationDetailPage extends HookConsumerWidget {
         : reserveTableForReserveInNextWeekProvider;
     final reserveTable = ref.watch(reserveTableProvider);
 
-    final member = ref.watch(authProvider).when(
-        unAuthenticated: () => null,
-        unVerified: (_) => null,
-        authenticated: (member) => member);
+    final member = ref.watch(authProvider).value?.member;
 
     return Scaffold(
       appBar: AppBar(

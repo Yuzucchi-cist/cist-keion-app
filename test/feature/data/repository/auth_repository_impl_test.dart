@@ -358,7 +358,7 @@ void main() {
     checkOnline(
         arrange: () {},
         act: () {
-          repository.logout(tStudentNumber);
+          repository.logout();
         });
 
     group('device is online', () {
@@ -367,28 +367,27 @@ void main() {
 
       test('should call logout member to log out', () async {
         // arrange
-        when(mockAuthenticationDataSource.logout(any))
+        when(mockAuthenticationDataSource.logout())
             .thenAnswer((realInvocation) async {});
         // act
-        final result = await repository.logout(tStudentNumber);
+        final result = await repository.logout();
         // assert
-        verify(mockAuthenticationDataSource.logout(tStudentNumber));
+        verify(mockAuthenticationDataSource.logout());
         expect(result, const Right(unit));
       });
 
       test('should return auth failure when auth data source failed', () async {
         // arrange
-        when(mockAuthenticationDataSource.logout(tStudentNumber))
+        when(mockAuthenticationDataSource.logout())
             .thenThrow(FireAuthException('invalid-email'));
         // act
-        final result = await repository.logout(tStudentNumber);
+        final result = await repository.logout();
         // assert
         expect(result, Left(AuthFailure(AuthFailureState.invalidEmail)));
       });
     });
 
-    returnServerFailureWhenDeviceIsOffline(
-        act: () => repository.logout(tStudentNumber));
+    returnServerFailureWhenDeviceIsOffline(act: () => repository.logout());
   });
 
   group('getAuthState', () {

@@ -21,6 +21,23 @@ class LoginPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isPassObscure = useState(true);
 
+    ref.listen(authProvider, (previous, next) async {
+      await next.when(
+          data: (authState) async {
+            await authState.when(
+                unAuthenticated: () {},
+                unVerified: (_) async =>
+                    context.router.push(const ConfirmEmailVerifyRoute()),
+                authenticated: (member) async => context.router.push(RootRoute(
+                    id: member.memberId, children: const [HomeRoute()])));
+          },
+          error: (error, stackTrace) async => showErrorDialog(
+              context: context, titleText: '$error', contentText: '$error'),
+          loading: () {
+            // show loading
+          });
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('ログイン'),
@@ -47,15 +64,8 @@ class LoginPage extends HookConsumerWidget {
                       ref
                           .read(authProvider.notifier)
                           .login(studentNumber, password)
-                          .then((member) {
-                        if (member.isVerified) {
-                          context.router.push(RootRoute(
-                              id: member.memberId,
-                              children: const [HomeRoute()]));
-                        } else {
-                          context.router.push(const ConfirmEmailVerifyRoute());
-                        }
-                      }).onError((error, _) {
+                          .then((member) {})
+                          .onError((error, _) {
                         showErrorDialog(
                           context: context,
                           titleText: 'ERROR',

@@ -9,7 +9,7 @@ abstract class AuthRepository {
 
   Future<Either<Failure, Member>> login(String studentNumber, String password);
 
-  Future<Either<Failure, Unit>> logout(String studentNumber);
+  Future<Either<Failure, Unit>> logout();
 
   Future<Either<Failure, Unit>> sendEmailVerify(String studentNumber);
 

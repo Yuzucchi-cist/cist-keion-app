@@ -18,10 +18,7 @@ final deleteParamProvider =
           deleteReservations: ref.watch(deleteReservationsProvider),
           getReservationsThisWeek: ref.watch(getReservationsThisWeekProvider),
           getReservationsNextWeek: ref.watch(getReservationsNextWeekProvider),
-          memberId: ref.watch(authProvider).when(
-              unAuthenticated: () => null,
-              unVerified: (_) => null,
-              authenticated: (member) => member.memberId),
+          memberId: ref.watch(authProvider).value?.member?.memberId,
         ));
 
 class DeleteParamNotifier extends StateNotifier<List<MemberReservation>> {
