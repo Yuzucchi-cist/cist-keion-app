@@ -20,7 +20,7 @@ class MakeReservationDetailPage extends HookConsumerWidget {
     final reserveTableProvider = isAdditionalReservation
         ? reserveTableForReserveInThisWeekProvider
         : reserveTableForReserveInNextWeekProvider;
-    final reserveTable = ref.watch(reserveTableProvider);
+    final reserveTable = ref.watch(reserveTableProvider).value;
 
     final member = ref.watch(authProvider).value?.member;
 
@@ -36,7 +36,7 @@ class MakeReservationDetailPage extends HookConsumerWidget {
             Row(
               children: [
                 const Text('予約時間: '),
-                ...reserveTable.table.entries
+                ...?reserveTable?.table.entries
                     .where((table) => table.value.isTapped)
                     .map((table) => Text(
                         '${table.key.weekDay.value} ${table.key.time.value}  '))

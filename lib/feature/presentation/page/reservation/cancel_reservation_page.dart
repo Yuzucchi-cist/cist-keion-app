@@ -126,7 +126,11 @@ class CancelReservationPage extends HookConsumerWidget {
   }
 
   Future<void> updateReservationTable(WidgetRef ref) async {
-    await ref.read(reserveTableForReserveInThisWeekProvider.notifier).update();
-    await ref.read(reserveTableForReserveInNextWeekProvider.notifier).update();
+    await ref
+        .read(reserveTableForReserveInThisWeekProvider.notifier)
+        .updateReservationTable();
+    await ref
+        .read(reserveTableForReserveInNextWeekProvider.notifier)
+        .updateReservationTable();
   }
 }

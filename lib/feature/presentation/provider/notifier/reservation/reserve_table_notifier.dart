@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../../core/error/failure/reservation/reservation_failure.dart';
@@ -13,83 +15,96 @@ import '../../state/reservation/reserve_table.dart';
 import '../../values/week_day.dart';
 
 final reserveTableForDisplayInThisWeekProvider =
-    StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
-  final notifier = ReserveTableNotifier(
-      getReservations: ref.watch(getReservationsThisWeekProvider),
-      addReservations: ref.watch(addReservationsProvider),
-      startDateOfWeek: getStartDateOfThisWeek());
-  return notifier;
-});
+    AsyncNotifierProvider<ReserveTableNotifier, ReserveTable>(
+        () => ReserveTableNotifier(isThisWeek: true));
 
 final reserveTableForDisplayInNextWeekProvider =
-    StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
-  final notifier = ReserveTableNotifier(
-      getReservations: ref.watch(getReservationsNextWeekProvider),
-      addReservations: ref.watch(addReservationsProvider),
-      startDateOfWeek: getStartDateOfThisWeek()
-          .add(const Duration(days: DateTime.daysPerWeek)));
+    AsyncNotifierProvider<ReserveTableNotifier, ReserveTable>(() {
+  final notifier = ReserveTableNotifier(isThisWeek: false);
   return notifier;
 });
 
 final reserveTableForReserveInThisWeekProvider =
-    StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
-  final notifier = ReserveTableNotifier(
-      getReservations: ref.watch(getReservationsThisWeekProvider),
-      addReservations: ref.watch(addReservationsProvider),
-      startDateOfWeek: getStartDateOfThisWeek());
-  return notifier;
-});
+    AsyncNotifierProvider<ReserveTableNotifier, ReserveTable>(
+        () => ReserveTableNotifier(isThisWeek: true));
 
 final reserveTableForReserveInNextWeekProvider =
-    StateNotifierProvider<ReserveTableNotifier, ReserveTable>((ref) {
-  final notifier = ReserveTableNotifier(
-      getReservations: ref.watch(getReservationsNextWeekProvider),
-      addReservations: ref.watch(addReservationsProvider),
-      startDateOfWeek: getStartDateOfThisWeek()
-          .add(const Duration(days: DateTime.daysPerWeek)));
+    AsyncNotifierProvider<ReserveTableNotifier, ReserveTable>(() {
+  final notifier = ReserveTableNotifier(isThisWeek: false);
   return notifier;
 });
 
-class ReserveTableNotifier extends StateNotifier<ReserveTable> {
-  ReserveTableNotifier({
-    required this.getReservations,
-    required this.addReservations,
-    required this.startDateOfWeek,
-  }) : super(ReserveTable.init(startDateOfWeek));
+class ReserveTableNotifier extends AsyncNotifier<ReserveTable> {
+  ReserveTableNotifier({required bool isThisWeek})
+      : getReservations = isThisWeek
+            ? getReservationsThisWeekProvider
+            : getReservationsNextWeekProvider,
+        addReservations = addReservationsProvider,
+        startDateOfWeek = isThisWeek
+            ? getStartDateOfThisWeek()
+            : getStartDateOfThisWeek()
+                .add(const Duration(days: DateTime.daysPerWeek));
 
-  final UseCase<List<Reservation>, NoParams> getReservations;
-  final AddReservations addReservations;
+  final Provider<UseCase<List<Reservation>, NoParams>> getReservations;
+  final Provider<AddReservations> addReservations;
   final DateTime startDateOfWeek;
 
-  Future<void> initialize() async {
-    update();
-  }
+  @override
+  FutureOr<ReserveTable> build() => getReserveTable();
 
-  Future<void> update() async {
-    final result = await getReservations(NoParams());
-    result.fold(
-      (l) {
-        if (l is ServerFailure) {
-          throw Exception(l);
-        } else if (l is ReservationFailure) {
-          switch (l.state) {
+  Future<ReserveTable> getReserveTable() async {
+    final result = await ref.read(getReservations)(NoParams());
+    return result.fold(
+      (failure) {
+        if (failure is ServerFailure) {
+          throw Exception(failure);
+        } else if (failure is ReservationFailure) {
+          switch (failure.state) {
             case ReservationFailureState.noData:
             case ReservationFailureState.cannotCached:
-              return;
+              return ReserveTable.init(startDateOfWeek);
             case ReservationFailureState.unexpected:
               throw Exception('Unexpected Error');
+          }
+        } else {
+          throw Exception('Unexpected Error');
+        }
+      },
+      (reservations) {
+        return ReserveTable.fromReservationList(reservations, startDateOfWeek,
+            oldTable: state.valueOrNull);
+      },
+    );
+  }
+
+  Future<void> updateReservationTable() async {
+    final oldState = state;
+    state = const AsyncLoading();
+    final result = await ref.read(getReservations)(NoParams());
+    result.fold(
+      (failure) {
+        if (failure is ServerFailure) {
+          state = AsyncError(failure, StackTrace.current);
+        } else if (failure is ReservationFailure) {
+          switch (failure.state) {
+            case ReservationFailureState.noData:
+            case ReservationFailureState.cannotCached:
+              state = oldState;
+            case ReservationFailureState.unexpected:
+              state = AsyncError('unexpected', StackTrace.current);
           }
         }
       },
       (reservations) {
-        state = ReserveTable.fromReservationList(reservations, startDateOfWeek,
-            oldTable: state);
+        state = AsyncData(ReserveTable.fromReservationList(
+            reservations, startDateOfWeek,
+            oldTable: oldState.valueOrNull));
       },
     );
   }
 
   Future<void> add() async {
-    final params = state.table.entries
+    final params = state.value?.table.entries
         .where((cell) => cell.value.id == null && cell.value.isTapped)
         .map((cell) => AddReservationsParam(
             title: cell.value.title,
@@ -98,7 +113,10 @@ class ReserveTableNotifier extends StateNotifier<ReserveTable> {
             reservedMemberId: cell.value.reserveMemberId!,
             reservedMemberName: cell.value.reserveMemberName!))
         .toList();
-    final result = await addReservations(params);
+    if (params == null) {
+      throw Exception('何も登録されませんでhした');
+    }
+    final result = await ref.read(addReservations)(params);
     await result.fold((l) {
       if (l is ServerFailure) {
         throw Exception(l);
@@ -111,41 +129,45 @@ class ReserveTableNotifier extends StateNotifier<ReserveTable> {
             throw Exception('Unexpected Error');
         }
       }
-    }, (r) async => update());
+    }, (r) async => updateReservationTable());
   }
 
   void onTapped(WeekDay weekDay, InstituteTime time) {
-    final clonedTable = {...state.table};
-    final cell = state.table[(weekDay: weekDay, time: time)]!;
-    if (cell.id == null) {
-      final isTapped = cell.isTapped;
-      clonedTable[(weekDay: weekDay, time: time)] =
-          cell.copyWith(isTapped: !isTapped);
-      state = state.copyWith(table: clonedTable);
+    final reserveTable = state.value;
+    if (reserveTable != null) {
+      final clonedTable = {...reserveTable.table};
+      final cell = reserveTable.table[(weekDay: weekDay, time: time)];
+      if (cell == null) {
+        throw Exception('cell is null');
+      }
+      if (cell.id == null) {
+        final isTapped = cell.isTapped;
+        clonedTable[(weekDay: weekDay, time: time)] =
+            cell.copyWith(isTapped: !isTapped);
+        state = AsyncData(reserveTable.copyWith(table: clonedTable));
+      }
     }
   }
 
   void resetIsTapped() {
-    state = state.copyWith(
-        table: state.table.map(
-            (key, value) => MapEntry(key, value.copyWith(isTapped: false))));
+    final reserveTable = state.value;
+    if (reserveTable != null) {
+      state = AsyncData(reserveTable.resetIsTapped());
+    }
   }
 
-  bool isChosen() {
-    return state.table.values.map((cell) => cell.isTapped).contains(true);
+  bool hasChosenCell() {
+    return state.value?.table.values
+            .map((cell) => cell.isTapped)
+            .contains(true) ??
+        false;
   }
 
   void setDetail(
       String title, String reservedMemberId, String reservedMemberName) {
-    state = state.copyWith(table: state.table.map((key, value) {
-      return value.isTapped
-          ? MapEntry(
-              key,
-              value.copyWith(
-                  title: title,
-                  reserveMemberId: reservedMemberId,
-                  reserveMemberName: reservedMemberName))
-          : MapEntry(key, value);
-    }));
+    final oldState = state;
+    final newValue =
+        state.value?.setDetail(title, reservedMemberId, reservedMemberName);
+    state = newValue == null ? oldState : AsyncData(newValue);
   }
 }

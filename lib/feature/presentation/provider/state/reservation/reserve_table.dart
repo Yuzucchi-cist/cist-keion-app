@@ -58,6 +58,26 @@ class ReserveTable with _$ReserveTable {
 
   DateTime get endDateOfWeek =>
       startDateOfWeek.add(const Duration(days: DateTime.daysPerWeek - 1));
+
+  ReserveTable resetIsTapped() {
+    return copyWith(
+        table: table.map(
+            (key, value) => MapEntry(key, value.copyWith(isTapped: false))));
+  }
+
+  ReserveTable setDetail(
+      String title, String reservedMemberId, String reservedMemberName) {
+    return copyWith(table: table.map((key, value) {
+      return value.isTapped
+          ? MapEntry(
+              key,
+              value.copyWith(
+                  title: title,
+                  reserveMemberId: reservedMemberId,
+                  reserveMemberName: reservedMemberName))
+          : MapEntry(key, value);
+    }));
+  }
 }
 
 final _initialMap = Map.fromIterables(

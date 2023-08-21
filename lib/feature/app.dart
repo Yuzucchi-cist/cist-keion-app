@@ -10,7 +10,7 @@ class App extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder(
-      future: initialize(ref),
+      future: initializeAuth(ref),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp.router(
@@ -22,14 +22,14 @@ class App extends HookConsumerWidget {
           );
         } else {
           // show loading
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
   }
 
-  Future<void> initialize(WidgetRef ref) async {
-    await Future.delayed(const Duration(seconds: 5));
+  Future<void> initializeAuth(WidgetRef ref) async {
+    await Future.delayed(const Duration(seconds: 3));
     await ref.read(authProvider.notifier).build();
   }
 }

@@ -8,10 +8,26 @@ import '../../provider/state/reservation/reserve_table.dart';
 import '../../provider/values/week_day.dart';
 
 Widget reservationTable(BuildContext context, WidgetRef ref,
-    {required StateNotifierProvider<ReserveTableNotifier, ReserveTable>
+    {required AsyncNotifierProvider<ReserveTableNotifier, ReserveTable>
         reserveTableProvider,
     void Function(WeekDay weekDay, InstituteTime time)? onTap}) {
-  final reserveTable = ref.watch(reserveTableProvider);
+  return ref.watch(reserveTableProvider).when(
+        data: (reserveTable) =>
+            _convertReserveTableToWidget(context, reserveTable, onTap),
+        error: (error, stackTrace) => Text('$error'),
+        loading: () {
+          // show loading
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+}
+
+Widget _convertReserveTableToWidget(
+    BuildContext context,
+    ReserveTable reserveTable,
+    void Function(WeekDay weekDay, InstituteTime time)? onTap) {
   final startDateOfWeek = reserveTable.startDateOfWeek;
   final endDateOfWeek = reserveTable.endDateOfWeek;
   return Column(
