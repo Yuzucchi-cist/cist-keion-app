@@ -42,7 +42,7 @@ class ProfilePage extends HookConsumerWidget {
   Widget proile(AuthState state, void Function() handleLogout) {
     final member = state.member;
     return member == null
-        ? Text('ログインしてください')
+        ? const Text('ログインしてください')
         : Center(
             child: Column(
               children: [
@@ -56,8 +56,8 @@ class ProfilePage extends HookConsumerWidget {
                   ],
                 ),
                 ElevatedButton(
-                  child: const Text('ログアウト'),
                   onPressed: handleLogout,
+                  child: const Text('ログアウト'),
                 )
               ],
             ),
